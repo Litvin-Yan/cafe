@@ -8,7 +8,7 @@
             <input type="image" src="${pageContext.request.contextPath}/images/language/ru.png" name="locale" value="RU" onclick="changeLanguage(this)">
             <input type="image" src="${pageContext.request.contextPath}/images/language/en.png" name="locale" value="EN" onclick="changeLanguage(this)">
     </div>
-</footer>`
+</footer>
 <script src="${pageContext.request.contextPath}/js/w3.js"></script>
 </div>
 </html>

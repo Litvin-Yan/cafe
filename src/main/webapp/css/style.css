@@ -92,7 +92,7 @@ html, body{
 }
 
 .fon {
-    height: 650px;
+    height: 624px;
 }
 .center{
     width: 150px;
@@ -102,9 +102,6 @@ html, body{
     height: calc(100% - 70px);
     width: 100%;
     margin: auto;
-    background-image: url("../images/fon.png");
-    background-size: 100%;
-    background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
 }

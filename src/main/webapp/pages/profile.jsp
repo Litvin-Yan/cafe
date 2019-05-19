@@ -17,8 +17,6 @@
 <fmt:message bundle="${rb}" key="txt.havent.match.money" var="txtHaventMatchMoney"/>
 <fmt:message bundle="${rb}" key="txt.enter.amount.want" var="txtEnterAmountWant"/>
 <fmt:message bundle="${rb}" key="txt.enter.amount" var="txtEnterAmount"/>
-<%--<fmt:message bundle="${rb}" key="txt.betting.result" var="txtBettingResult"/>--%>
-<%--<fmt:message bundle="${rb}" key="txt.expected.rates" var="txtExpectedRates"/>--%>
 <fmt:message bundle="${rb}" key="txt.withdraw.money" var="txtWithdrawMoney"/>
 <fmt:message bundle="${rb}" key="txt.add.money" var="txtAddMoney"/>
 <fmt:message bundle="${rb}" key="txt.change.avatar" var="txtChangeAvatar"/>
@@ -26,6 +24,7 @@
 <fmt:message bundle="${rb}" key="txt.profile" var="txtProfile"/>
 <fmt:message bundle="${rb}" key="lbl.Name" var="txtName"/>
 <fmt:message bundle="${rb}" key="txt.cash" var="txtCash"/>
+<fmt:message bundle="${rb}" key="txt.bonus" var="txtBonus"/>
 <fmt:message bundle="${rb}" key="txt.role" var="txtRole"/>
 <fmt:message bundle="${rb}" key="txt.email" var="txtEmail"/>
 <fmt:message bundle="${rb}" key="txt.ok" var="txtOk"/>
@@ -90,6 +89,11 @@
                     </span>
                     <br>
                     <span>
+                        <i>${txtBonus}: </i>
+                        <b> <ctg:decimal-presenter number="${user.bonus}"/>$ </b>
+                    </span>
+                    <br>
+                    <span>
                         <i>${txtRole}: </i>
                         <b> <c:out value="${user.type}"/> </b>
                     </span>
@@ -104,16 +108,16 @@
 
             <%--Bet info section--%>
             <div class="w3-col m8 w3-container">
-                <div class="w3-bar w3-black w3-card-2 w3-margin-bottom">
-                    <button class="w3-bar-item w3-button generalLink w3-white"
-                            onclick="openTab(event,'Upcoming', 'general', 'generalLink')">
-                        ${txtExpectedRates}
-                    </button>
-                    <button class="w3-bar-item w3-button generalLink"
-                            onclick="openTab(event,'Past', 'general', 'generalLink')">
-                        ${txtBettingResult}
-                    </button>
-                </div>
+<%--                <div class="w3-bar w3-black w3-card-2 w3-margin-bottom">--%>
+<%--                    <button class="w3-bar-item w3-button generalLink w3-white"--%>
+<%--                            onclick="openTab(event,'Upcoming', 'general', 'generalLink')">--%>
+<%--                        ${txtExpectedRates}--%>
+<%--                    </button>--%>
+<%--                    <button class="w3-bar-item w3-button generalLink"--%>
+<%--                            onclick="openTab(event,'Past', 'general', 'generalLink')">--%>
+<%--                        ${txtBettingResult}--%>
+<%--                    </button>--%>
+<%--                </div>--%>
 
 <%--                <div id="Upcoming" class="general">--%>
 <%--                    &lt;%&ndash;Incude upcoming bets part&ndash;%&gt;--%>

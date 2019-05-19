@@ -5,7 +5,6 @@ import by.epam.cafe.constant.RequestNameConstant;
 import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.dao.TransactionManager;
 import by.epam.cafe.dao.impl.*;
-import by.epam.cafe.entity.CompetitionEntity;
 import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
@@ -382,32 +381,25 @@ public class UserReceiverImpl implements UserReceiver {
         TransactionManager manager = new TransactionManager();
         try {
             UserDAOImpl userDAO = new UserDAOImpl();
-            CompetitionDAOImpl competitionDAO = new CompetitionDAOImpl();
-            CompetitorDAOImpl competitorDAO = new CompetitorDAOImpl();
-            BetDAOImpl betDAO = new BetDAOImpl();
+            OrderDAOImpl orderDAO = new OrderDAOImpl();
+            OrderDataDAOImpl orderDataDAO = new OrderDataDAOImpl();
             CommonDAOImpl commonDAO = new CommonDAOImpl();
-            manager.beginTransaction(userDAO, betDAO, commonDAO, competitionDAO, competitorDAO);
+            manager.beginTransaction(userDAO, orderDAO, commonDAO, orderDataDAO);
             UserEntity actualUser = userDAO.findEntityById(user.getId());
 
             if (actualUser.getIsBlocked()) {
-
                 content.getRequestAttributes().put(IS_BLOCKED, true);
                 content.getSessionAttributes().put(TEXT, user.getBlockedText());
                 content.getSessionAttributes().remove(USER);
                 return;
             }
 
-            List<Map<String, Object>> pastBetsAndGames = betDAO.findPastBetsByUserId(user.getId());
-            List<Map<String, Object>> upcomingBetsAndGames = betDAO.findUpcomingBetsByUserId(user.getId());
-            extractCompetitors(pastBetsAndGames, competitorDAO);
-            extractCompetitors(upcomingBetsAndGames, competitorDAO);
+            List<Map<String, Object>> pastOrder = orderDAO.findActiveOrdersByUserId(user.getId());
 
             manager.commit();
             manager.endTransaction();
 
             content.getSessionAttributes().put(USER, actualUser);
-            content.getRequestAttributes().put(PAST_BETS_AND_GAMES, pastBetsAndGames);
-            content.getRequestAttributes().put(UPCOMING_BETS_AND_GAMES, upcomingBetsAndGames);
 
         } catch (DAOException e) {
             try {
@@ -421,22 +413,13 @@ public class UserReceiverImpl implements UserReceiver {
         }
     }
 
-    private void extractCompetitors(List<Map<String, Object>> betsAndGames,
-                                    CompetitorDAOImpl competitorDAO) throws DAOException {
-        for (Map<String, Object> betAndGame : betsAndGames) {
-            CompetitionEntity game = (CompetitionEntity) betAndGame.get(COMPETITION);
-            List<Map<String, Object>> competitors = competitorDAO.findWithTeamByGameId(game.getId());
-            betAndGame.put(COMPETITORS, competitors);
-        }
-    }
-
     @Override
     public void changeRole(RequestContent content) throws ReceiverException {
         int userId = Integer.valueOf(content.getRequestParameters().get(USER_ID)[0]);
         UserType userType = UserType.valueOf(content.getRequestParameters().get(USER_TYPE)[0]);
         UserEntity currentUser = (UserEntity) content.getSessionAttributes().get(USER);
 
-        if (!UserType.BOOKMAKER.equals(currentUser.getType()) || currentUser.getId() == userId) {
+        if (!UserType.ADMIN.equals(currentUser.getType()) || currentUser.getId() == userId) {
             content.setAjaxSuccess(false);
             return;
         }
@@ -478,7 +461,7 @@ public class UserReceiverImpl implements UserReceiver {
         String blockedText = arrayText == null ? "" : arrayText[0].trim();
         UserEntity currentUser = (UserEntity) content.getSessionAttributes().get(USER);
 
-        if (!UserType.BOOKMAKER.equals(currentUser.getType()) ||
+        if (!UserType.ADMIN.equals(currentUser.getType()) ||
                 currentUser.getId() == userId || (isBlocked && blockedText.isEmpty())) {
             content.setAjaxSuccess(false);
             return;
@@ -565,12 +548,10 @@ public class UserReceiverImpl implements UserReceiver {
             if (isUpdated) {
                 manager.commit();
                 content.getSessionAttributes().put(USER, actualUser);
-
             } else {
                 manager.rollback();
                 content.getAjaxResult().add(UPDATE_ERROR, new Gson().toJsonTree(true));
             }
-
             content.setAjaxSuccess(isUpdated);
             manager.endTransaction();
 

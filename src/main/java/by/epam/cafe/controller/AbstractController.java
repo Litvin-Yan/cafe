@@ -13,8 +13,7 @@ import java.io.IOException;
 
 abstract class AbstractController extends HttpServlet {
 
-    protected void executeRequest(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void executeRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         AbstractCommand executionCommand;
         RequestContent requestContent = new RequestContent();
 
@@ -25,5 +24,16 @@ abstract class AbstractController extends HttpServlet {
         JsonObject json = requestContent.getAjaxResult();
         resp.getWriter().println(json.toString());
         resp.getWriter().close();
+    }
+
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        executeRequest(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        executeRequest(req, resp);
     }
 }

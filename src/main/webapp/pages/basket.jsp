@@ -10,7 +10,7 @@
     <nav class="container-fluid">
         <ul class="nav-list row">
             <li class="col-1"><a href="../index.jsp">Кафе</a></li>
-            <li class="col-1"><a href="menu.jsp">Меню</a></li>
+            <li class="col-1"><a href="menuEntity.jsp">Меню</a></li>
             <li class="col-2"><a href="basket.jsp">Корзина</a></li>
             <li class="col-5"><a href="comments.jsp">Отзывы</a></li>
             <li class="col-2"><a href="sign_up.jsp">Зарегистрироваться</a></li>

@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 public abstract class DAO<T extends Entity> {
+
     protected final static Logger LOGGER = LogManager.getLogger();
 
     protected ProxyConnection connection;

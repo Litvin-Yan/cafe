@@ -87,7 +87,7 @@ public class ConnectionPool {
      *
      * @param connection connection
      */
-    public void putbackConnection(ProxyConnection connection) {
+    public void putBackConnection(ProxyConnection connection) {
         if (connection != null) {
             if (usedConns.remove(connection)) {
                 availableConns.offer(connection);

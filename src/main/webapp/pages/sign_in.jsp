@@ -18,11 +18,9 @@
 
         <form class="w3-container  w3-card-2" name="form" action="${pageContext.request.contextPath}/generalController" method="post">
             <input type="hidden" name="command" value="Sign_in">
-
             <p>${email}:</p>
             <input  title="${email}" class="w3-input w3-border" type="email" id="email" name="email">
             <br>
-
             <p>${password}:</p>
             <input title="${password}" class="w3-input w3-border" type="password" id="password" name="password">
             <c:if test="${requestScope.containsKey('wrongData')}">

@@ -8,29 +8,26 @@ import by.epam.cafe.pool.ProxyConnection;
 import java.sql.SQLException;
 
 public class TransactionManager {
-    private ProxyConnection connection;
 
+    private ProxyConnection connection;
     /**
      * Begin transaction
      *
-     * @param dao  dao
      * @param daos daos
      * @throws DAOException when sql error
      */
-    public void beginTransaction(DAO dao, DAO... daos) throws DAOException {
+    public void beginTransaction(DAO... daos) throws DAOException {
 
         try {
             connection = ConnectionPool.getInstance().retrieveConnection();
         } catch (ConnectionPoolException e) {
             throw new DAOException(e);
         }
-
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
             throw new DAOException("Set auto commit 'false' error", e);
         }
-        dao.setConnection(connection);
         for (DAO d : daos) {
             d.setConnection(connection);
         }
@@ -48,7 +45,7 @@ public class TransactionManager {
         } catch (SQLException e) {
             throw new DAOException("Set auto commit 'true' error", e);
         }
-        ConnectionPool.getInstance().putbackConnection(connection);
+        ConnectionPool.getInstance().putBackConnection(connection);
     }
 
     /**
@@ -76,5 +73,4 @@ public class TransactionManager {
             throw new DAOException("Rollback error", e);
         }
     }
-
 }

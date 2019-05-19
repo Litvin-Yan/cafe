@@ -31,7 +31,6 @@ class ConnectionPoolConfig {
             properties.put(GeneralConstant.DataBase.CHARACTER_ENCODING, resourceBundle.getString(GeneralConstant.DataBase.CHARACTER_ENCODING));
             properties.put(GeneralConstant.DataBase.AUTO_RECONNECT, resourceBundle.getString(GeneralConstant.DataBase.AUTO_RECONNECT));
             properties.put(GeneralConstant.ConnectionPool.CAPACITY, resourceBundle.getString(GeneralConstant.ConnectionPool.CAPACITY));
-
         } catch (ClassNotFoundException e) {
             LOGGER.log(Level.FATAL, "Connection pool will nowhere create. ", e);
             throw new RuntimeException("Driver not found. ", e);
@@ -39,7 +38,6 @@ class ConnectionPoolConfig {
         } catch (MissingResourceException e) {
             LOGGER.log(Level.FATAL, "Connection pool will nowhere create. ", e);
             throw new RuntimeException("Data base configuration file not found. ", e);
-
         }
     }
 

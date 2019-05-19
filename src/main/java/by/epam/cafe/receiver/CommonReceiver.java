@@ -48,16 +48,4 @@ public interface CommonReceiver extends Receiver {
      * @see RequestContent
      */
     void openNotFoundPage(RequestContent requestContent) throws ReceiverException;
-
-    /**
-     * Send question email.
-     *
-     * @param requestContent request content
-     * @throws ReceiverException when throw DAOException
-     *
-     * @see DAOException
-     * @see RequestContent
-     */
-    void sendQuestionEmail(RequestContent requestContent) throws ReceiverException;
-
 }

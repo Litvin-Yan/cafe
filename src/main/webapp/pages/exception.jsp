@@ -17,5 +17,5 @@ Exception: ${pageContext.exception}
 <br/>
 Message from exception: ${pageContext.exception.message}
 <br/>
-<a href="../../index.jsp">Go Back</a>
+<a href="../index.jsp">Go Back</a>
 </html>

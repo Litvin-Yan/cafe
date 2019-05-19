@@ -1,7 +1,6 @@
 package by.epam.cafe.dao.impl;
 
 import by.epam.cafe.constant.GeneralConstant;
-import by.epam.cafe.constant.SQLRequestConstant;
 import by.epam.cafe.dao.CommonDAO;
 import by.epam.cafe.entity.Entity;
 import by.epam.cafe.exception.DAOException;
@@ -16,6 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 public class CommonDAOImpl extends CommonDAO {
+
+    private static final String SELECT_ADMIN_STATISTIC =
+            "SELECT " +
+                    "(SELECT COUNT(user_id) FROM user) AS countRegistered, " +
+                    "(SELECT COUNT(user_id) FROM user WHERE user_is_blocked) AS countLocked, " +
+                    "(SELECT COUNT(product_id) FROM product) AS countProduct, ";
 
     @Override
     public List findAll() throws DAOException {
@@ -47,84 +52,37 @@ public class CommonDAOImpl extends CommonDAO {
         return false;
     }
 
+    @Override
     public int findCountBetsOnCompetition(int competitionId, ExpectResultType expectResult) throws DAOException {
-        int count = 0;
-        try (PreparedStatement statement = connection.prepareStatement(SQLRequestConstant.COUNT_BETS_ON_COMPETITION)) {
-            statement.setInt(1, competitionId);
-            statement.setString(2, expectResult.toString());
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()){
-                count = resultSet.getInt(GeneralConstant.COUNT);
-            }
-
-        } catch (SQLException e) {
-            throw new DAOException("find count of bets error", e);
-        }
-        return count;
+        return 0;
     }
 
+    @Override
     public int findCountBetsOnCompetitor(int competitorId) throws DAOException {
-        int count = 0;
-        try (PreparedStatement statement = connection.prepareStatement(SQLRequestConstant.COUNT_BETS_ON_COMPETITOR)) {
-            statement.setInt(1, competitorId);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()){
-                count = resultSet.getInt(GeneralConstant.COUNT);
-            }
-
-        } catch (SQLException e) {
-            throw new DAOException("find count of bets error", e);
-        }
-        return count;
+        return 0;
     }
 
-    public BigDecimal findAmountOfMoneyOnCompetitor (int competitorId) throws DAOException {
-        BigDecimal amountOfMoney = null;
-        try (PreparedStatement statement = connection.prepareStatement(SQLRequestConstant.AMOUNT_OF_MONEY_ON_COMPETITOR)) {
-            statement.setInt(1, competitorId);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()){
-                amountOfMoney = resultSet.getBigDecimal(GeneralConstant.CASH);
-            }
-
-        } catch (SQLException e) {
-            throw new DAOException("find amount of money error", e);
-        }
-        return amountOfMoney;
+    @Override
+    public BigDecimal findAmountOfMoneyOnCompetitor(int competitorId) throws DAOException {
+        return null;
     }
 
-    public BigDecimal findAmountOfMoneyOnCompetition (int competitionId, ExpectResultType expectResult) throws DAOException {
-        BigDecimal amountOfMoney = null;
-        try (PreparedStatement statement = connection.prepareStatement(SQLRequestConstant.AMOUNT_OF_MONEY_ON_COMPETITION)) {
-            statement.setInt(1, competitionId);
-            statement.setString(2, expectResult.toString());
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()){
-                amountOfMoney = resultSet.getBigDecimal(GeneralConstant.CASH);
-            }
-
-        } catch (SQLException e) {
-            throw new DAOException("find amount of money error", e);
-        }
-        return amountOfMoney;
+    @Override
+    public BigDecimal findAmountOfMoneyOnCompetition(int competitionId, ExpectResultType expectResult) throws DAOException {
+        return null;
     }
 
     public Map<String, Object> findAdminStatistic() {
         Map<String, Object> statisticMap = null;
 
-        try (PreparedStatement statement = connection.prepareStatement(SQLRequestConstant.SELECT_ADMIN_STATISTIC)) {
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_ADMIN_STATISTIC)) {
             ResultSet resultSet = statement.executeQuery();
             statisticMap = new HashMap<>();
 
             if (resultSet.next()) {
-                statisticMap.put(GeneralConstant.COUNT_REGISTERED, resultSet.getInt(GeneralConstant.COUNT_REGISTERED));
-                statisticMap.put(GeneralConstant.COUNT_LOCKED, resultSet.getInt(GeneralConstant.COUNT_LOCKED));
-                statisticMap.put(GeneralConstant.COUNT_NEWS, resultSet.getInt(GeneralConstant.COUNT_NEWS));
-                statisticMap.put(GeneralConstant.COUNT_SPORTS, resultSet.getInt(GeneralConstant.COUNT_SPORTS));
+                statisticMap.put(GeneralConstant.REGISTERED_COUNT, resultSet.getInt(GeneralConstant.REGISTERED_COUNT));
+                statisticMap.put(GeneralConstant.LOCKED_COUNT, resultSet.getInt(GeneralConstant.LOCKED_COUNT));
+                statisticMap.put(GeneralConstant.PRODUCT_COUNT, resultSet.getInt(GeneralConstant.PRODUCT_COUNT));
             }
 
         } catch (SQLException e) {
@@ -132,6 +90,4 @@ public class CommonDAOImpl extends CommonDAO {
         }
         return statisticMap;
     }
-
-
 }

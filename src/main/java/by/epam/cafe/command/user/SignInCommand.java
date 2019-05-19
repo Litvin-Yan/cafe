@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Set;
 
 import static by.epam.cafe.constant.GeneralConstant.IS_BLOCKED;
-import static by.epam.cafe.constant.RequestNameConstant.WRONG_DATA;
+import static by.epam.cafe.constant.GeneralConstant.WRONG_DATA;
 
 public class SignInCommand extends AbstractCommand {
     private static final Logger LOGGER = LogManager.getLogger();

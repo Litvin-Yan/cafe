@@ -79,12 +79,12 @@ public class UserValidatorImpl implements UserValidator {
     public boolean isBookmaker(UserEntity user) {
         boolean isBookmaker = true;
 
-        if (user == null) {
-            isBookmaker = false;
-
-        } else if (!UserType.BOOKMAKER.equals(user.getType())) {
-            isBookmaker = false;
-        }
+//        if (user == null) {
+//            isBookmaker = false;
+//
+//        } else if (!UserType.BOOKMAKER.equals(user.getType())) {
+//            isBookmaker = false;
+//        }
 
         return isBookmaker;
     }

@@ -12,6 +12,7 @@ import java.io.IOException;
                 @WebInitParam(name = "encoding", value = "UTF-8", description = "Encoding Param"),
                 @WebInitParam(name = "contentType", value = "text/html", description = "Content type Param") })
 public class EncodingFilter implements Filter {
+
     private String code;
     private String contentType;
 

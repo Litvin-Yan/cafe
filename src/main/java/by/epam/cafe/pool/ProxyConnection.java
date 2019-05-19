@@ -58,7 +58,7 @@ final public class ProxyConnection implements Connection, AutoCloseable {
 
     @Override
     public void close() throws SQLException {
-        ConnectionPool.getInstance().putbackConnection(this);
+        ConnectionPool.getInstance().putBackConnection(this);
     }
 
     void realClose() throws SQLException {

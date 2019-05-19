@@ -1,9 +1,9 @@
 <%@include file="/pages/partial/header.jsp" %>
 <script src="../js/button.js"></script>
-<fmt:message bundle="${rb}" key="txt.menu.category" var="txtMenuCategory"/>
+<fmt:message bundle="${rb}" key="txt.menuEntity.category" var="txtMenuCategory"/>
 
 <body>
-    <table class="products table">
+    <table class="productEntities table">
         <thead>
         <div class="w3-col s4 w3-padding-small">
             <label>

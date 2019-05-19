@@ -1,6 +1,7 @@
 package by.epam.cafe.filter;
 
 import by.epam.cafe.type.PageType;
+import by.epam.cafe.type.UploadType;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -9,9 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static by.epam.cafe.constant.GeneralConstant.USER_IMAGE_PATH;
 import static javax.servlet.jsp.PageContext.SESSION;
 
-@WebFilter(filterName = "sessionFilter", urlPatterns = {"/jsp/*"},
+@WebFilter(filterName = "sessionFilter", urlPatterns = {"/pages/*"},
         dispatcherTypes = {DispatcherType.FORWARD, DispatcherType.REQUEST})
 public class SessionFilter implements Filter {
     private static final int SESSION_LIFE_TIME = 1000 * 60;
@@ -30,13 +32,11 @@ public class SessionFilter implements Filter {
         }
 
         if (session.getAttribute(SESSION) == null) {
-
             session.setAttribute(SESSION, true);
+            session.setAttribute(USER_IMAGE_PATH, UploadType.AVATARS.getUploadFolder());
             httpResponse.sendRedirect(PageType.INDEX.getPage());
             return;
         }
-
-
         chain.doFilter(request, response);
     }
 

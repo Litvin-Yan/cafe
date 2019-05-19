@@ -3,20 +3,15 @@ package by.epam.cafe.entity;
 import java.util.Date;
 import java.util.Objects;
 
-
-public class CommentEntity extends Entity {
+public class CommentEntity extends Entity{
 
     private int id;
     private String text;
     private Boolean isBlocked;
     private Date postDate;
-    private int newsId;
+    private int rate;
+    private int orderId;
     private int userId;
-
-    /**
-     * Default constructor.
-     */
-    public CommentEntity() {}
 
     /**
      * Get ID.
@@ -34,6 +29,24 @@ public class CommentEntity extends Entity {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    /**
+     * Get Rate.
+     *
+     * @return comment rate
+     */
+    public int getRate() {
+        return rate;
+    }
+
+    /**
+     * Set Rate.
+     *
+     * @param rate comment rate
+     */
+    public void setRate(int rate) {
+        this.rate = rate;
     }
 
     /**
@@ -91,21 +104,21 @@ public class CommentEntity extends Entity {
     }
 
     /**
-     * Get news ID.
+     * Get order ID.
      *
-     * @return news id
+     * @return order id
      */
     public int getNewsId() {
-        return newsId;
+        return orderId;
     }
 
     /**
-     * Set news ID.
+     * Set order ID.
      *
-     * @param newsId news id
+     * @param orderId order id
      */
-    public void setNewsId(int newsId) {
-        this.newsId = newsId;
+    public void setNewsId(int orderId) {
+        this.orderId = orderId;
     }
 
     /**
@@ -130,25 +143,18 @@ public class CommentEntity extends Entity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CommentEntity)) return false;
-
-        CommentEntity that = (CommentEntity) o;
-
-        if (id != that.id) return false;
-        if (newsId != that.newsId) return false;
-        if (userId != that.userId) return false;
-        if (!Objects.equals(text, that.text)) return false;
-        if (!Objects.equals(isBlocked, that.isBlocked)) return false;
-        return Objects.equals(postDate, that.postDate);
+        CommentEntity commentEntity = (CommentEntity) o;
+        return id == commentEntity.id &&
+                rate == commentEntity.rate &&
+                orderId == commentEntity.orderId &&
+                userId == commentEntity.userId &&
+                text.equals(commentEntity.text) &&
+                isBlocked.equals(commentEntity.isBlocked) &&
+                postDate.equals(commentEntity.postDate);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (text != null ? text.hashCode() : 0);
-        result = 31 * result + (isBlocked != null ? isBlocked.hashCode() : 0);
-        result = 31 * result + (postDate != null ? postDate.hashCode() : 0);
-        result = 31 * result + newsId;
-        result = 31 * result + userId;
-        return result;
+        return Objects.hash(id, text, isBlocked, postDate, rate, orderId, userId);
     }
 }

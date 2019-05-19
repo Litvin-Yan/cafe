@@ -78,9 +78,9 @@
 }
 
 body {
-    background-image: url("../images/fon.png");
-    background-size: 100%;
-    background-repeat: no-repeat;
+    /*background-image: url("../images/fon.png");*/
+    /*background-size: 100%;*/
+    /*background-repeat: no-repeat;*/
     display: flex;
     flex-direction: column;
 }
@@ -91,9 +91,6 @@ html, body{
     display: block;
 }
 
-.fon {
-    height: 624px;
-}
 .center{
     width: 150px;
     margin: 40px auto;
@@ -104,6 +101,9 @@ html, body{
     margin: auto;
     display: flex;
     flex-direction: column;
+    background-image: url("../image/fon.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 #top {
     min-height: calc(100% - 70px);

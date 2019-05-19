@@ -6,23 +6,17 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class UserEntity extends Entity {
-     private int id;
-     private String name;
-     private String email;
-     private String password;
-     private UserType type;
-     private boolean isConfirm;
-     private String confirmUrl;
-     private boolean isBlocked;
-     private String blockedText;
-     private BigDecimal cash;
-     private String avatarURL;
 
-    /**
-     * Default constructor.
-     */
-    public UserEntity() {
-    }
+    private int id;
+    private String name;
+    private String email;
+    private String password;
+    private UserType type;
+    private boolean isBlocked;
+    private String blockedText;
+    private BigDecimal cash;
+    private BigDecimal bonus;
+    private String avatarURL;
 
     /**
      * Get ID.
@@ -115,24 +109,6 @@ public class UserEntity extends Entity {
     }
 
     /**
-     * Get is confirm.
-     *
-     * @return user confirm state
-     */
-    public boolean getIsConfirm() {
-        return isConfirm;
-    }
-
-    /**
-     * Set confirm.
-     *
-     * @param confirm user confirm state
-     */
-    public void setConfirm(boolean confirm) {
-        isConfirm = confirm;
-    }
-
-    /**
      * Get is blocked.
      *
      * @return user blocked state
@@ -168,23 +144,6 @@ public class UserEntity extends Entity {
         this.cash = cash;
     }
 
-    /**
-     * Get confirm URL.
-     *
-     * @return user confirm url
-     */
-    public String getConfirmUrl() {
-        return confirmUrl;
-    }
-
-    /**
-     * Set confirm URL.
-     *
-     * @param confirmUrl user confirm url
-     */
-    public void setConfirmUrl(String confirmUrl) {
-        this.confirmUrl = confirmUrl;
-    }
 
     /**
      * Get avatar URL.
@@ -222,64 +181,37 @@ public class UserEntity extends Entity {
         this.blockedText = blockedText;
     }
 
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public BigDecimal getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(BigDecimal bonus) {
+        this.bonus = bonus;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof UserEntity)) {
-            return false;
-        }
-
-        UserEntity user = (UserEntity) o;
-
-        if (id != user.id) {
-            return false;
-        }
-        if (isConfirm != user.isConfirm) {
-            return false;
-        }
-        if (isBlocked != user.isBlocked) {
-            return false;
-        }
-        if (!Objects.equals(name, user.name)) {
-            return false;
-        }
-        if (!Objects.equals(email, user.email)) {
-            return false;
-        }
-        if (!Objects.equals(password, user.password)) {
-            return false;
-        }
-        if (type != user.type) {
-            return false;
-        }
-        if (!Objects.equals(confirmUrl, user.confirmUrl)) {
-            return false;
-        }
-        if (!Objects.equals(blockedText, user.blockedText)) {
-            return false;
-        }
-        if (!Objects.equals(cash, user.cash)) {
-            return false;
-        }
-        return Objects.equals(avatarURL, user.avatarURL);
+        if (this == o) return true;
+        if (!(o instanceof UserEntity)) return false;
+        UserEntity that = (UserEntity) o;
+        return id == that.id &&
+                isBlocked == that.isBlocked &&
+                name.equals(that.name) &&
+                email.equals(that.email) &&
+                password.equals(that.password) &&
+                type == that.type &&
+                Objects.equals(blockedText, that.blockedText) &&
+                cash.equals(that.cash) &&
+                bonus.equals(that.bonus) &&
+                avatarURL.equals(that.avatarURL);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (isConfirm ? 1 : 0);
-        result = 31 * result + (confirmUrl != null ? confirmUrl.hashCode() : 0);
-        result = 31 * result + (isBlocked ? 1 : 0);
-        result = 31 * result + (blockedText != null ? blockedText.hashCode() : 0);
-        result = 31 * result + (cash != null ? cash.hashCode() : 0);
-        result = 31 * result + (avatarURL != null ? avatarURL.hashCode() : 0);
-        return result;
+        return Objects.hash(id, name, email, password, type, isBlocked, blockedText, cash, bonus, avatarURL);
     }
-
 }

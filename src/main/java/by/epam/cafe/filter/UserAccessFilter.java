@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebFilter(filterName = "userAccessFilter",
-        urlPatterns = {"/jsp/user/profile.jsp", "/jsp/user/change_avatar.jsp", "/jsp/user/change_password.jsp"},
+        urlPatterns = {"/pages/profile.jsp", "/pages/change_avatar.jsp", "/pages/change_password.jsp"},
         dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
 public class UserAccessFilter implements Filter {
     public void init(FilterConfig fConfig) throws ServletException {

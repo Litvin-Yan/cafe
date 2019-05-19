@@ -1,60 +1,24 @@
 package by.epam.cafe.receiver.impl;
 
-import by.epam.cafe.constant.SQLFieldConstant;
 import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.dao.TransactionManager;
 import by.epam.cafe.dao.impl.*;
-import by.epam.cafe.entity.CompetitionTypeEntity;
-import by.epam.cafe.entity.KindOfSportEntity;
-import by.epam.cafe.entity.NewsEntity;
+import by.epam.cafe.entity.OrderDataEntity;
+import by.epam.cafe.entity.ProductEntity;
 import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.CommonReceiver;
-import by.epam.cafe.type.MailType;
 import by.epam.cafe.type.UploadType;
-import by.epam.cafe.util.Formatter;
-import by.epam.cafe.util.MailSender;
-import by.epam.cafe.util.Packer;
-import by.epam.cafe.validator.impl.CommonValidatorImpl;
-import by.epam.cafe.validator.impl.UserValidatorImpl;
 import com.google.gson.JsonObject;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static by.epam.cafe.constant.GeneralConstant.*;
-import static by.epam.cafe.constant.RequestNameConstant.EMAIL;
 import static javax.servlet.jsp.PageContext.SESSION;
 
 public class CommonReceiverImpl implements CommonReceiver {
-
-    @Override
-    public void sendQuestionEmail(RequestContent content) throws ReceiverException {
-        UserValidatorImpl userValidator = new UserValidatorImpl();
-        CommonValidatorImpl commonValidator = new CommonValidatorImpl();
-        HashMap<String, Object> data = new HashMap<>();
-        String[] emailArr = content.getRequestParameters().get(EMAIL);
-        String[] textArr = content.getRequestParameters().get(TEXT);
-
-        if (commonValidator.isVarExist(emailArr) &&
-                commonValidator.isVarExist(textArr) &&
-                userValidator.checkEmail(emailArr[0])) {
-
-            MailSender sender = new MailSender(emailArr[0], textArr[0], MailType.EMAIL.getValue());
-            sender.start();
-            data.put(SUCCESS, true);
-            content.getSessionAttributes().put(TEMPORARY, data);
-
-        } else {
-            data.put(WRONG_DATA, true);
-            content.getSessionAttributes().put(TEMPORARY, data);
-        }
-
-
-    }
-
 
     @Override
     public void changeLocale(RequestContent requestContent) throws ReceiverException {
@@ -65,34 +29,16 @@ public class CommonReceiverImpl implements CommonReceiver {
         requestContent.setAjaxResult(object);
     }
 
-
     @Override
     public void openMainPage(RequestContent content) throws ReceiverException {
-        Packer packer = new Packer();
-        Formatter newsFormatter = new Formatter();
         UserEntity user = (UserEntity)  content.getSessionAttributes().get(USER);
-
         TransactionManager handler = new TransactionManager();
         try {
-            NewsDAOImpl newsDAO = new NewsDAOImpl();
-            CompetitionDAOImpl competitionDAO = new CompetitionDAOImpl();
-            KindOfSportDAOImpl kindOfSportDAO = new KindOfSportDAOImpl();
-            CompetitorDAOImpl competitorDAO = new CompetitorDAOImpl();
+            ProductDAOImpl productDAO = new ProductDAOImpl();
+            OrderDAOImpl orderDAO = new OrderDAOImpl();
             UserDAOImpl userDAO = new UserDAOImpl();
-            handler.beginTransaction(newsDAO, competitionDAO,
-                    kindOfSportDAO, competitorDAO, userDAO);
-
-            List<Map<String, Object>> kindOfSportList = kindOfSportDAO.findUsingKindsOfSport();
-            List<NewsEntity> newsList = newsDAO.findLimit(0, COUNT_NEWS_ON_MAIN_PAGE);
-
-            List<Map<String, Object>> upcomingGames = competitionDAO.findLimitUpcomingGames(0,
-                    COUNT_COMPETITIONS_ON_MAIN_PAGE, true);
-
-            List<Map<String, Object>> pastGames = competitionDAO.findLimitPastGames(0,
-                            COUNT_COMPETITIONS_ON_MAIN_PAGE, true, true);
-
-            extractCompetitors(upcomingGames, competitorDAO);
-            extractCompetitors(pastGames, competitorDAO);
+            OrderDataDAOImpl orderDataDAO = new OrderDataDAOImpl();
+            handler.beginTransaction(productDAO, orderDAO, userDAO);
 
             if (user != null) {
                 user = userDAO.findEntityById(user.getId());
@@ -100,16 +46,13 @@ public class CommonReceiverImpl implements CommonReceiver {
             handler.commit();
             handler.endTransaction();
 
-            Map<KindOfSportEntity, List<CompetitionTypeEntity>> kindsOfSportResult =
-                    packer.orderKindsOfSport(kindOfSportList);
+            List<ProductEntity> productList = productDAO.findAll();
+            List<OrderDataEntity> orderDataEntityList = orderDataDAO.findAll();
 
-            newsFormatter.formatNewsForPreview(newsList);
             content.getSessionAttributes().put(SESSION, true);
-            content.getRequestAttributes().put(NEWS_LIST, newsList);
-            content.getRequestAttributes().put(UPCOMING_GAMES, upcomingGames);
-            content.getRequestAttributes().put(PAST_GAMES, pastGames);
-            content.getSessionAttributes().put(KINDS_OF_SPORT_LEFT_BAR, kindsOfSportResult);
-            content.getSessionAttributes().put(NEWS_IMAGE_PATH, UploadType.NEWS.getUploadFolder());
+            content.getRequestAttributes().put(PRODUCT_LIST, productList);
+            content.getRequestAttributes().put(ORDER_DATA, orderDataEntityList);
+            content.getSessionAttributes().put(PRODUCTS_IMAGE_PATH, UploadType.PRODUCT.getUploadFolder());
             content.getSessionAttributes().put(USER_IMAGE_PATH, UploadType.AVATARS.getUploadFolder());
             content.getSessionAttributes().put(USER, user);
 
@@ -121,16 +64,6 @@ public class CommonReceiverImpl implements CommonReceiver {
                 throw new ReceiverException("Open main page rollback error", e);
             }
             throw new ReceiverException(e);
-        }
-    }
-
-    private void extractCompetitors(List<Map<String, Object>> competitions,
-                                    CompetitorDAOImpl competitorDAO) throws DAOException {
-
-        for (Map<String, Object> competition : competitions) {
-            int compId = (int) competition.get(SQLFieldConstant.Competition.ID);
-            List<Map<String, Object>> competitors = competitorDAO.findWithTeamByGameId(compId);
-            competition.put(COMPETITORS, competitors);
         }
     }
 
@@ -162,7 +95,5 @@ public class CommonReceiverImpl implements CommonReceiver {
             }
             throw new ReceiverException(e);
         }
-
-
     }
 }

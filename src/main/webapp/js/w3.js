@@ -16,7 +16,7 @@ function dropDown(className) {
     }
 }
 
-// Used to toggle the menu on smaller screens when clicking on the menu button
+// Used to toggle the product on smaller screens when clicking on the product button
 function openNav() {
     var x = document.getElementById("navDemo");
     if (x.className.indexOf("w3-show") == -1) {
@@ -44,7 +44,7 @@ function closeSidebar() {
 
 function changeLanguage(element) {
 
-    var dataString = "locale=" + element.value + "&command=change_locale";
+    const dataString = "locale=" + element.value + "&command=change_locale";
 
     $.ajax({
         type: "POST",

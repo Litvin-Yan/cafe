@@ -17,7 +17,4 @@ final public class RequestNameConstant {
 
     private RequestNameConstant() {
     }
-
-
-
 }

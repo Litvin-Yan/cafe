@@ -1,35 +1,27 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="ctg" uri="customtags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <fmt:setLocale value="${sessionScope.get('locale')}" scope="session"/>
 <fmt:setBundle basename="locale/text" var="rb"/>
-<c:set var="user" value="${sessionScope.get('user')}"/>
+<c:set var="userEntity" value="${sessionScope.get('user')}"/>
 
 <fmt:message bundle="${rb}" key="lbl.SignIn" var="signIn"/>
 <fmt:message bundle="${rb}" key="lbl.SignUp" var="signUp"/>
 <fmt:message bundle="${rb}" key="lbl.SignOut" var="signOut"/>
 <fmt:message bundle="${rb}" key="lbl.title" var="cafe"/>
-<fmt:message bundle="${rb}" key="lbl.Settings" var="settings"/>
 <fmt:message bundle="${rb}" key="lbl.Profile" var="profile"/>
-<fmt:message bundle="${rb}" key="lbl.Menu" var="menu"/>
-<fmt:message bundle="${rb}" key="lbl.Live" var="live"/>
+<fmt:message bundle="${rb}" key="lbl.Menu" var="menuEntity"/>
 <fmt:message bundle="${rb}" key="lbl.Comments" var="comments"/>
-<fmt:message bundle="${rb}" key="lbl.Help" var="help"/>
-<fmt:message bundle="${rb}" key="lbl.AboutCompany" var="aboutCompany"/>
-<fmt:message bundle="${rb}" key="lbl.Rules" var="rules"/>
 <fmt:message bundle="${rb}" key="lbl.Basket" var="basket"/>
-<fmt:message bundle="${rb}" key="lbl.Past" var="past"/>
 <fmt:message bundle="${rb}" key="txt.admin.panel" var="txtAdminPanel"/>
 
 
 <html>
 <head>
-    <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8"/>
+    <link rel="icon" href="${pageContext.request.contextPath}/image/favicon.png">
     <title >${cafe}</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/w3.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/w3-theme-black.css">
     <link rel='stylesheet' href='${pageContext.request.contextPath}/css/style.css'>
@@ -46,8 +38,8 @@
                 <i class="fa fa-bars"></i>
             </a>
             <c:choose>
-                <%--Present if user signed--%>
-                <c:when test="${user != null}">
+                <%--Present if userEntity signed--%>
+                <c:when test="${userEntity != null}">
                     <div class="w3-bar-item w3-dropdown-hover w3-right w3-hide-small" style="padding: 0">
                         <form action="${pageContext.request.contextPath}/generalController">
                             <input type="hidden" name="command" value="OPEN_PROFILE">
@@ -56,16 +48,16 @@
                                 <div class="w3-col s8">
                                     <div class="w3-row w3-right-align w3-small">
                                         <div class="w3-text-amber w3-col s12 w3-padding-small">
-                                            <c:out value="${user.name}"/>
+                                            <c:out value="${userEntity.name}"/>
                                         </div>
                                         <div class="w3-text-amber w3-col s12 w3-padding-small">
-                                            <ctg:decimal-presenter number="${user.cash}"/>$
+                                            <ctg:decimal-presenter number="${userEntity.cash}"/>$
                                         </div>
                                     </div>
                                 </div>
                                 <div class="w3-col s4">
                                     <img style="width:50px" class="w3-circle"
-                                         src="${userImagePath}${user.avatarURL}"/>
+                                         src="${userImagePath}${userEntity.avatarURL}"/>
                                 </div>
                             </div>
                             </button>
@@ -75,7 +67,7 @@
                                 <input type="hidden" name="command" value="OPEN_PROFILE">
                                 <input type="submit" class="w3-text-amber w3-bar-item w3-button" value="${profile}"/>
                             </form>
-                            <c:if test="${user.type.toString().equals('ADMIN')}">
+                            <c:if test="${userEntity.type.toString().equals('ADMIN')}">
                                 <form action="${pageContext.request.contextPath}/generalController" method="post">
                                     <input type="hidden" name="command" value="OPEN_ADMIN_STATISTIC">
                                     <input type="submit" class="w3-text-amber w3-bar-item w3-button" value="${txtAdminPanel}"/>
@@ -88,7 +80,7 @@
                         </div>
                     </div>
                 </c:when>
-                <%--Present if user not signed--%>
+                <%--Present if userEntity not signed--%>
                 <c:otherwise>
                     <div class="w3-bar-item w3-hide-small w3-right w3-padding-16 w3-small">
                         <a href="${pageContext.request.contextPath}/pages/sign_up.jsp" class="w3-text-amber w3-hover-text-white">
@@ -108,21 +100,21 @@
                 <c:out value="${cafe}"/>
             </a>
             <div class="w3-left w3-hide-small w3-center w3-padding-small w3-medium">
-                <form action="${pageContext.request.contextPath}/menu.jsp"
+                <form action="${pageContext.request.contextPath}/generalController"
                       class="w3-bar-item w3-padding-small">
                     <input type="hidden" name="command" value="OPEN_MENU">
                     <input type="submit"
                            class="w3-button w3-hide-small w3-padding-small w3-text-amber w3-hover-none w3-hover-text-white"
-                           value="<c:out value='${menu}'/>">
+                           value="<c:out value='${menuEntity}'/>">
                 </form>
-                <form action="${pageContext.request.contextPath}/basket.jsp"
+                <form action="${pageContext.request.contextPath}/generalController"
                       class="w3-bar-item w3-padding-small">
                     <input type="hidden" name="command" value="OPEN_BASKET">
                     <input type="submit"
                            class="w3-button w3-hide-small w3-padding-small w3-text-amber w3-hover-none w3-hover-text-white"
                            value="<c:out value='${basket}'/>">
                 </form>
-                <form action="${pageContext.request.contextPath}/comments.jsp"
+                <form action="${pageContext.request.contextPath}/generalController"
                       class="w3-bar-item w3-padding-small">
                     <input type="hidden" name="command" value="OPEN_COMMENTS">
                     <input type="submit"
@@ -135,3 +127,4 @@
 </header>
 <div id="wrapper">
     <div id="top">
+        <script src="../js/w3.js"></script>

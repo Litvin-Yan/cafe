@@ -15,9 +15,9 @@ public abstract class CommentDAO extends DAO<CommentEntity> {
     public abstract void changeLockCommentById(int commentId, boolean changeValue) throws DAOException;
 
     /**
-     * Delete news by id
+     * Delete product by id
      *
-     * @param newsId news id
+     * @param newsId product id
      * @return success delete
      * @throws DAOException when sql request error
      */

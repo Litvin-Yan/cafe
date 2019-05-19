@@ -1,5 +1,6 @@
 package by.epam.cafe.dao;
 
+import by.epam.cafe.entity.OrderEntity;
 import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
 
@@ -71,12 +72,12 @@ public abstract class UserDAO extends DAO<UserEntity> {
     public abstract boolean updateLock(UserEntity entity) throws DAOException;
 
     /**
-     * Return money for bets
+     * Return money for canceled order.
      *
-     * @param competitionId competition id
+     * @param entity order
      * @throws DAOException when sql request error
      */
-    public abstract void returnMoneyForBets(int competitionId) throws DAOException;
+    public abstract void returnMoneyForCanceledOrder(OrderEntity entity) throws DAOException;
 
     /**
      * Update user cash

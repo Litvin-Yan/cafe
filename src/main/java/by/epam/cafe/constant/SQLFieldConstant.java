@@ -2,6 +2,7 @@ package by.epam.cafe.constant;
 
 
 final public class SQLFieldConstant {
+
     private SQLFieldConstant() {
     }
 
@@ -9,86 +10,49 @@ final public class SQLFieldConstant {
         private static final String USER = "user_";
         public static final String ID =  USER + "id";
         public static final String NAME = USER + "name";
+        public static final String TYPE = USER + "type";
         public static final String EMAIL = USER + "email";
         public static final String PASSWORD = USER + "password";
-        public static final String CONFIRM_URL = USER + "confirm_url";
-        public static final String IS_CONFIRM = USER + "is_confirm";
+        public static final String MONEY = USER + "money";
         public static final String IS_BLOCKED = USER + "is_blocked";
-        public static final String CASH = USER + "cash";
-        public static final String TYPE = USER + "type";
-        public static final String BLOCKED_TEXT = USER + "blocked_text";
+        public static final String BONUS = USER + "bonus";
         public static final String AVATAR_URL = USER + "avatar_url";
     }
 
-    public final class News {
-        private static final String NEWS = "news_";
-        public static final String ID = NEWS + "id";
-        public static final String TITLE = NEWS + "title";
-        public static final String IMAGE_URL = NEWS + "image_url";
-        public static final String TEXT = NEWS + "text";
-        public static final String DATE_CREATION = NEWS + "date_creation";
+    public final class Order {
+        private static final String ORDER = "order_";
+        public static final String ID = ORDER + "id";
+        public static final String PAID = ORDER + "paid";
+        public static final String PAYMENT_METHOD = ORDER + "payment_method";
+        public static final String BONUS = ORDER + "bonus";
+        public static final String USER_ID = "user_id";
+        public static final String EXPECTED_TIME = ORDER + "expected_time";
+        public static final String TIME = ORDER + "time";
     }
 
     public final class Comment {
         private static final String COMMENT = "comment_";
-        public static final String ID = COMMENT + "id";
-        public static final String TEXT = COMMENT + "text";
+        public static final String CONTENT = COMMENT + "content";
+        public static final String RATE = COMMENT + "rate";
+        public static final String POST_DATE = COMMENT + "date";
         public static final String IS_BLOCKED = COMMENT + "is_blocked";
-        public static final String POST_DATE = COMMENT + "post_date";
+        public static final String ORDER_ID = "order_id";
     }
 
-    public final class TEAM {
-        public static final String KIND_OF_SPORT_ID = "kind_of_sport_id";
-        private static final String TEAM = "team_";
-        public static final String ID = TEAM + "id";
-        public static final String NAME = TEAM + "name";
+    public final class Product {
+        private static final String PRODUCT = "product_";
+        public static final String ID = PRODUCT + "id";
+        public static final String NAME = PRODUCT + "name";
+        public static final String TYPE = PRODUCT + "type";
+        public static final String PRICE = PRODUCT + "price";
+        public static final String AVATAR_URL = PRODUCT + "avatar_url";
+        public static final String INGREDIENTS = PRODUCT + "ingredients";
     }
-
-    public final class CompetitionType {
-        private static final String COMPETITION_TYPE = "competition_type_";
-        public static final String ID = COMPETITION_TYPE + "id";
-        public static final String NAME = COMPETITION_TYPE + "name";
+    public final class OrderData {
+        public static final String ORDER_ID = "order_data_";
+        public static final String PRODUCT_ID = "product_id";
+        public static final String NUMBER = "number";
+        public static final String PRODUCT_PRICE = "product_price";
     }
-
-    public final class Competition {
-        private static final String COMPETITION = "competition_";
-        public static final String ID = COMPETITION + "id";
-        public static final String NAME = COMPETITION + "name";
-        public static final String DESCRIPTION = COMPETITION + "description";
-        public static final String DATE_START = COMPETITION + "date_start";
-        public static final String DATE_FINISH = COMPETITION + "date_finish";
-        public static final String TOTAL = COMPETITION + "total";
-        public static final String MORE_TOTAL_COEFF = COMPETITION + "more_total_coeff";
-        public static final String LESS_TOTAL_COEFF = COMPETITION + "less_total_coeff";
-        public static final String STANDOFF_COEFF = COMPETITION + "standoff_coeff";
-        public static final String IS_ACTIVE = COMPETITION + "is_active";
-        public static final String IS_RESULT_FILLED = COMPETITION + "is_result_filled";
-
-    }
-
-    public final class KindOfSport {
-        public static final String COMPETITOR_COUNT = "competitor_count";
-        private static final String KIND_OF_SPORT = "kind_of_sport_";
-        public static final String ID = KIND_OF_SPORT + "id";
-        public static final String NAME = KIND_OF_SPORT + "name";
-    }
-
-    public final class Competitor {
-        private static final String COMPETITOR = "competitor_";
-        public static final String ID = COMPETITOR + "id";
-        public static final String IS_WIN = COMPETITOR + "is_win";
-        public static final String WIN_COEFF =  COMPETITOR + "win_coeff";
-        public static final String RESULT = COMPETITOR + "result";
-    }
-
-    public final class Bet {
-        private static final String BET = "bet_";
-        public static final String ID = BET + "id";
-        public static final String CASH = BET + "cash";
-        public static final String IS_WIN = BET + "is_win";
-        public static final String TOTAL = BET + "total";
-        public static final String IS_ACTIVE = BET + "is_active";
-    }
-
 }
 

@@ -64,7 +64,7 @@ public class CommentReceiverImpl implements CommentReceiver {
         CommonValidatorImpl commonValidator = new CommonValidatorImpl();
         CommentValidatorImpl commentValidator = new CommentValidatorImpl();
         UserEntity user = (UserEntity) content.getSessionAttributes().get(GeneralConstant.USER);
-        String[] stringNewsId = content.getRequestParameters().get(GeneralConstant.NEWS_ID);
+        String[] stringNewsId = content.getRequestParameters().get(GeneralConstant.PRODUCT_ID);
         String[] commentTextArr = content.getRequestParameters().get(GeneralConstant.TEXT);
 
 

@@ -37,6 +37,7 @@ public class GeneralConstant {
     public static final String USER = "user";
     public static final String ORDER_DATA = "orderData";
     public static final String PRODUCT_LIST = "productList";
+    public static final String PRODUCT_TYPE_LIST = "productTypeList";
     public static final String STATISTIC_MAP = "statisticMap";
     public static final String NAME = "name";
     public static final String USER_LIST = "userList";
@@ -58,6 +59,7 @@ public class GeneralConstant {
     public static final String REGISTERED_COUNT = "registeredCount";
     public static final String LOCKED_COUNT = "lockedCount";
     public static final String PRODUCT_COUNT = "productCount";
+    public static final String PRODUCT_TYPE_COUNT = "productTypeCount";
     public static final String TYPE_ID = "typeId";
     public static final String TITLE = "title";
     public static final String PRODUCT_IMAGE_URL = "productImageUrl";
@@ -78,7 +80,7 @@ public class GeneralConstant {
     public static final String LITTLE_MONEY = "littleMoney";
     public static final String IMAGE = "image";
     public static final String LIMIT = "limit";
-    public static final int COUNT_PRODUCTS_ON_PAGE = 4;
+    public static final int COUNT_PRODUCTS_ON_PAGE = 5;
     public static final int COUNT_USERS_ON_PAGE = 5;
 
     private GeneralConstant() {

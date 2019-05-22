@@ -5,7 +5,6 @@ import by.epam.cafe.constant.SQLFieldConstant;
 import by.epam.cafe.dao.ProductDAO;
 import by.epam.cafe.entity.ProductEntity;
 import by.epam.cafe.exception.DAOException;
-import by.epam.cafe.type.ProductType;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -69,6 +68,10 @@ public class ProductDAOImpl extends ProductDAO {
             "UPDATE product  " +
                     "SET product_image_url = ? " +
                     "WHERE product_id = ? ;";
+
+    public static final String FIND_PRODUCT_TYPE =
+            "SELECT DISTINCT product.product_type  " +
+                    "FROM product;";
 
     @Override
     public List<ProductEntity> findAll() throws DAOException {
@@ -179,10 +182,10 @@ public class ProductDAOImpl extends ProductDAO {
         return null;
     }
 
-    public List<ProductEntity> findProductByType(ProductType productType) throws DAOException {
+    public List<ProductEntity> findProductByType(String  productType) throws DAOException {
         List<ProductEntity> foundProducts = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(FIND_PRODUCT_BY_TYPE)) {
-            statement.setString(1, productType.toString());
+            statement.setString(1, productType);
             ResultSet result = statement.executeQuery();
             for (int i = 0; result.next(); i++ ){
                 foundProducts.add(extractProducts(result).get(i));
@@ -229,12 +232,22 @@ public class ProductDAOImpl extends ProductDAO {
             product.setImageURL(resultSet.getString(SQLFieldConstant.Product.IMAGE_URL));
             product.setName(resultSet.getString(SQLFieldConstant.Product.NAME));
             product.setIngredients(resultSet.getString(SQLFieldConstant.Product.INGREDIENTS));
-            String productTypeStr = resultSet.getString(SQLFieldConstant.Product.TYPE);
-            product.setProductType(ProductType.valueOf(productTypeStr));
+            product.setProductType(resultSet.getString(SQLFieldConstant.Product.TYPE));
             productList.add(product);
         }
         return productList;
     }
+
+//    private List<String> extractProductType(ResultSet resultSet) throws SQLException {
+//
+//        List<String> productTypes = new ArrayList<>();
+//
+//        while (resultSet.next()) {
+//            String productType = ;
+//            productTypes.add(productType);
+//        }
+//        return productTypes;
+//    }
 
     public int createAndGetId(ProductEntity entity) throws DAOException {
         int productId = 0;
@@ -261,12 +274,25 @@ public class ProductDAOImpl extends ProductDAO {
 
             statement.setString(1, entity.getImageURL());
             statement.setInt(2, entity.getId());
-
             isUpdated = statement.executeUpdate() == 1;
 
         } catch (SQLException e) {
             throw new DAOException("Update product error ", e);
         }
         return isUpdated;
+    }
+
+    public List<String> findProductType()throws DAOException{
+        List<String> foundProductTypes = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(FIND_PRODUCT_TYPE)) {
+            ResultSet result = statement.executeQuery();
+            while (result.next()){
+                String productType = result.getString(SQLFieldConstant.Product.TYPE);
+                foundProductTypes.add(productType);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Find product types error ", e);
+        }
+        return foundProductTypes;
     }
 }

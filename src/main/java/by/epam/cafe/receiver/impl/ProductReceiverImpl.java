@@ -42,6 +42,8 @@ public class ProductReceiverImpl implements ProductReceiver {
             ProductDAOImpl productDAO = new ProductDAOImpl();
             handler.beginTransaction(productDAO);
             List<ProductEntity> productsList = productDAO.findWithLimit(startIndex, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
+            List<String> productTypeList = productDAO.findProductType();
+            int productTypeCount = productTypeList.size();
             int productCount = productDAO.findProductCount();
             handler.commit();
             handler.endTransaction();
@@ -52,9 +54,11 @@ public class ProductReceiverImpl implements ProductReceiver {
             }
 
             content.getRequestAttributes().put(GeneralConstant.PRODUCT_LIST, productsList);
+            content.getRequestAttributes().put(GeneralConstant.PRODUCT_TYPE_LIST, productTypeList);
             content.getRequestAttributes().put(GeneralConstant.LIMIT, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
             content.getRequestAttributes().put(GeneralConstant.PRODUCT_COUNT, productCount);
             content.getRequestAttributes().put(GeneralConstant.PRODUCTS_IMAGE_PATH, UploadType.PRODUCTS.getUploadFolder());
+            content.getRequestAttributes().put(GeneralConstant.PRODUCT_TYPE_COUNT, productTypeCount);
 
         } catch (DAOException e) {
             try {

@@ -4,9 +4,7 @@
 <fmt:message bundle="${rb}" key="lbl.Menu" var="txtMenu"/>
 <fmt:message bundle="${rb}" key="txt.button.in.basket" var="txtButton"/>
 <fmt:message bundle="${rb}" key="txt.gramm" var="txtGramm"/>
-<br>
-<br>
-<br>
+<fmt:message bundle="${rb}" key="txt.choose.product.type" var="txtChooseProductType"/>
 <br>
 <table class="products w3-table w3-centered">
     <thead>
@@ -17,9 +15,9 @@
             </span>
             <select id="selectProductType" required name="productId" class="w3-select">
                 <option value='' selected disabled><c:out value="${txtChooseProductType}"/></option>
-                <c:forEach var="productType" items="${productType}">
-                    <option value="${product.id}" count="${product.typeCount}">
-                        <c:out value="${product.type}"/>
+                <c:forEach var="productType" items="${productTypeList}">
+                    <option value="${productType}" count="${productTypeCount}" onclick="">
+                        <c:out value="${productType}"/>
                     </option>
                 </c:forEach>
             </select>

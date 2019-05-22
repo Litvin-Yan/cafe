@@ -2,7 +2,6 @@ package by.epam.cafe.dao;
 
 import by.epam.cafe.entity.ProductEntity;
 import by.epam.cafe.exception.DAOException;
-import by.epam.cafe.type.ProductType;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public abstract class ProductDAO extends DAO<ProductEntity> {
      * @return productEntity
      * @throws DAOException when sql request error
      */
-    public abstract List<ProductEntity> findProductByType(ProductType type) throws DAOException;
+    public abstract List<ProductEntity> findProductByType(String type) throws DAOException;
 
     /**
      * Update product type

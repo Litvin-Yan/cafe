@@ -1,7 +1,5 @@
 package by.epam.cafe.entity;
 
-import by.epam.cafe.type.ProductType;
-
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -9,7 +7,7 @@ public class ProductEntity extends Entity {
 
     private int id;
     private String name;
-    private ProductType productType;
+    private String productType;
     private BigDecimal price;
     private String imageURL;
     private String ingredients;
@@ -39,11 +37,11 @@ public class ProductEntity extends Entity {
         this.name = name;
     }
 
-    public ProductType getProductType() {
+    public String getProductType() {
         return productType;
     }
 
-    public void setProductType(ProductType productType) {
+    public void setProductType(String productType) {
         this.productType = productType;
     }
 

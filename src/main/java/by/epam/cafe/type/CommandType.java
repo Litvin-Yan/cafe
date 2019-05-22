@@ -4,6 +4,7 @@ import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.command.comment.ChangeLockCommentCommand;
 import by.epam.cafe.command.comment.CreateCommentCommand;
 import by.epam.cafe.command.common.*;
+import by.epam.cafe.command.product.OpenMenuCommand;
 import by.epam.cafe.command.user.*;
 import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.exception.ReceiverException;
@@ -115,8 +116,13 @@ public enum CommandType {
         public void doReceiver(RequestContent content) throws ReceiverException {
             ((UserReceiverImpl) getCommand().getReceiver()).changeLock(content);
         }
-    };
+    },
 
+    OPEN_MENU(new OpenMenuCommand(new ProductReceiverImpl())) {
+        public void doReceiver(RequestContent content) throws ReceiverException {
+            ((ProductReceiverImpl) getCommand().getReceiver()).openMenuPage(content);
+        }
+    };
 
 
     private AbstractCommand command;

@@ -12,6 +12,7 @@
 <fmt:message bundle="${rb}" key="lbl.title" var="cafe"/>
 <fmt:message bundle="${rb}" key="lbl.Profile" var="profile"/>
 <fmt:message bundle="${rb}" key="lbl.Menu" var="menuEntity"/>
+<fmt:message bundle="${rb}" key="lbl.Product" var="product"/>
 <fmt:message bundle="${rb}" key="lbl.Comments" var="comments"/>
 <fmt:message bundle="${rb}" key="lbl.Basket" var="basket"/>
 <fmt:message bundle="${rb}" key="txt.admin.panel" var="txtAdminPanel"/>
@@ -22,10 +23,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8"/>
     <link rel="icon" href="${pageContext.request.contextPath}/image/favicon.png">
     <title >${cafe}</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/w3.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/w3-theme-black.css">
-    <link rel='stylesheet' href='${pageContext.request.contextPath}/css/style.css'>
-    <link rel='stylesheet' href='${pageContext.request.contextPath}/css/open-sans.css'>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/open-sans.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
@@ -82,7 +84,7 @@
                 </c:when>
                 <%--Present if userEntity not signed--%>
                 <c:otherwise>
-                    <div class="w3-bar-item w3-hide-small w3-right w3-padding-16 w3-small">
+                    <div class="w3-bar-item w3-hide-small w3-right w3-padding-16 w3-small w3-margin-bottom">
                         <a href="${pageContext.request.contextPath}/pages/sign_up.jsp" class="w3-text-amber w3-hover-text-white">
                             <c:out value="${signUp}"/>
                         </a>
@@ -96,10 +98,10 @@
                 </c:otherwise>
             </c:choose>
             <a href="${pageContext.request.contextPath}/index.jsp"
-               class="w3-bar-item w3-button w3-padding w3-text-amber w3-xlarge  w3-hover-none w3-hover-text-white">
+               class="w3-bar-item w3-button w3-padding w3-text-amber w3-xlarge w3-hover-none w3-hover-text-white">
                 <c:out value="${cafe}"/>
             </a>
-            <div class="w3-left w3-hide-small w3-center w3-padding-small w3-medium">
+            <div class="w3-left w3-hide-small w3-center w3-padding-small w3-medium w3-margin-bottom">
                 <form action="${pageContext.request.contextPath}/generalController"
                       class="w3-bar-item w3-padding-small">
                     <input type="hidden" name="command" value="OPEN_MENU">

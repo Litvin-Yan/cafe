@@ -39,10 +39,10 @@ public class ProductReceiverImpl implements ProductReceiver {
         int startIndex = formatter.formatToStartIndex(page, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
         TransactionManager handler = new TransactionManager();
         try {
-            ProductDAOImpl newsDAO = new ProductDAOImpl();
-            handler.beginTransaction(newsDAO);
-            List<ProductEntity> productsList = newsDAO.findLimit(startIndex, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
-            int newsCount = newsDAO.findProductCount();
+            ProductDAOImpl productDAO = new ProductDAOImpl();
+            handler.beginTransaction(productDAO);
+            List<ProductEntity> productsList = productDAO.findWithLimit(startIndex, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
+            int productCount = productDAO.findProductCount();
             handler.commit();
             handler.endTransaction();
 
@@ -53,8 +53,8 @@ public class ProductReceiverImpl implements ProductReceiver {
 
             content.getRequestAttributes().put(GeneralConstant.PRODUCT_LIST, productsList);
             content.getRequestAttributes().put(GeneralConstant.LIMIT, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
-            content.getRequestAttributes().put(GeneralConstant.PRODUCT_COUNT, newsCount);
-            content.getRequestAttributes().put(GeneralConstant.PRODUCTS_IMAGE_PATH, UploadType.PRODUCT.getUploadFolder());
+            content.getRequestAttributes().put(GeneralConstant.PRODUCT_COUNT, productCount);
+            content.getRequestAttributes().put(GeneralConstant.PRODUCTS_IMAGE_PATH, UploadType.PRODUCTS.getUploadFolder());
 
         } catch (DAOException e) {
             try {
@@ -62,7 +62,7 @@ public class ProductReceiverImpl implements ProductReceiver {
                 handler.endTransaction();
 
             } catch (DAOException e1) {
-                throw new ReceiverException("Open all news rollback error", e);
+                throw new ReceiverException("Open menu rollback error", e);
             }
             throw new ReceiverException(e);
         }
@@ -75,7 +75,7 @@ public class ProductReceiverImpl implements ProductReceiver {
     public void createProduct(RequestContent content) throws ReceiverException {
         ProductValidatorImpl productValidator = new ProductValidatorImpl();
         CommonValidatorImpl validator = new CommonValidatorImpl();
-        File uploadPath = new File(content.getRealPath(), UploadType.PRODUCT.getUploadFolder());
+        File uploadPath = new File(content.getRealPath(), UploadType.PRODUCTS.getUploadFolder());
         ImageUploader uploader = new ImageUploader();
 
         String[] stringPointX1 = content.getRequestParameters().get(GeneralConstant.POINT_X1);
@@ -162,7 +162,7 @@ public class ProductReceiverImpl implements ProductReceiver {
         int newsId = Integer.valueOf(content.getRequestParameters().get(GeneralConstant.PRODUCT_ID)[0]);
         String newsImageUrl = content.getRequestParameters().get(GeneralConstant.PRODUCT_IMAGE_URL)[0];
 
-        File directoryPath = new File(content.getRealPath(), UploadType.PRODUCT.getUploadFolder());
+        File directoryPath = new File(content.getRealPath(), UploadType.PRODUCTS.getUploadFolder());
         File file = new File(directoryPath, newsImageUrl);
 
         TransactionManager manager = new TransactionManager();

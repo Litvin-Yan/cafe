@@ -52,7 +52,7 @@ public class CommonReceiverImpl implements CommonReceiver {
             content.getSessionAttributes().put(SESSION, true);
             content.getRequestAttributes().put(PRODUCT_LIST, productList);
             content.getRequestAttributes().put(ORDER_DATA, orderDataEntityList);
-            content.getSessionAttributes().put(PRODUCTS_IMAGE_PATH, UploadType.PRODUCT.getUploadFolder());
+            content.getSessionAttributes().put(PRODUCTS_IMAGE_PATH, UploadType.PRODUCTS.getUploadFolder());
             content.getSessionAttributes().put(USER_IMAGE_PATH, UploadType.AVATARS.getUploadFolder());
             content.getSessionAttributes().put(USER, user);
 

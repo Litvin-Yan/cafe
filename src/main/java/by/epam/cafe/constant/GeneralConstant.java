@@ -78,8 +78,8 @@ public class GeneralConstant {
     public static final String LITTLE_MONEY = "littleMoney";
     public static final String IMAGE = "image";
     public static final String LIMIT = "limit";
-    public static final int COUNT_PRODUCTS_ON_PAGE = 2;
-    public static final int COUNT_USERS_ON_PAGE = 10;
+    public static final int COUNT_PRODUCTS_ON_PAGE = 4;
+    public static final int COUNT_USERS_ON_PAGE = 5;
 
     private GeneralConstant() {
     }

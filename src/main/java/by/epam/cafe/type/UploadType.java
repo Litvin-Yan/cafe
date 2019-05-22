@@ -11,7 +11,7 @@ import static by.epam.cafe.constant.GeneralConstant.UPLOAD_PROPERTIES;
 
 public enum UploadType {
 
-    PRODUCT, AVATARS;
+    PRODUCTS, AVATARS;
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static ResourceBundle jspBundle = ResourceBundle.getBundle(UPLOAD_PROPERTIES);

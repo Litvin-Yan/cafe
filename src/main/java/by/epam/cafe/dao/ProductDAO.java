@@ -15,7 +15,7 @@ public abstract class ProductDAO extends DAO<ProductEntity> {
      * @return products
      * @throws DAOException when sql request error
      */
-    public abstract List<ProductEntity> findLimit(int startIndex, int limit) throws DAOException;
+    public abstract List<ProductEntity> findWithLimit(int startIndex, int limit) throws DAOException;
 
     /**
      * Find products count

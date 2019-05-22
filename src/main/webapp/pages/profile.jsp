@@ -52,9 +52,9 @@
             <%--User info section--%>
             <div class="w3-col m4 w3-container w3-card-2 w3-display-container w3-margin-bottom">
                 <div class="w3-display-topright">
-                    <a href="${pageContext.request.contextPath}/jsp/user/change_avatar.jsp"
+                    <a href="${pageContext.request.contextPath}/pages/change_avatar.jsp"
                        class="w3-button w3-tiny w3-black w3-padding-small w3-display-hover">${txtChangeAvatar}</a>
-                    <a href="${pageContext.request.contextPath}/jsp/user/change_password.jsp"
+                    <a href="${pageContext.request.contextPath}/pages/change_password.jsp"
                        class="w3-button w3-tiny w3-black w3-padding-small w3-display-hover">${txtChangePassword}</a>
                 </div>
                 <div class="w3-col s12 w3-center">

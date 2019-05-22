@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static by.epam.cafe.constant.GeneralConstant.COUNT;
+
 public class ProductDAOImpl extends ProductDAO {
 
     private static final String CREATE_PRODUCT =
@@ -32,6 +34,17 @@ public class ProductDAOImpl extends ProductDAO {
             "SELECT product_id, product_name , product_type, product_price, product_avatar_url, product_ingredients" +
                     "FROM product " +
                     "WHERE product_type = ?;";
+
+    private static final String FIND_LIMIT_PRODUCTS =
+            "SELECT product_id," +
+                    " product_name," +
+                    " product_image_url," +
+                    " product_price," +
+                    " product_type, " +
+                    " product_ingredients " +
+                    "FROM product " +
+                    "ORDER BY product_id DESC " +
+                    "LIMIT ?, ?;";
 
     private static final String FIND_PRODUCT_COUNT =
             "SELECT  " +
@@ -54,7 +67,7 @@ public class ProductDAOImpl extends ProductDAO {
 
     public static final String UPDATE_IMAGE_PATH_PRODUCT =
             "UPDATE product  " +
-                    "SET product_avatar_url = ? " +
+                    "SET product_image_url = ? " +
                     "WHERE product_id = ? ;";
 
     @Override
@@ -85,7 +98,7 @@ public class ProductDAOImpl extends ProductDAO {
         try (PreparedStatement statement = connection.prepareStatement(FIND_PRODUCT_BY_ID)) {
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
-            foundProduct = extractProduct(result);
+            foundProduct = extractProducts(result).get(0);
         } catch (SQLException e) {
             throw new DAOException("Find all users error ", e);
         }
@@ -125,13 +138,40 @@ public class ProductDAOImpl extends ProductDAO {
     }
 
     @Override
-    public List<ProductEntity> findLimit(int startIndex, int limit) throws DAOException {
-        return null;
+    public List<ProductEntity> findWithLimit(int startIndex, int limit) throws DAOException {
+        List<ProductEntity> productList;
+
+        try (PreparedStatement statement = connection.prepareStatement(FIND_LIMIT_PRODUCTS)) {
+            statement.setInt(1, startIndex);
+            statement.setInt(2, limit);
+
+            ResultSet resultSet = statement.executeQuery();
+            productList = extractProducts(resultSet);
+
+        } catch (SQLException e) {
+            throw new DAOException("Find limit news error ", e);
+        }
+
+        return productList;
     }
 
     @Override
     public int findProductCount() throws DAOException {
-        return 0;
+        int countProduct = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(FIND_PRODUCT_COUNT)) {
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                countProduct = resultSet.getInt(COUNT);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Find count products error ", e);
+        }
+
+        return countProduct;
     }
 
     @Override
@@ -144,8 +184,8 @@ public class ProductDAOImpl extends ProductDAO {
         try (PreparedStatement statement = connection.prepareStatement(FIND_PRODUCT_BY_TYPE)) {
             statement.setString(1, productType.toString());
             ResultSet result = statement.executeQuery();
-            while (result.next()){
-                foundProducts.add(extractProduct(result));
+            for (int i = 0; result.next(); i++ ){
+                foundProducts.add(extractProducts(result).get(i));
             }
         } catch (SQLException e) {
             throw new DAOException("Find all users error ", e);
@@ -178,19 +218,22 @@ public class ProductDAOImpl extends ProductDAO {
         return false;
     }
 
-    private ProductEntity extractProduct(ResultSet result) throws SQLException {
-        ProductEntity foundProduct = null;
-        if (result.next()) {
-            foundProduct = new ProductEntity();
-            foundProduct.setId(result.getInt(SQLFieldConstant.Product.ID));
-            foundProduct.setName(result.getString(SQLFieldConstant.Product.NAME));
-            String productType = result.getString(SQLFieldConstant.Product.TYPE);
-            foundProduct.setProductType(ProductType.valueOf(productType));
-            foundProduct.setPrice(result.getBigDecimal(SQLFieldConstant.Product.PRICE));
-            foundProduct.setImageURL(result.getString(SQLFieldConstant.Product.AVATAR_URL));
-            foundProduct.setIngredients(result.getString(SQLFieldConstant.Product.INGREDIENTS));
+    private List<ProductEntity> extractProducts(ResultSet resultSet) throws SQLException {
+
+        List<ProductEntity> productList = new ArrayList<>();
+
+        while (resultSet.next()) {
+            ProductEntity product = new ProductEntity();
+            product.setId(resultSet.getInt(SQLFieldConstant.Product.ID));
+            product.setPrice(resultSet.getBigDecimal(SQLFieldConstant.Product.PRICE));
+            product.setImageURL(resultSet.getString(SQLFieldConstant.Product.IMAGE_URL));
+            product.setName(resultSet.getString(SQLFieldConstant.Product.NAME));
+            product.setIngredients(resultSet.getString(SQLFieldConstant.Product.INGREDIENTS));
+            String productTypeStr = resultSet.getString(SQLFieldConstant.Product.TYPE);
+            product.setProductType(ProductType.valueOf(productTypeStr));
+            productList.add(product);
         }
-        return foundProduct;
+        return productList;
     }
 
     public int createAndGetId(ProductEntity entity) throws DAOException {

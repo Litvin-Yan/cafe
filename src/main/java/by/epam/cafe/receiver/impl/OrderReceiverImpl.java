@@ -16,16 +16,13 @@ import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.OrderReceiver;
 import by.epam.cafe.type.UploadType;
 import by.epam.cafe.util.Formatter;
-import by.epam.cafe.util.StringEncoder;
 import by.epam.cafe.validator.impl.CommonValidatorImpl;
 import by.epam.cafe.validator.impl.OrderValidatorImpl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static by.epam.cafe.constant.GeneralConstant.ORDER;
 import static by.epam.cafe.constant.GeneralConstant.ORDER_DATA;
 import static by.epam.cafe.constant.RequestNameConstant.WRONG_PASSWORD;
 import static by.epam.cafe.constant.RequestNameConstant.WRONG_REPEAT_PASSWORD;

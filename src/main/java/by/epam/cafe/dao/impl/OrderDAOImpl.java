@@ -18,7 +18,7 @@ import java.util.Map;
 public class OrderDAOImpl extends OrderDAO {
 
     private static final String CREATE_ORDER =
-            "INSERT INTO order (order_expected_time, order_bonus, order_payment_method, user_id) " +
+            "INSERT INTO `order` (order_expected_time, order_bonus, order_payment_method, user_id) " +
                     "VALUES (?, ?, ?, ?);";
 
     private static final String FIND_ACTIVE_ORDER_BY_USER_ID =
@@ -30,7 +30,7 @@ public class OrderDAOImpl extends OrderDAO {
                     ", order_expected_time" +
                     ", order_time " +
                     "FROM " +
-                    "cafe.order "+
+                    "`order` "+
                     "WHERE " +
                     "user_id = ? AND " +
                     "order_expected_time > now() " +

@@ -7,7 +7,6 @@
 <fmt:message bundle="${rb}" key="txt.yes" var="txtYes"/>
 <fmt:message bundle="${rb}" key="txt.symbols" var="txtSymbols"/>
 <fmt:message bundle="${rb}" key="txt.all.fields.be.filled" var="txtAllFieldsMustFilled"/>
-<fmt:message bundle="${rb}" key="txt.competition.type.not.correct" var="txtTypeNotCorrect"/>
 <fmt:message bundle="${rb}" key="txt.delete.error" var="txtDeleteError"/>
 <fmt:message bundle="${rb}" key="txt.try.again" var="txtTryAgain"/>
 <fmt:message bundle="${rb}" key="txt.wrong.access" var="txtWrongAccess"/>
@@ -23,23 +22,21 @@
 <fmt:message bundle="${rb}" key="txt.without" var="txtWithout"/>
 <fmt:message bundle="${rb}" key="txt.name.already.exist" var="txtNameAlreadyExist"/>
 <fmt:message bundle="${rb}" key="txt.users" var="txtUsers"/>
-<fmt:message bundle="${rb}" key="txt.user" var="txtUser"/>
 <fmt:message bundle="${rb}" key="txt.admin" var="txtAdmin"/>
-<fmt:message bundle="${rb}" key="txt.bookmaker" var="txtBookmaker"/>
+<fmt:message bundle="${rb}" key="txt.userEntity" var="txtUser"/>
 <fmt:message bundle="${rb}" key="txt.cash" var="txtCash"/>
 <fmt:message bundle="${rb}" key="txt.role" var="txtRole"/>
 <fmt:message bundle="${rb}" key="txt.email" var="txtEmail"/>
 <fmt:message bundle="${rb}" key="txt.blocked" var="txtBlocked"/>
 <fmt:message bundle="${rb}" key="txt.blocked.text" var="txtBlockedText"/>
-<fmt:message bundle="${rb}" key="txt.before.unlock.user" var="txtBeforeUnlockUser"/>
-<fmt:message bundle="${rb}" key="txt.before.block.user" var="txtBeforeBlockUser"/>
 <fmt:message bundle="${rb}" key="txt.blocking.reason" var="txtBlockingReason"/>
 <fmt:message bundle="${rb}" key="txt.select.role" var="txtSelectRole"/>
 <fmt:message bundle="${rb}" key="txt.change.role.wrong" var="txtChangeWrongRole"/>
 <fmt:message bundle="${rb}" key="txt.change.lock.wrong" var="txtChangeWrongLock"/>
 <fmt:message bundle="${rb}" key="lbl.Name" var="txtName"/>
 <fmt:message bundle="${rb}" key="txt.error.check.connection" var="txtErrorCheckConnection"/>
-
+<fmt:message bundle="${rb}" key="txt.before.unlock.user" var="txtBeforeUnlockUser"/>
+<fmt:message bundle="${rb}" key="txt.before.block.user" var="txtBeforeBlockUser"/>
 <body>
 
 <div class="w3-container w3-content main-container">
@@ -61,10 +58,9 @@
                         <div id='${userEntity.id}' class="w3-container w3-margin-top">
                             <div class="w3-row w3-card-2 w3-display-container">
 
-
                                 <c:if test="${userEntity.id != user.id}">
                                     <div class="w3-display-topright w3-display-hover w3-small">
-                                        <c:if test="${user.type.toString().equals('BOOKMAKER')}">
+                                        <c:if test="${user.type.toString().equals('ADMIN')}">
                                             <button class="w3-button w3-black w3-padding-small"
                                                     onclick="(modal_change_role${userEntity.id}).style.display='block'">
                                                 <i class="fa fa-users"></i>
@@ -148,10 +144,6 @@
                                                 </label>
                                                 <label class="w3-padding-small">${txtAdmin}
                                                     <input type="radio" class="w3-radio" name="userType" value="ADMIN">
-                                                </label>
-                                                <label class="w3-padding-small">${txtBookmaker}
-                                                    <input type="radio" class="w3-radio" name="userType"
-                                                           value="BOOKMAKER">
                                                 </label>
                                             </form>
                                             </p>

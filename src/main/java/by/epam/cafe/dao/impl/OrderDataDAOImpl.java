@@ -1,11 +1,13 @@
 package by.epam.cafe.dao.impl;
 
+import by.epam.cafe.constant.GeneralConstant;
 import by.epam.cafe.constant.SQLFieldConstant;
 import by.epam.cafe.dao.OrderDataDAO;
 import by.epam.cafe.entity.OrderDataEntity;
 import by.epam.cafe.entity.ProductEntity;
 import by.epam.cafe.exception.DAOException;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +22,10 @@ public class OrderDataDAOImpl extends OrderDataDAO {
             "SELECT order_order_id, product_product_id, number, product_price" +
                     " FROM orderdata" +
                     " WHERE order_order_id = ?;";
+
+    private static final String CREATE_ORDER_DATA =
+            "INSERT INTO orderdata (product_product_id, number, product_price , order_order_id) " +
+                    "VALUES (?, ?, ?, ?);";
 
     @Override
     public List<OrderDataEntity> findAll() throws DAOException {
@@ -52,6 +58,22 @@ public class OrderDataDAOImpl extends OrderDataDAO {
     @Override
     public boolean create(OrderDataEntity entity) throws DAOException {
         return false;
+    }
+
+    public boolean create(int productId, int productCount, BigDecimal productPrice, int orderId) throws DAOException {
+        boolean isCreated = false;
+        try (PreparedStatement statement = connection.prepareStatement(CREATE_ORDER_DATA)) {
+            statement.setInt(1, productId);
+            statement.setInt(2, productCount);
+            statement.setBigDecimal(3, productPrice);
+            statement.setInt(4, orderId);
+            isCreated = statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            if (!GeneralConstant.DUPLICATE_UNIQUE_INDEX.equals(e.getSQLState())) {
+                throw new DAOException("Create order data error ", e);
+            }
+        }
+        return isCreated;
     }
 
     @Override

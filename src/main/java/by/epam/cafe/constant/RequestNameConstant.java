@@ -16,6 +16,7 @@ final public class RequestNameConstant {
     public static final String WRONG_EMAIL = "wrongEmail";
     public static final String EXPECTED_TIME = "expectedTime";
     public static final String PAYMENT_METHOD = "paymentMethod";
+    public static final String WRONG_COUNTER = "wrongCounter";
 
 
     private RequestNameConstant() {

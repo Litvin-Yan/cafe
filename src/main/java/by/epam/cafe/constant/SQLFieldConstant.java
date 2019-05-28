@@ -17,6 +17,7 @@ final public class SQLFieldConstant {
         public static final String IS_BLOCKED = USER + "is_blocked";
         public static final String BONUS = USER + "bonus";
         public static final String AVATAR_URL = USER + "avatar_url";
+        public static final String BLOCKED_TEXT = USER + "blocked_text";
     }
 
     public final class Order {

@@ -1,14 +1,16 @@
 package by.epam.cafe.receiver.impl;
 
-import by.epam.cafe.constant.GeneralConstant;
 import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.dao.TransactionManager;
+import by.epam.cafe.dao.impl.OrderDataDAOImpl;
 import by.epam.cafe.dao.impl.ProductDAOImpl;
 import by.epam.cafe.entity.OrderDataEntity;
 import by.epam.cafe.entity.ProductEntity;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.OrderDataReceiver;
+import by.epam.cafe.validator.impl.CommonValidatorImpl;
+import by.epam.cafe.validator.impl.OrderDataValidatorImpl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static by.epam.cafe.constant.GeneralConstant.ORDER_DATA;
+import static by.epam.cafe.constant.RequestNameConstant.WRONG_COUNTER;
 
 public class OrderDataReceiverImpl implements OrderDataReceiver {
 
@@ -59,11 +62,49 @@ public class OrderDataReceiverImpl implements OrderDataReceiver {
         requestContent.setAjaxSuccess(true);
     }
 
-    public void createOrderData(int orderId) throws ReceiverException{
+    public void createOrderData(RequestContent content, int orderId) throws ReceiverException {
+        OrderDataValidatorImpl validator = new OrderDataValidatorImpl();
+        CommonValidatorImpl commonValidator = new CommonValidatorImpl();
 
+        OrderDataEntity orderData = (OrderDataEntity) content.getSessionAttributes().get(ORDER_DATA);
+        List<ProductEntity> productList = new ArrayList<>(orderData.getProducts().keySet());
+
+        boolean isValidData = true;
+
+        for (ProductEntity product : productList) {
+            if (!validator.isPositiveInteger(orderData.getProducts().get(product))) {
+                content.getRequestAttributes().put(WRONG_COUNTER, true);
+                isValidData = false;
+            }
+        }
+        if (!isValidData) {
+            return;
+        }
+
+        TransactionManager manager = new TransactionManager();
+        try {
+            OrderDataDAOImpl orderDataDAO = new OrderDataDAOImpl();
+            manager.beginTransaction(orderDataDAO);
+            for (ProductEntity product : productList) {
+                if(orderDataDAO.create(product.getId(), orderData.getProducts().get(product), product.getPrice(), orderId)){
+                    manager.commit();
+                }
+            }
+            manager.endTransaction();
+            content.getSessionAttributes().remove(ORDER_DATA);
+            content.getSessionAttributes().put(ORDER_DATA, new OrderDataEntity());
+        } catch (DAOException e) {
+            try {
+                manager.rollback();
+                manager.endTransaction();
+            } catch (DAOException e1) {
+                throw new ReceiverException("Create orderData rollback error", e);
+            }
+            throw new ReceiverException(e);
+        }
     }
 
-    public BigDecimal findOrderPriceById(int orderId,RequestContent content) throws ReceiverException{
+    public BigDecimal findOrderPriceById(int orderId, RequestContent content) throws ReceiverException {
         BigDecimal orderPrice = new BigDecimal(0);
 
         OrderDataEntity orderData = (OrderDataEntity) content.getSessionAttributes().get(ORDER_DATA);

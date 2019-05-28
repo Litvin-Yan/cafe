@@ -23,7 +23,7 @@ public class UserDAOImpl extends UserDAO {
 
     private static final String FIND_USER_BY_EMAIL_AND_PASSWORD =
             "SELECT user_id, user_name , user_type, user_email, user_password, user_money, " +
-                    "user_is_blocked, user_bonus, user_avatar_url " +
+                    "user_is_blocked, user_bonus, user_avatar_url, user_blocked_text " +
                     "FROM user " +
                     "WHERE user_email = ? AND user_password = ?;";
 
@@ -43,6 +43,7 @@ public class UserDAOImpl extends UserDAO {
                     ", user_is_blocked" +
                     ", user_bonus" +
                     ", user_avatar_url" +
+                    ", user_blocked_text" +
                     " FROM user " +
                     "ORDER BY user_id DESC " +
                     "LIMIT ?, ?;";
@@ -160,6 +161,7 @@ public class UserDAOImpl extends UserDAO {
             foundUser.setPassword(result.getString(SQLFieldConstant.User.PASSWORD));
             foundUser.setBlocked(result.getBoolean(SQLFieldConstant.User.IS_BLOCKED));
             foundUser.setAvatarURL(result.getString(SQLFieldConstant.User.AVATAR_URL));
+            foundUser.setBlockedText(result.getString(SQLFieldConstant.User.BLOCKED_TEXT));
             foundUser.setCash(result.getBigDecimal(SQLFieldConstant.User.MONEY));
             foundUser.setBonus(result.getBigDecimal(SQLFieldConstant.User.BONUS));
             String userType = result.getString(SQLFieldConstant.User.TYPE);
@@ -184,6 +186,7 @@ public class UserDAOImpl extends UserDAO {
                 foundUser.setEmail(result.getString(SQLFieldConstant.User.EMAIL));
                 foundUser.setPassword(result.getString(SQLFieldConstant.User.PASSWORD));
                 foundUser.setBlocked(result.getBoolean(SQLFieldConstant.User.IS_BLOCKED));
+                foundUser.setBlockedText(result.getString(SQLFieldConstant.User.BLOCKED_TEXT));
                 foundUser.setAvatarURL(result.getString(SQLFieldConstant.User.AVATAR_URL));
                 String userType = result.getString(SQLFieldConstant.User.TYPE);
                 foundUser.setType(UserType.valueOf(userType));
@@ -245,10 +248,9 @@ public class UserDAOImpl extends UserDAO {
 
         } catch (SQLException e) {
             if (!GeneralConstant.CAN_NOT_DELETE_OR_UPDATE.equals(e.getSQLState())) {
-                throw new DAOException("Create user error ", e);
+                throw new DAOException("Update user error ", e);
             }
         }
-
         return isUpdated;
     }
 

@@ -5,10 +5,9 @@ import by.epam.cafe.command.comment.ChangeLockCommentCommand;
 import by.epam.cafe.command.comment.CreateCommentCommand;
 import by.epam.cafe.command.common.*;
 import by.epam.cafe.command.order.OpenBasketCommand;
-import by.epam.cafe.command.product.AddProductCommand;
-import by.epam.cafe.command.product.ChooseCategoryCommand;
+import by.epam.cafe.command.orderdata.AddProductCommand;
 import by.epam.cafe.command.product.OpenMenuCommand;
-import by.epam.cafe.command.product.RemoveProductCommand;
+import by.epam.cafe.command.orderdata.RemoveProductCommand;
 import by.epam.cafe.command.user.*;
 import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.exception.DAOException;
@@ -141,6 +140,12 @@ public enum CommandType {
     OPEN_BASKET(new OpenBasketCommand(new OrderReceiverImpl())) {
         public void doReceiver(RequestContent content) throws ReceiverException {
             ((OrderReceiverImpl) getCommand().getReceiver()).openBasketPage(content);
+        }
+    },
+
+    CREATE_ORDER(new OpenBasketCommand(new OrderReceiverImpl())) {
+        public void doReceiver(RequestContent content) throws ReceiverException {
+            ((OrderReceiverImpl) getCommand().getReceiver()).createOrder(content);
         }
     };
 

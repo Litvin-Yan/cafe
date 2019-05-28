@@ -1,4 +1,4 @@
-package by.epam.cafe.command.product;
+package by.epam.cafe.command.orderdata;
 
 import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.content.RequestContent;

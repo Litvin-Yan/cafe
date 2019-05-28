@@ -34,22 +34,22 @@
                 </label>
                 <br>
                 <br>
-                <select id="paymentType" required name="typeId" class="w3-select">
+                <select id="paymentType" required name="paymentMethod" class="w3-select">
                     <option value='' selected disabled> ${txtChoosePaymentType}</option>
-                    <option value="1">
+                    <option value="money">
                         ${txtMoney}
                     </option>
-                    <option value="2">
+                    <option value="cash">
                         ${txtCash}
                     </option>
-                    <option value="3">
+                    <option value="bonuses">
                         ${txtBonuses}
                     </option>
                 </select>
                 <br>
                 <br>
                 <label><c:out value="${txtOrderPrice}"/></label>
-                <label class="orderPrice">
+                <label class="orderPrice" id="orderPrice">
                     <c:set var="total" value="${0}"/>
                     <c:forEach var="product" items="${orderData.products}">
                         <c:set var="total" value="${total + product.key.price*product.value}"/>
@@ -58,7 +58,7 @@
                 </label>
                 <p>
                     <input class="w3-button w3-black w3-text-amber" style="margin-bottom: 8px" type="submit" id="submit"
-                           value="${send}" onclick="alert(${txtConfirmOrder})">
+                           value="${send}" onclick="">
                 </p>
             </form>
         </div>

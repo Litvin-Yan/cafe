@@ -17,6 +17,7 @@ public class OrderEntity extends Entity {
     private Date time;
     private PaymentType paymentType;
 
+
     public int getId() {
         return id;
     }
@@ -85,15 +86,15 @@ public class OrderEntity extends Entity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof OrderEntity)) return false;
-        OrderEntity orderEntity = (OrderEntity) o;
-        return id == orderEntity.id &&
-                userId == orderEntity.userId &&
-                bonus == orderEntity.bonus &&
-                cash.equals(orderEntity.cash) &&
-                paid.equals(orderEntity.paid) &&
-                expectedTime.equals(orderEntity.expectedTime) &&
-                time.equals(orderEntity.time) &&
-                paymentType == orderEntity.paymentType;
+        OrderEntity that = (OrderEntity) o;
+        return id == that.id &&
+                userId == that.userId &&
+                Objects.equals(cash, that.cash) &&
+                Objects.equals(paid, that.paid) &&
+                Objects.equals(bonus, that.bonus) &&
+                Objects.equals(expectedTime, that.expectedTime) &&
+                Objects.equals(time, that.time) &&
+                paymentType == that.paymentType;
     }
 
     @Override

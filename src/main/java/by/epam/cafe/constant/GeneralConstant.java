@@ -11,6 +11,10 @@ public class GeneralConstant {
     public static final String ALL_RU = "Всё";
     public static final String ALL_EN = "All";
 
+
+    public static final String EXPECTED_TIME = "timeOfReceiving";
+    public static final String EXPECTED_DATE = "dateOfReceiving";
+    public static final String PAYMENT_METHOD = "paymentMethod";
     public static final String PRODUCT_ID = "productId";
     public static final String DUPLICATE_UNIQUE_INDEX = "23000";
     public static final String CAN_NOT_DELETE_OR_UPDATE = "23000";

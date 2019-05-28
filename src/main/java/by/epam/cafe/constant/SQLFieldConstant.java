@@ -27,6 +27,7 @@ final public class SQLFieldConstant {
         public static final String BONUS = ORDER + "bonus";
         public static final String USER_ID = "user_id";
         public static final String EXPECTED_TIME = ORDER + "expected_time";
+        public static final String EXPECTED_DATE = ORDER + "expected_date";
         public static final String TIME = ORDER + "time";
     }
 

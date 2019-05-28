@@ -1,29 +1,18 @@
 package by.epam.cafe.receiver.impl;
 
 import by.epam.cafe.constant.GeneralConstant;
-import by.epam.cafe.constant.SQLFieldConstant;
 import by.epam.cafe.content.RequestContent;
-import by.epam.cafe.dao.TransactionManager;
-import by.epam.cafe.dao.impl.UserDAOImpl;
 import by.epam.cafe.entity.OrderDataEntity;
 import by.epam.cafe.entity.ProductEntity;
-import by.epam.cafe.entity.UserEntity;
-import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.OrderReceiver;
 import by.epam.cafe.type.UploadType;
 import by.epam.cafe.util.Formatter;
-import by.epam.cafe.util.StringEncoder;
-import by.epam.cafe.validator.impl.CommonValidatorImpl;
-import by.epam.cafe.validator.impl.OrderValidatorImpl;
-import by.epam.cafe.validator.impl.UserValidatorImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static by.epam.cafe.constant.GeneralConstant.ORDER_DATA;
-import static by.epam.cafe.constant.RequestNameConstant.*;
-import static by.epam.cafe.constant.SQLFieldConstant.User.NAME;
 
 public class OrderReceiverImpl implements OrderReceiver {
 

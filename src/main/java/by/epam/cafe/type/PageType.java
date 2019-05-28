@@ -29,7 +29,7 @@ public enum PageType {
     /* ------- Error pages ------- */
     ERROR_404,
     ERROR_500,
-    ERROR_SERVER;
+    SERVER_ERROR;
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static ResourceBundle jspBundle = ResourceBundle.getBundle(GeneralConstant.PAGE_PATH_PROPERTIES);

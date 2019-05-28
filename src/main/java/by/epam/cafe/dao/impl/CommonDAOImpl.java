@@ -14,13 +14,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static by.epam.cafe.constant.GeneralConstant.LOCKED_COUNT;
+import static by.epam.cafe.constant.GeneralConstant.PRODUCT_COUNT;
+import static by.epam.cafe.constant.GeneralConstant.REGISTERED_COUNT;
+
 public class CommonDAOImpl extends CommonDAO {
 
     private static final String SELECT_ADMIN_STATISTIC =
             "SELECT " +
-                    "(SELECT COUNT(user_id) FROM user) AS countRegistered, " +
-                    "(SELECT COUNT(user_id) FROM user WHERE user_is_blocked) AS countLocked, " +
-                    "(SELECT COUNT(product_id) FROM product) AS countProduct;";
+                    "(SELECT COUNT(user_id) FROM user) AS "+ REGISTERED_COUNT +", " +
+                    "(SELECT COUNT(user_id) FROM user WHERE user_is_blocked) AS "+LOCKED_COUNT+", " +
+                    "(SELECT COUNT(product_id) FROM product) AS "+PRODUCT_COUNT+";";
 
     @Override
     public List findAll() throws DAOException {
@@ -80,9 +84,9 @@ public class CommonDAOImpl extends CommonDAO {
             statisticMap = new HashMap<>();
 
             if (resultSet.next()) {
-                statisticMap.put(GeneralConstant.REGISTERED_COUNT, resultSet.getInt(GeneralConstant.REGISTERED_COUNT));
-                statisticMap.put(GeneralConstant.LOCKED_COUNT, resultSet.getInt(GeneralConstant.LOCKED_COUNT));
-                statisticMap.put(GeneralConstant.PRODUCT_COUNT, resultSet.getInt(GeneralConstant.PRODUCT_COUNT));
+                statisticMap.put(REGISTERED_COUNT, resultSet.getInt(REGISTERED_COUNT));
+                statisticMap.put(LOCKED_COUNT, resultSet.getInt(LOCKED_COUNT));
+                statisticMap.put(PRODUCT_COUNT, resultSet.getInt(PRODUCT_COUNT));
             }
 
         } catch (SQLException e) {

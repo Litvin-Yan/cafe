@@ -40,7 +40,7 @@ public class OpenMenuCommand extends AbstractCommand {
 
         } catch (ReceiverException e) {
             LOGGER.log(Level.ERROR, "Open menu receiver error", e);
-            router.setRoutePath(PageType.ERROR_SERVER.getPage());
+            router.setRoutePath(PageType.SERVER_ERROR.getPage());
             router.setRouteType(RouteType.REDIRECT);
         } catch (DAOException e) {
             e.printStackTrace();

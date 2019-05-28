@@ -18,7 +18,7 @@
 <br>
 <br>
 <div class="w3-container main-container">
-    <div class="w3-col m3 ">
+    <div class="w3-col m3">
         <div class="w3-container w3-card-2 backgraund-opacity">
             <form class="" name="form" action="${pageContext.request.contextPath}/generalController" method="post">
                 <input type="hidden" name="command" value="CREATE_ORDER">

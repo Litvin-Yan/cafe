@@ -42,7 +42,7 @@ public class OpenUserSettingsCommand extends AbstractCommand {
         } catch (ReceiverException e) {
             LOGGER.log(Level.ERROR, "Handle receiver error", e);
             router.setRouteType(RouteType.REDIRECT);
-            router.setRoutePath(PageType.ERROR_SERVER.getPage());
+            router.setRoutePath(PageType.SERVER_ERROR.getPage());
         } catch (DAOException e) {
             e.printStackTrace();
         }

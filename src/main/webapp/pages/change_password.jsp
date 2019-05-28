@@ -29,7 +29,6 @@
 <fmt:message bundle="${rb}" key="txt.new.password" var="txtNewPassword"/>
 <fmt:message bundle="${rb}" key="txt.change.password" var="txtChangePassword"/>
 <fmt:message bundle="${rb}" key="txt.password.changed" var="txtPasswordChanged"/>
-
 <body>
 <div class="w3-row-padding">
     <div class="w3-third">
@@ -74,7 +73,7 @@
             <span class="wrong w3-text-red" id="wrongDB">${txtDatabaseError}</span>
             <span class="wrong w3-text-red" id="errorResponse">${txtError}</span>
             <br>
-            <input class="w3-button w3-black" type="button" id="submit" value="Change password">
+            <input class="w3-button w3-black" type="button" id="submit" value="${txtChangePassword}">
 
         </form>
     </div>

@@ -51,7 +51,7 @@
         <div class=" w3-margin-top">
             <%--User info section--%>
             <div class="w3-col m4 w3-container w3-card-2 w3-display-container w3-margin-bottom">
-                <div class="w3-display-topright">
+                <div class="w3-display-topright w3-black">
                     <a href="${pageContext.request.contextPath}/pages/change_avatar.jsp"
                        class="w3-button w3-tiny w3-black w3-padding-small w3-display-hover">${txtChangeAvatar}</a>
                     <a href="${pageContext.request.contextPath}/pages/change_password.jsp"

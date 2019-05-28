@@ -7,7 +7,7 @@ import by.epam.cafe.exception.ReceiverException;
 public interface ProductReceiver extends Receiver {
 
     /**
-     * Open concrete news page.
+     * Open concrete product page.
      *
      * @param requestContent request content
      * @throws ReceiverException when throw DAOException
@@ -18,7 +18,7 @@ public interface ProductReceiver extends Receiver {
     void openConcreteProductPage(RequestContent requestContent) throws ReceiverException;
 
     /**
-     * Open all news.
+     * Open menu.
      *
      * @param requestContent request content
      * @throws ReceiverException when throw DAOException
@@ -29,7 +29,7 @@ public interface ProductReceiver extends Receiver {
     void openMenuPage(RequestContent requestContent) throws ReceiverException;
 
     /**
-     * Create news.
+     * Create product.
      *
      * @param requestContent request content
      * @throws ReceiverException when throw DAOException
@@ -40,7 +40,7 @@ public interface ProductReceiver extends Receiver {
     void createProduct(RequestContent requestContent) throws ReceiverException;
 
     /**
-     * Delete news.
+     * Delete product.
      *
      * @param requestContent request content
      * @throws ReceiverException when throw DAOException

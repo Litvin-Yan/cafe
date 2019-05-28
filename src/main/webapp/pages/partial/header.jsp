@@ -67,17 +67,17 @@
                         <div class="w3-dropdown-content w3-bar-block w3-border">
                             <form action="${pageContext.request.contextPath}/generalController">
                                 <input type="hidden" name="command" value="OPEN_PROFILE">
-                                <input type="submit" class="w3-text-amber w3-bar-item w3-button" value="${profile}"/>
+                                <input type="submit" class="w3-text-amber w3-bar-item w3-button w3-black" value="${profile}"/>
                             </form>
                             <c:if test="${userEntity.type.toString().equals('ADMIN')}">
                                 <form action="${pageContext.request.contextPath}/generalController" method="post">
                                     <input type="hidden" name="command" value="OPEN_ADMIN_STATISTIC">
-                                    <input type="submit" class="w3-text-amber w3-bar-item w3-button" value="${txtAdminPanel}"/>
+                                    <input type="submit" class="w3-text-amber w3-bar-item w3-button w3-black" value="${txtAdminPanel}"/>
                                 </form>
                             </c:if>
                             <form action="${pageContext.request.contextPath}/generalController">
                                 <input type="hidden" name="command" value="SIGN_OUT">
-                                <input type="submit" class="w3-text-amber w3-bar-item w3-button" value="${signOut}"/>
+                                <input type="submit" class="w3-text-amber w3-bar-item w3-button w3-black" value="${signOut}"/>
                             </form>
                         </div>
                     </div>

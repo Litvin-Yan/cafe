@@ -2,6 +2,7 @@ package by.epam.cafe.command.product;
 
 import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.content.RequestContent;
+import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.Receiver;
 import by.epam.cafe.type.CommandType;
@@ -30,7 +31,7 @@ public class OpenMenuSettingsCommand extends AbstractCommand {
             receiver.action(CommandType.takeCommandType(this), content);
 
             if (!content.getRequestAttributes().containsKey(PAGE_NOT_FOUND)) {
-                router.setRoutePath(PageType.ADMIN_NEWS.getPage());
+                router.setRoutePath(PageType.ADMIN_PRODUCTS.getPage());
                 router.setRouteType(RouteType.FORWARD);
 
             } else {
@@ -42,6 +43,8 @@ public class OpenMenuSettingsCommand extends AbstractCommand {
             LOGGER.log(Level.ERROR, "Open product settings product receiver error", e);
             router.setRoutePath(PageType.ERROR_SERVER.getPage());
             router.setRouteType(RouteType.REDIRECT);
+        } catch (DAOException e) {
+            e.printStackTrace();
         }
         return router;
     }

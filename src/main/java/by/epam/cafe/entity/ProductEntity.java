@@ -11,7 +11,15 @@ public class ProductEntity extends Entity {
     private BigDecimal price;
     private String imageURL;
     private String ingredients;
+    private int weight;
 
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
 
     public String getIngredients() {
         return ingredients;
@@ -65,17 +73,18 @@ public class ProductEntity extends Entity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ProductEntity)) return false;
-        ProductEntity productEntity = (ProductEntity) o;
-        return id == productEntity.id &&
-                price == productEntity.price &&
-                name.equals(productEntity.name) &&
-                productType == productEntity.productType &&
-                imageURL.equals(productEntity.imageURL) &&
-                ingredients.equals(productEntity.ingredients);
+        ProductEntity that = (ProductEntity) o;
+        return id == that.id &&
+                weight == that.weight &&
+                name.equals(that.name) &&
+                productType.equals(that.productType) &&
+                price.equals(that.price) &&
+                imageURL.equals(that.imageURL) &&
+                ingredients.equals(that.ingredients);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, productType, price, imageURL, ingredients);
+        return Objects.hash(id, name, productType, price, imageURL, ingredients, weight);
     }
 }

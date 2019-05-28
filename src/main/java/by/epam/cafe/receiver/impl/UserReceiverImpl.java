@@ -2,9 +2,12 @@ package by.epam.cafe.receiver.impl;
 
 
 import by.epam.cafe.constant.RequestNameConstant;
+import by.epam.cafe.constant.SQLFieldConstant;
 import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.dao.TransactionManager;
 import by.epam.cafe.dao.impl.*;
+import by.epam.cafe.entity.OrderDataEntity;
+import by.epam.cafe.entity.ProductEntity;
 import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
@@ -210,24 +213,24 @@ public class UserReceiverImpl implements UserReceiver {
 
         if (!commonValidator.isVarExist(password) || !validator.checkPassword(password[0])) {
             content.getRequestAttributes().put(WRONG_PASSWORD, true);
-            return;
-
+            isValidData = false;
         }
+
         if (!commonValidator.isVarExist(repeatPassword) || !password[0].equals(repeatPassword[0])) {
             content.getRequestAttributes().put(WRONG_REPEAT_PASSWORD, true);
             isValidData = false;
-
         }
+
         if (!commonValidator.isVarExist(email) || !validator.checkEmail(email[0])) {
             content.getRequestAttributes().put(WRONG_EMAIL, true);
             isValidData = false;
-
         }
+
         if (!commonValidator.isVarExist(name) || !validator.checkName(name[0])) {
             content.getRequestAttributes().put(WRONG_NAME, true);
             isValidData = false;
-
         }
+
         if (!isValidData) {
             return;
         }
@@ -247,6 +250,7 @@ public class UserReceiverImpl implements UserReceiver {
             if (userDao.create(user)) {
                 handler.commit();
                 content.getSessionAttributes().put(USER, userDao.findUser(user));
+                content.getSessionAttributes().put(ORDER_DATA, new OrderDataEntity());
             } else {
                 content.getRequestAttributes().put(EMAIL_EXISTS, true);
             }
@@ -300,9 +304,9 @@ public class UserReceiverImpl implements UserReceiver {
                 if (foundUser.getIsBlocked()) {
                     content.getSessionAttributes().put(TEXT, foundUser.getBlockedText());
                     content.getRequestAttributes().put(IS_BLOCKED, true);
-
                 } else {
                     content.getSessionAttributes().put(USER, foundUser);
+                    content.getSessionAttributes().put(ORDER_DATA, new OrderDataEntity());
                 }
             } else {
                 content.getRequestAttributes().put(WRONG_DATA, true);
@@ -323,6 +327,7 @@ public class UserReceiverImpl implements UserReceiver {
     @Override
     public void signOut(RequestContent content) {
         content.getSessionAttributes().remove(RequestNameConstant.USER);
+        content.getRequestAttributes().remove(ORDER_DATA);
     }
 
     @Override

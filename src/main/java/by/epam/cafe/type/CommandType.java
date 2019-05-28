@@ -4,18 +4,32 @@ import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.command.comment.ChangeLockCommentCommand;
 import by.epam.cafe.command.comment.CreateCommentCommand;
 import by.epam.cafe.command.common.*;
+import by.epam.cafe.command.order.OpenBasketCommand;
+import by.epam.cafe.command.product.AddProductCommand;
+import by.epam.cafe.command.product.ChooseCategoryCommand;
 import by.epam.cafe.command.product.OpenMenuCommand;
+import by.epam.cafe.command.product.RemoveProductCommand;
 import by.epam.cafe.command.user.*;
 import by.epam.cafe.content.RequestContent;
+import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
-import by.epam.cafe.receiver.Receiver;
-import by.epam.cafe.receiver.UserReceiver;
 import by.epam.cafe.receiver.impl.*;
 
 import java.util.*;
 
 public enum CommandType {
 
+    ADD_PRODUCT(new AddProductCommand(new OrderDataReceiverImpl())){
+        public void doReceiver(RequestContent content) throws ReceiverException, DAOException {
+            ((OrderDataReceiverImpl) getCommand().getReceiver()).addProduct(content);
+        }
+    },
+
+    REMOVE_PRODUCT(new RemoveProductCommand(new OrderDataReceiverImpl())){
+        public void doReceiver(RequestContent content) throws ReceiverException, DAOException {
+            ((OrderDataReceiverImpl) getCommand().getReceiver()).removeProduct(content);
+        }
+    },
 
     SIGN_IN(new SignInCommand(new UserReceiverImpl())) {
         public void doReceiver(RequestContent content) throws ReceiverException {
@@ -122,6 +136,12 @@ public enum CommandType {
         public void doReceiver(RequestContent content) throws ReceiverException {
             ((ProductReceiverImpl) getCommand().getReceiver()).openMenuPage(content);
         }
+    },
+
+    OPEN_BASKET(new OpenBasketCommand(new OrderReceiverImpl())) {
+        public void doReceiver(RequestContent content) throws ReceiverException {
+            ((OrderReceiverImpl) getCommand().getReceiver()).openBasketPage(content);
+        }
     };
 
 
@@ -142,5 +162,5 @@ public enum CommandType {
         return command;
     }
 
-    public abstract void doReceiver(RequestContent content) throws ReceiverException;
+    public abstract void doReceiver(RequestContent content) throws ReceiverException, DAOException;
 }

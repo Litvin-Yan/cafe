@@ -47,6 +47,7 @@ final public class SQLFieldConstant {
         public static final String PRICE = PRODUCT + "price";
         public static final String IMAGE_URL = PRODUCT + "image_url";
         public static final String INGREDIENTS = PRODUCT + "ingredients";
+        public static final String WEIGHT = PRODUCT + "weight";
     }
     public final class OrderData {
         public static final String ORDER_ID = "order_data_";

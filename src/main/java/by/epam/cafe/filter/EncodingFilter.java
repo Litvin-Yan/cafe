@@ -24,6 +24,19 @@ public class EncodingFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
+//        HttpServletRequest httpRequest = (HttpServletRequest) request;
+//        String codeRequest = request.getCharacterEncoding();
+//        String contentTypeRequest = request.getContentType();
+//
+//        if (contentType != null && !contentType.equalsIgnoreCase(contentTypeRequest)) {
+//            response.setContentType(contentType);
+//        }
+//
+//        if (code != null && !code.equalsIgnoreCase(codeRequest)) {
+//            request.setCharacterEncoding(code);
+//            response.setCharacterEncoding(code);
+//        }
+//        chain.doFilter(request, response);
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String codeRequest = request.getCharacterEncoding();
         String contentTypeRequest = request.getContentType();
@@ -33,10 +46,10 @@ public class EncodingFilter implements Filter {
         }
 
         if (code != null && !code.equalsIgnoreCase(codeRequest)) {
-            request.setCharacterEncoding(code);
+            httpRequest.setCharacterEncoding(code);
             response.setCharacterEncoding(code);
         }
-        chain.doFilter(request, response);
+        chain.doFilter(httpRequest, response);
     }
 
     public void destroy() {

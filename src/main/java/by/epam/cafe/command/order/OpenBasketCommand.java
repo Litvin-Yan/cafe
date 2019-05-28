@@ -1,4 +1,4 @@
-package by.epam.cafe.command.user;
+package by.epam.cafe.command.order;
 
 import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.content.RequestContent;
@@ -13,42 +13,40 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Set;
+import static by.epam.cafe.constant.GeneralConstant.PAGE_NOT_FOUND;
 
-import static by.epam.cafe.constant.RequestNameConstant.*;
+public class OpenBasketCommand extends AbstractCommand {
 
-public class SignUpCommand extends AbstractCommand {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public SignUpCommand(Receiver receiver) {
+    public OpenBasketCommand(Receiver receiver) {
         super(receiver);
     }
-
-    public Router execute(RequestContent requestContent) {
+    //TODO catch dao exception
+    @Override
+    public Router execute(RequestContent content) {
         Router router = new Router();
 
         try {
-            receiver.action(CommandType.takeCommandType(this), requestContent);
-            Set<String> keys = requestContent.getRequestAttributes().keySet();
+            receiver.action(CommandType.takeCommandType(this), content);
 
-            if (keys.contains(WRONG_EMAIL) || keys.contains(WRONG_NAME) ||
-                    keys.contains(WRONG_PASSWORD) || keys.contains(WRONG_REPEAT_PASSWORD) ||
-                    keys.contains(EMAIL_EXISTS)) {
+            if (!content.getRequestAttributes().containsKey(PAGE_NOT_FOUND)) {
+                router.setRoutePath(PageType.BASKET.getPage());
                 router.setRouteType(RouteType.FORWARD);
-                router.setRoutePath(PageType.SIGN_UP.getPage());
 
             } else {
+                router.setRoutePath(PageType.ERROR_404.getPage());
                 router.setRouteType(RouteType.REDIRECT);
-                router.setRoutePath(PageType.INDEX.getPage());
             }
 
         } catch (ReceiverException e) {
-            LOGGER.log(Level.ERROR, "Sign up receiver error", e);
-            router.setRouteType(RouteType.REDIRECT);
+            LOGGER.log(Level.ERROR, "Open menu receiver error", e);
             router.setRoutePath(PageType.ERROR_SERVER.getPage());
+            router.setRouteType(RouteType.REDIRECT);
         } catch (DAOException e) {
             e.printStackTrace();
         }
+
         return router;
     }
 }

@@ -17,18 +17,18 @@ import java.util.Map;
 public class OrderDAOImpl extends OrderDAO {
 
     private static final String FIND_ACTIVE_ORDER_BY_USER_ID =
-            "select distinct order.order_id" +
-                    ", order.order_paid" +
-                    ", order.order_payment_method" +
-                    ", order.order_bonus" +
-                    ", order.user_id" +
-                    ", order.order_expected_time" +
-                    ", order.order_time " +
+            "select distinct order_id" +
+                    ", order_paid" +
+                    ", order_payment_method" +
+                    ", order_bonus" +
+                    ", user_id" +
+                    ", order_expected_time" +
+                    ", order_time " +
                     "FROM " +
                     "cafe.order "+
                     "WHERE " +
-                    "order.user_id = ? AND " +
-                    "order.order_expected_time > now() " +
+                    "user_id = ? AND " +
+                    "order_expected_time > now() " +
                     "ORDER BY order_time;";
 
     @Override

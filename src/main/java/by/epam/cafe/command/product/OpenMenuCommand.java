@@ -2,6 +2,7 @@ package by.epam.cafe.command.product;
 
 import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.content.RequestContent;
+import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.Receiver;
 import by.epam.cafe.type.CommandType;
@@ -20,7 +21,7 @@ public class OpenMenuCommand extends AbstractCommand {
     public OpenMenuCommand(Receiver receiver) {
         super(receiver);
     }
-
+    //TODO catch dao exception
     @Override
     public Router execute(RequestContent content) {
         Router router = new Router();
@@ -38,9 +39,11 @@ public class OpenMenuCommand extends AbstractCommand {
             }
 
         } catch (ReceiverException e) {
-            LOGGER.log(Level.ERROR, "Open all product receiver error", e);
+            LOGGER.log(Level.ERROR, "Open menu receiver error", e);
             router.setRoutePath(PageType.ERROR_SERVER.getPage());
             router.setRouteType(RouteType.REDIRECT);
+        } catch (DAOException e) {
+            e.printStackTrace();
         }
 
         return router;

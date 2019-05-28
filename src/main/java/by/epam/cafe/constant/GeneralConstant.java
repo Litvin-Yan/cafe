@@ -8,6 +8,8 @@ public class GeneralConstant {
     public static final String DB_PROPERTIES = "config/database";
     public static final String PAGE_PATH_PROPERTIES = "config/pages";
     public static final String UPLOAD_PROPERTIES = "config/upload";
+    public static final String ALL_RU = "Всё";
+    public static final String ALL_EN = "All";
 
     public static final String PRODUCT_ID = "productId";
     public static final String DUPLICATE_UNIQUE_INDEX = "23000";
@@ -38,6 +40,7 @@ public class GeneralConstant {
     public static final String ORDER_DATA = "orderData";
     public static final String PRODUCT_LIST = "productList";
     public static final String PRODUCT_TYPE_LIST = "productTypeList";
+    public static final String PRODUCT_TYPE = "productType";
     public static final String STATISTIC_MAP = "statisticMap";
     public static final String NAME = "name";
     public static final String USER_LIST = "userList";
@@ -80,6 +83,11 @@ public class GeneralConstant {
     public static final String LITTLE_MONEY = "littleMoney";
     public static final String IMAGE = "image";
     public static final String LIMIT = "limit";
+    public static final String ORDER_DATA_ORDER_ID = "orderDataOrderId";
+    public static final String ORDER_DATA_PRODUCT_ID = "orderDataProductId";
+    public static final String ORDER_DATA_NUMBER = "orderDataNumber";
+    public static final String ORDER_DATA_PRODUCT_PRICE = "orderDataProductPrice";
+
     public static final int COUNT_PRODUCTS_ON_PAGE = 5;
     public static final int COUNT_USERS_ON_PAGE = 5;
 

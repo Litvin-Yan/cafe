@@ -2,6 +2,7 @@ package by.epam.cafe.command.common;
 
 import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.content.RequestContent;
+import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.Receiver;
 import by.epam.cafe.type.CommandType;
@@ -32,6 +33,8 @@ public class OpenMainCommand extends AbstractCommand {
             LOGGER.log(Level.ERROR, "Open main receiver error", e);
             router.setRouteType(RouteType.REDIRECT);
             router.setRoutePath(PageType.ERROR_SERVER.getPage());
+        } catch (DAOException e) {
+            e.printStackTrace();
         }
         return router;
     }

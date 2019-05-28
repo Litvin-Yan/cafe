@@ -16,7 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
- *Class for contain connections
+ * Class for contain connections
  */
 public class ConnectionPool {
 
@@ -33,8 +33,8 @@ public class ConnectionPool {
      */
     private ConnectionPool() {
         config = new ConnectionPoolConfig();
-        availableConns = new ArrayBlockingQueue<>(config.getPoolCapacity());
-        usedConns = new ArrayBlockingQueue<>(config.getPoolCapacity());
+        availableConns = new ArrayBlockingQueue<>(config.getPoolCapacity(), true);
+        usedConns = new ArrayBlockingQueue<>(config.getPoolCapacity(), true);
     }
 
     /**
@@ -98,25 +98,30 @@ public class ConnectionPool {
     /**
      * Destroy pool.
      *
-     * @throws ConnectionPoolException when sql error
      */
-    public void destroyPool() throws ConnectionPoolException {
-        try {
-            for (ProxyConnection availableConn : availableConns) {
+    public void destroyPool() {
+
+        for (ProxyConnection availableConn : availableConns) {
+            try {
                 if (!availableConn.isClosed()) {
                     availableConn.realClose();
                 }
+            }catch (SQLException e){
+                LOGGER.log(Level.ERROR, "Destroy available connection exception"+e);
             }
-            availableConns = new ArrayBlockingQueue<>(config.getPoolCapacity());
+        }
+        availableConns.clear();
 
-            for (ProxyConnection usedConn : usedConns) {
+        for (ProxyConnection usedConn : usedConns) {
+            try {
                 if (!usedConn.isClosed()) {
                     usedConn.realClose();
                 }
+            }catch (SQLException e){
+                LOGGER.log(Level.ERROR, "Destroy used connection exception"+e);
             }
-            usedConns = new ArrayBlockingQueue<>(config.getPoolCapacity());
-        } catch (SQLException e) {
-            throw new ConnectionPoolException("Destroy pool error. ", e);
         }
+        usedConns.clear();
+
     }
 }

@@ -2,6 +2,7 @@ package by.epam.cafe.command.common;
 
 import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.content.RequestContent;
+import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.Receiver;
 import by.epam.cafe.type.CommandType;
@@ -21,6 +22,7 @@ public class OpenAdminStatisticCommand extends AbstractCommand {
         super(receiver);
     }
 
+    //TODO: catch dao exception
     @Override
     public Router execute(RequestContent requestContent){
         Router router = new Router();
@@ -41,6 +43,8 @@ public class OpenAdminStatisticCommand extends AbstractCommand {
             LOGGER.log(Level.ERROR, "Open admin statistic receiver error", e);
             router.setRoutePath(PageType.ERROR_SERVER.getPage());
             router.setRouteType(RouteType.REDIRECT);
+        } catch (DAOException e) {
+            e.printStackTrace();
         }
 
         return router;

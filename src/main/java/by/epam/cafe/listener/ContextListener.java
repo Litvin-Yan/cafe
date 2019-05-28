@@ -1,6 +1,5 @@
 package by.epam.cafe.listener;
 
-import by.epam.cafe.exception.ConnectionPoolException;
 import by.epam.cafe.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -37,8 +36,6 @@ public class ContextListener implements ServletContextListener {
         } catch (SQLException e) {
             LOGGER.log(Level.ERROR, "Can't deregister driver", e);
 
-        } catch (ConnectionPoolException e) {
-            LOGGER.log(Level.ERROR, "Destroy pool error", e);
         }
     }
 }

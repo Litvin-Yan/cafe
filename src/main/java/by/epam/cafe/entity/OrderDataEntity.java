@@ -1,11 +1,14 @@
 package by.epam.cafe.entity;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class OrderDataEntity extends Entity {
+
     private int order_id;
-    private Map<ProductEntity, Integer[]> products;
+
+    private Map<ProductEntity, Integer> products = new HashMap<>();
 
     public int getOrder_id() {
         return order_id;
@@ -15,11 +18,11 @@ public class OrderDataEntity extends Entity {
         this.order_id = order_id;
     }
 
-    public Map<ProductEntity, Integer[]> getProducts() {
+    public Map<ProductEntity, Integer> getProducts() {
         return products;
     }
 
-    public void setProducts(Map<ProductEntity, Integer[]> products) {
+    public void setProducts(Map<ProductEntity, Integer> products) {
         this.products = products;
     }
 
@@ -27,9 +30,9 @@ public class OrderDataEntity extends Entity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof OrderDataEntity)) return false;
-        OrderDataEntity orderDataEntity = (OrderDataEntity) o;
-        return order_id == orderDataEntity.order_id &&
-                Objects.equals(products, orderDataEntity.products);
+        OrderDataEntity that = (OrderDataEntity) o;
+        return order_id == that.order_id &&
+                Objects.equals(products, that.products);
     }
 
     @Override

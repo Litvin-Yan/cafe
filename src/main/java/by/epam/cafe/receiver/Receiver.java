@@ -2,6 +2,7 @@ package by.epam.cafe.receiver;
 
 
 import by.epam.cafe.content.RequestContent;
+import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.type.CommandType;
 
@@ -13,7 +14,7 @@ public interface Receiver {
      * @param content request content
      * @throws ReceiverException when some error
      */
-    default void action(CommandType type, RequestContent content) throws ReceiverException {
+    default void action(CommandType type, RequestContent content) throws ReceiverException, DAOException {
         type.doReceiver(content);
     }
 

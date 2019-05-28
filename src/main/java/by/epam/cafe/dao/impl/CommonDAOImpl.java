@@ -20,7 +20,7 @@ public class CommonDAOImpl extends CommonDAO {
             "SELECT " +
                     "(SELECT COUNT(user_id) FROM user) AS countRegistered, " +
                     "(SELECT COUNT(user_id) FROM user WHERE user_is_blocked) AS countLocked, " +
-                    "(SELECT COUNT(product_id) FROM product) AS countProduct, ";
+                    "(SELECT COUNT(product_id) FROM product) AS countProduct;";
 
     @Override
     public List findAll() throws DAOException {

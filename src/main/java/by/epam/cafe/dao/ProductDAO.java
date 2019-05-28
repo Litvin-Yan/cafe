@@ -40,7 +40,7 @@ public abstract class ProductDAO extends DAO<ProductEntity> {
      * @return productEntity
      * @throws DAOException when sql request error
      */
-    public abstract List<ProductEntity> findProductByType(String type) throws DAOException;
+    public abstract List<ProductEntity> findProductByType(String type, int page, int limit) throws DAOException;
 
     /**
      * Update product type
@@ -86,4 +86,9 @@ public abstract class ProductDAO extends DAO<ProductEntity> {
      * @throws DAOException when sql request error
      */
     public abstract boolean updateIngredients(ProductEntity entity) throws DAOException;
+
+
+
+
+    public abstract List<String> findProductType()throws DAOException;
 }

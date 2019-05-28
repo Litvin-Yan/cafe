@@ -1,5 +1,6 @@
 package by.epam.cafe.filter;
 
+import by.epam.cafe.constant.GeneralConstant;
 import by.epam.cafe.type.PageType;
 import by.epam.cafe.type.UploadType;
 
@@ -34,6 +35,7 @@ public class SessionFilter implements Filter {
         if (session.getAttribute(SESSION) == null) {
             session.setAttribute(SESSION, true);
             session.setAttribute(USER_IMAGE_PATH, UploadType.AVATARS.getUploadFolder());
+            session.setAttribute(GeneralConstant.PRODUCT_TYPE, GeneralConstant.ALL_RU);
             httpResponse.sendRedirect(PageType.INDEX.getPage());
             return;
         }

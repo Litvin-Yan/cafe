@@ -21,6 +21,7 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 public class ProductReceiverImpl implements ProductReceiver {
@@ -30,7 +31,13 @@ public class ProductReceiverImpl implements ProductReceiver {
         Formatter formatter = new Formatter();
         String[] stringPage = content.getRequestParameters().get(GeneralConstant.PAGE_NUMBER);
         int page = formatter.formatToPage(stringPage);
-
+        Optional<String[]> newProductType = Optional.ofNullable(content.getRequestParameters().get(GeneralConstant.PRODUCT_TYPE));
+        if (newProductType.isPresent()){
+            if (newProductType.get()[0].equals(GeneralConstant.ALL_EN)){
+                newProductType.get()[0] = GeneralConstant.ALL_RU;
+            }
+        }
+        String currentProductType = (String) content.getSessionAttributes().get(GeneralConstant.PRODUCT_TYPE);
         if (page == -1) {
             content.getRequestAttributes().put(GeneralConstant.PAGE_NOT_FOUND, true);
             return;
@@ -38,27 +45,46 @@ public class ProductReceiverImpl implements ProductReceiver {
 
         int startIndex = formatter.formatToStartIndex(page, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
         TransactionManager handler = new TransactionManager();
+        List<ProductEntity> productList;
+        List<String> productTypeList;
+        int productCount;
         try {
             ProductDAOImpl productDAO = new ProductDAOImpl();
             handler.beginTransaction(productDAO);
-            List<ProductEntity> productsList = productDAO.findWithLimit(startIndex, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
-            List<String> productTypeList = productDAO.findProductType();
-            int productTypeCount = productTypeList.size();
-            int productCount = productDAO.findProductCount();
+
+            if  ((newProductType.isPresent() && newProductType.get()[0].equals(GeneralConstant.ALL_RU)) ||
+                    (currentProductType.equals(GeneralConstant.ALL_RU) && !newProductType.isPresent())) {
+                productList = productDAO.findWithLimit(startIndex, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
+                productTypeList = productDAO.findProductType();
+                productCount = productDAO.findProductCount();
+                content.getSessionAttributes().remove(GeneralConstant.PRODUCT_TYPE);
+                content.getSessionAttributes().put(GeneralConstant.PRODUCT_TYPE, GeneralConstant.ALL_RU);
+
+            } else if (newProductType.isPresent()){
+                productList = productDAO.findProductByType(newProductType.get()[0], startIndex, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
+                productTypeList = productDAO.findProductType();
+                productCount = productDAO.findProductCountByType(newProductType.get()[0]);
+                content.getSessionAttributes().remove(GeneralConstant.PRODUCT_TYPE);
+                content.getSessionAttributes().put(GeneralConstant.PRODUCT_TYPE, newProductType.get()[0]);
+
+            } else {
+                productList = productDAO.findProductByType(currentProductType, startIndex, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
+                productTypeList = productDAO.findProductType();
+                productCount = productDAO.findProductCountByType(currentProductType);
+            }
             handler.commit();
             handler.endTransaction();
 
-            if (productsList.isEmpty() && page != 1) {
+            if (productList.isEmpty() && page != 1) {
                 content.getRequestAttributes().put(GeneralConstant.PAGE_NOT_FOUND, true);
                 return;
             }
 
-            content.getRequestAttributes().put(GeneralConstant.PRODUCT_LIST, productsList);
+            content.getRequestAttributes().put(GeneralConstant.PRODUCT_LIST, productList);
             content.getRequestAttributes().put(GeneralConstant.PRODUCT_TYPE_LIST, productTypeList);
             content.getRequestAttributes().put(GeneralConstant.LIMIT, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
             content.getRequestAttributes().put(GeneralConstant.PRODUCT_COUNT, productCount);
             content.getRequestAttributes().put(GeneralConstant.PRODUCTS_IMAGE_PATH, UploadType.PRODUCTS.getUploadFolder());
-            content.getRequestAttributes().put(GeneralConstant.PRODUCT_TYPE_COUNT, productTypeCount);
 
         } catch (DAOException e) {
             try {
@@ -71,9 +97,6 @@ public class ProductReceiverImpl implements ProductReceiver {
             throw new ReceiverException(e);
         }
     }
-
-
-
 
     @Override
     public void createProduct(RequestContent content) throws ReceiverException {

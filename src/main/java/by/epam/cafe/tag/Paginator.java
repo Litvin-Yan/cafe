@@ -26,7 +26,7 @@ class Paginator {
      * Describes count of links before and after
      * current pageNumber link.
      */
-    private int countLinks = 3;
+    private int countLinks = 2;
 
     /**
      * Class name of pagination list.

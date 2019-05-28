@@ -1,5 +1,6 @@
 package by.epam.cafe.receiver.impl;
 
+import by.epam.cafe.constant.GeneralConstant;
 import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.dao.TransactionManager;
 import by.epam.cafe.dao.impl.ProductDAOImpl;
@@ -9,6 +10,9 @@ import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.OrderDataReceiver;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static by.epam.cafe.constant.GeneralConstant.ORDER_DATA;
@@ -53,5 +57,23 @@ public class OrderDataReceiverImpl implements OrderDataReceiver {
             orderData.getProducts().put(product, 1);
         }
         requestContent.setAjaxSuccess(true);
+    }
+
+    public void createOrderData(int orderId) throws ReceiverException{
+
+    }
+
+    public BigDecimal findOrderPriceById(int orderId,RequestContent content) throws ReceiverException{
+        BigDecimal orderPrice = new BigDecimal(0);
+
+        OrderDataEntity orderData = (OrderDataEntity) content.getSessionAttributes().get(ORDER_DATA);
+        List<ProductEntity> orderList = new ArrayList<>(orderData.getProducts().keySet());
+
+        for (ProductEntity productEntity : orderList) {
+            BigDecimal price = productEntity.getPrice();
+            BigDecimal count = BigDecimal.valueOf(orderData.getProducts().get(productEntity));
+            orderPrice = orderPrice.add(price.multiply(count));
+        }
+        return orderPrice;
     }
 }

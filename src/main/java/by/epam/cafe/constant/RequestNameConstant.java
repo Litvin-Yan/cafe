@@ -14,6 +14,9 @@ final public class RequestNameConstant {
     public static final String EQUALS_PASSWORDS = "equalsPasswords";
     public static final String WRONG_NAME = "wrongName";
     public static final String WRONG_EMAIL = "wrongEmail";
+    public static final String EXPECTED_TIME = "expectedTime";
+    public static final String PAYMENT_METHOD = "paymentMethod";
+
 
     private RequestNameConstant() {
     }

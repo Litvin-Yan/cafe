@@ -3,6 +3,7 @@ package by.epam.cafe.entity;
 import by.epam.cafe.type.PaymentType;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,8 +14,8 @@ public class OrderEntity extends Entity {
     private BigDecimal cash;
     private Boolean paid;
     private BigDecimal bonus;
-    private Date expectedTime;
-    private Date time;
+    private Timestamp expectedTime;
+    private Timestamp time;
     private PaymentType paymentType;
 
 
@@ -58,19 +59,19 @@ public class OrderEntity extends Entity {
         this.bonus = bonus;
     }
 
-    public Date getExpectedTime() {
+    public Timestamp getExpectedTime() {
         return expectedTime;
     }
 
-    public void setExpectedTime(Date expectedTime) {
+    public void setExpectedTime(Timestamp expectedTime) {
         this.expectedTime = expectedTime;
     }
 
-    public Date getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
 

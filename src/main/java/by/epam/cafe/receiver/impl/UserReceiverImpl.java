@@ -399,7 +399,7 @@ public class UserReceiverImpl implements UserReceiver {
                 return;
             }
 
-            List<Map<String, Object>> pastOrder = orderDAO.findActiveOrdersByUserId(user.getId());
+            List<Map<String, Object>> activeOrder = orderDAO.findActiveOrdersByUserId(user.getId());
 
             manager.commit();
             manager.endTransaction();

@@ -1,5 +1,6 @@
 package by.epam.cafe.dao.impl;
 
+import by.epam.cafe.constant.GeneralConstant;
 import by.epam.cafe.constant.SQLFieldConstant;
 import by.epam.cafe.dao.OrderDAO;
 import by.epam.cafe.entity.OrderEntity;
@@ -15,6 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 public class OrderDAOImpl extends OrderDAO {
+
+    private static final String CREATE_ORDER =
+            "INSERT INTO order (order_expected_time, order_bonus, order_payment_method, user_id) " +
+                    "VALUES (?, ?, ?, ?);";
 
     private static final String FIND_ACTIVE_ORDER_BY_USER_ID =
             "select distinct order_id" +
@@ -53,7 +58,19 @@ public class OrderDAOImpl extends OrderDAO {
 
     @Override
     public boolean create(OrderEntity entity) throws DAOException {
-        return false;
+        boolean isCreated = false;
+        try (PreparedStatement statement = connection.prepareStatement(CREATE_ORDER)) {
+            statement.setTimestamp(1, entity.getExpectedTime());
+            statement.setBigDecimal(2, entity.getBonus());
+            statement.setString(3, String.valueOf(entity.getPaymentType()));
+            statement.setInt(4, entity.getUserId());
+            isCreated = statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            if (!GeneralConstant.DUPLICATE_UNIQUE_INDEX.equals(e.getSQLState())) {
+                throw new DAOException("Create order error ", e);
+            }
+        }
+        return isCreated;
     }
 
     @Override
@@ -73,12 +90,12 @@ public class OrderDAOImpl extends OrderDAO {
                 OrderEntity order = new OrderEntity();
 
                 order.setId(resultSet.getInt(SQLFieldConstant.Order.ID));
-                order.setCash(resultSet.getBigDecimal(12));
+                order.setCash(resultSet.getBigDecimal(SQLFieldConstant.OrderData.PRODUCT_PRICE));
                 order.setUserId(resultSet.getInt(SQLFieldConstant.User.ID));
                 BigDecimal divisor = new BigDecimal(10);
                 BigDecimal bonus = order.getCash().divide(divisor,0);
                 order.setBonus(bonus);
-                order.setExpectedTime(resultSet.getDate(SQLFieldConstant.Order.EXPECTED_TIME));
+                order.setExpectedTime(resultSet.getTimestamp(SQLFieldConstant.Order.EXPECTED_TIME));
                 order.setPaid(resultSet.getBoolean(SQLFieldConstant.Order.PAID));
                 order.setUserId(resultSet.getInt(SQLFieldConstant.Order.USER_ID));
             }

@@ -1,18 +1,34 @@
 package by.epam.cafe.receiver.impl;
 
 import by.epam.cafe.constant.GeneralConstant;
+import by.epam.cafe.constant.RequestNameConstant;
 import by.epam.cafe.content.RequestContent;
+import by.epam.cafe.dao.TransactionManager;
+import by.epam.cafe.dao.impl.OrderDAOImpl;
+import by.epam.cafe.dao.impl.OrderDataDAOImpl;
+import by.epam.cafe.dao.impl.UserDAOImpl;
 import by.epam.cafe.entity.OrderDataEntity;
+import by.epam.cafe.entity.OrderEntity;
 import by.epam.cafe.entity.ProductEntity;
+import by.epam.cafe.entity.UserEntity;
+import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.OrderReceiver;
 import by.epam.cafe.type.UploadType;
 import by.epam.cafe.util.Formatter;
+import by.epam.cafe.util.StringEncoder;
+import by.epam.cafe.validator.impl.CommonValidatorImpl;
+import by.epam.cafe.validator.impl.OrderValidatorImpl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import static by.epam.cafe.constant.GeneralConstant.ORDER;
 import static by.epam.cafe.constant.GeneralConstant.ORDER_DATA;
+import static by.epam.cafe.constant.RequestNameConstant.WRONG_PASSWORD;
+import static by.epam.cafe.constant.RequestNameConstant.WRONG_REPEAT_PASSWORD;
 
 public class OrderReceiverImpl implements OrderReceiver {
 
@@ -51,87 +67,79 @@ public class OrderReceiverImpl implements OrderReceiver {
 
     @Override
     public void createOrder(RequestContent content) throws ReceiverException {
-//        private int id;
-//        private int userId;
-//        private BigDecimal cash;
-//        private Boolean paid;
-//        private BigDecimal bonus;
-//        private Date expectedTime;
-//        private Date time;
-//        private PaymentType paymentType;
 
-//        OrderValidatorImpl validator = new OrderValidatorImpl();
-//        CommonValidatorImpl commonValidator = new CommonValidatorImpl();
-//        int userId = ((UserEntity) content.getSessionAttributes().get(GeneralConstant.USER)).getId();
-//        String[] date = content.getRequestParameters().get(GeneralConstant.EXPECTED_DATE);
-//        String[] time = content.getRequestParameters().get(GeneralConstant.EXPECTED_TIME);
-//        String[] paymentMethod = content.getRequestParameters().get(GeneralConstant.PAYMENT_METHOD);
-//        OrderDataEntity orderData = (OrderDataEntity) content.getSessionAttributes().get(ORDER_DATA);
-//        List<ProductEntity> orderList = new ArrayList<>(orderData.getProducts().keySet());
-//
-//        String dbPassword;
-//        boolean isValidData = true;
-//
-//        content.getRequestAttributes().put(NAME, name[0]);
-//        content.getRequestAttributes().put(EMAIL, email[0]);
-//        content.getRequestAttributes().put(PASSWORD, password[0]);
-//        content.getRequestAttributes().put(REPEAT_PASSWORD, repeatPassword[0]);
-//
-//        if (!commonValidator.isVarExist(password) || !validator.checkPassword(password[0])) {
-//            content.getRequestAttributes().put(WRONG_PASSWORD, true);
-//            isValidData = false;
-//        }
-//
-//        if (!commonValidator.isVarExist(repeatPassword) || !password[0].equals(repeatPassword[0])) {
-//            content.getRequestAttributes().put(WRONG_REPEAT_PASSWORD, true);
-//            isValidData = false;
-//        }
-//
-//        if (!commonValidator.isVarExist(email) || !validator.checkEmail(email[0])) {
-//            content.getRequestAttributes().put(WRONG_EMAIL, true);
-//            isValidData = false;
-//        }
-//
-//        if (!commonValidator.isVarExist(name) || !validator.checkName(name[0])) {
-//            content.getRequestAttributes().put(WRONG_NAME, true);
-//            isValidData = false;
-//        }
-//
-//        if (!isValidData) {
-//            return;
-//        }
-//
-//        dbPassword = StringEncoder.encode(password[0]);
-//
-//        UserEntity user = new UserEntity();
-//        user.setName(name[0]);
-//        user.setEmail(email[0]);
-//        user.setPassword(dbPassword);
-//
-//        TransactionManager handler = new TransactionManager();
-//        try {
-//            UserDAOImpl userDao = new UserDAOImpl();
-//            handler.beginTransaction(userDao);
-//
-//            if (userDao.create(user)) {
-//                handler.commit();
-//                content.getSessionAttributes().put(USER, userDao.findUser(user));
-//                content.getSessionAttributes().put(ORDER_DATA, new OrderDataEntity());
-//            } else {
+        OrderValidatorImpl validator = new OrderValidatorImpl();
+        CommonValidatorImpl commonValidator = new CommonValidatorImpl();
+        int userId = ((UserEntity) content.getSessionAttributes().get(GeneralConstant.USER)).getId();
+        String[] date = content.getRequestParameters().get(GeneralConstant.EXPECTED_DATE);
+        String[] time = content.getRequestParameters().get(GeneralConstant.EXPECTED_TIME);
+        Timestamp expectedTime = Timestamp.valueOf(date[0]+" "+time[0]);
+        String[] paymentMethod = content.getRequestParameters().get(GeneralConstant.PAYMENT_METHOD);
+
+
+        boolean isValidData = true;
+
+        content.getRequestAttributes().put(RequestNameConstant.EXPECTED_TIME, expectedTime);
+        content.getRequestAttributes().put(RequestNameConstant.PAYMENT_METHOD, paymentMethod[0]);
+
+        if (!commonValidator.isVarExist(expectedTime) || !validator.checkPassword(password[0])) {
+            content.getRequestAttributes().put(WRONG_PASSWORD, true);
+            isValidData = false;
+        }
+
+        if (!commonValidator.isVarExist(repeatPassword) || !password[0].equals(repeatPassword[0])) {
+            content.getRequestAttributes().put(WRONG_REPEAT_PASSWORD, true);
+            isValidData = false;
+        }
+
+        if (!commonValidator.isVarExist(email) || !validator.checkEmail(email[0])) {
+            content.getRequestAttributes().put(WRONG_EMAIL, true);
+            isValidData = false;
+        }
+
+        if (!commonValidator.isVarExist(name) || !validator.checkName(name[0])) {
+            content.getRequestAttributes().put(WRONG_NAME, true);
+            isValidData = false;
+        }
+
+        if (!isValidData) {
+            return;
+        }
+
+        OrderEntity order = new OrderEntity();
+        order.setCash(cash);
+        order.setPaid(false);
+        order.setUserId(userId);
+        order.setBonus();
+        order.setExpectedTime();
+        order.setId(userId);
+        order.setPaymentType();
+        order.setTime();
+
+        TransactionManager handler = new TransactionManager();
+        try {
+            UserDAOImpl userDao = new UserDAOImpl();
+            OrderDAOImpl orderDAO = new OrderDAOImpl();
+            OrderDataDAOImpl orderDataDAO = new OrderDataDAOImpl();
+            handler.beginTransaction(userDao, orderDAO, orderDataDAO);
+
+            if (orderDAO.create(order)) {
+                handler.commit();
+            } else {
 //                content.getRequestAttributes().put(EMAIL_EXISTS, true);
-//            }
-//            handler.commit();
-//            handler.endTransaction();
-//
-//        } catch (DAOException e) {
-//            try {
-//                handler.rollback();
-//                handler.endTransaction();
-//            } catch (DAOException e1) {
-//                throw new ReceiverException("Sign up rollback error", e);
-//            }
-//            throw new ReceiverException(e);
-//        }
+            }
+            handler.commit();
+            handler.endTransaction();
+
+        } catch (DAOException e) {
+            try {
+                handler.rollback();
+                handler.endTransaction();
+            } catch (DAOException e1) {
+                throw new ReceiverException("Create order rollback error", e);
+            }
+            throw new ReceiverException(e);
+        }
 
     }
 }

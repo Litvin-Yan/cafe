@@ -34,9 +34,16 @@ public class UserDAOImpl extends UserDAO {
                     "WHERE user_id = ?;";
 
     private static final String FIND_LIMIT_USERS =
-            "SELECT user.user_id, user.user_name , user.user_type, user.user_email, user.user_password, user.user_money, " +
-                    "user.user_is_blocked, user.user_bonus, user.user_avatar_url" +
-                    "FROM user " +
+            "SELECT user_id" +
+                    ", user_name" +
+                    ", user_type" +
+                    ", user_email" +
+                    ", user_password" +
+                    ", user_money" +
+                    ", user_is_blocked" +
+                    ", user_bonus" +
+                    ", user_avatar_url" +
+                    " FROM user " +
                     "ORDER BY user_id DESC " +
                     "LIMIT ?, ?;";
 

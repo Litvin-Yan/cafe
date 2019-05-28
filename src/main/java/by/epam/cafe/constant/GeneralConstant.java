@@ -93,7 +93,7 @@ public class GeneralConstant {
     public static final String ORDER_DATA_PRODUCT_PRICE = "orderDataProductPrice";
 
     public static final int COUNT_PRODUCTS_ON_PAGE = 5;
-    public static final int COUNT_USERS_ON_PAGE = 5;
+    public static final int COUNT_USERS_ON_PAGE = 4;
 
     private GeneralConstant() {
     }

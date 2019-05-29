@@ -28,8 +28,8 @@ public class UserDAOImpl extends UserDAO {
                     "WHERE user_email = ? AND user_password = ?;";
 
     private static final String FIND_USER_BY_ID =
-            "SELECT user.user_id, user.user_name , user.user_type, user.user_email, user.user_password, user.user_money, " +
-                    "user.user_is_blocked, user.user_bonus, user.user_avatar_url " +
+            "SELECT user_id, user_name , user_type, user_email, user_password, user_money, " +
+                    "user_is_blocked, user_bonus, user_avatar_url, user_blocked_text " +
                     "FROM user " +
                     "WHERE user_id = ?;";
 

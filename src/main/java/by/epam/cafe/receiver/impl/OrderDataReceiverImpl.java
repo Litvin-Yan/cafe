@@ -9,7 +9,6 @@ import by.epam.cafe.entity.ProductEntity;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.OrderDataReceiver;
-import by.epam.cafe.validator.impl.CommonValidatorImpl;
 import by.epam.cafe.validator.impl.OrderDataValidatorImpl;
 
 import java.math.BigDecimal;
@@ -64,7 +63,6 @@ public class OrderDataReceiverImpl implements OrderDataReceiver {
 
     public void createOrderData(RequestContent content, int orderId) throws ReceiverException {
         OrderDataValidatorImpl validator = new OrderDataValidatorImpl();
-        CommonValidatorImpl commonValidator = new CommonValidatorImpl();
 
         OrderDataEntity orderData = (OrderDataEntity) content.getSessionAttributes().get(ORDER_DATA);
         List<ProductEntity> productList = new ArrayList<>(orderData.getProducts().keySet());
@@ -82,24 +80,28 @@ public class OrderDataReceiverImpl implements OrderDataReceiver {
         }
 
         TransactionManager manager = new TransactionManager();
+        OrderDataDAOImpl orderDataDAO = new OrderDataDAOImpl();
+
         try {
-            OrderDataDAOImpl orderDataDAO = new OrderDataDAOImpl();
             manager.beginTransaction(orderDataDAO);
             for (ProductEntity product : productList) {
-                if(orderDataDAO.create(product.getId(), orderData.getProducts().get(product), product.getPrice(), orderId)){
-                    manager.commit();
+                try {
+                    if (orderDataDAO.create(product.getId(), orderData.getProducts().get(product), product.getPrice(), orderId)) {
+                        manager.commit();
+                    }
+                } catch (DAOException e) {
+                    try {
+                        manager.rollback();
+                        manager.endTransaction();
+                    } catch (DAOException e1) {
+                        throw new ReceiverException("Create orderData rollback error", e);
+                    }
                 }
             }
             manager.endTransaction();
             content.getSessionAttributes().remove(ORDER_DATA);
             content.getSessionAttributes().put(ORDER_DATA, new OrderDataEntity());
         } catch (DAOException e) {
-            try {
-                manager.rollback();
-                manager.endTransaction();
-            } catch (DAOException e1) {
-                throw new ReceiverException("Create orderData rollback error", e);
-            }
             throw new ReceiverException(e);
         }
     }

@@ -11,25 +11,25 @@
     <div class="w3-container w3-card-2 backgraund-opacity">
         <form action="${pageContext.request.contextPath}/generalController" class="w3-margin-bottom w3-card-2 w3-margin-top">
             <input type="hidden" name="command" value="OPEN_USER_SETTINGS">
-            <button type="submit" class="w3-button w3-block w3-theme-l2 w3-center">
+            <button type="submit" class="w3-button w3-block  w3-center w3-black w3-text-amber">
                 ${txtUsers}
             </button>
         </form>
         <form action="${pageContext.request.contextPath}/generalController" class="w3-margin-bottom w3-card-2">
             <input type="hidden" name="command" value="open_news_settings">
-            <button type="submit" class="w3-button w3-block w3-theme-l2 w3-center">
+            <button type="submit" class="w3-button w3-block w3-center w3-black w3-text-amber">
                 ${txtOrders}
             </button>
         </form>
         <form action="${pageContext.request.contextPath}/generalController" class="w3-margin-bottom w3-card-2">
             <input type="hidden" name="command" value="open_product_settings">
-            <button type="submit" class="w3-button w3-block w3-theme-l2 w3-center">
+            <button type="submit" class="w3-button w3-block w3-center w3-black w3-text-amber">
                 ${txtProducts}
             </button>
         </form>
         <form action="${pageContext.request.contextPath}/generalController" class="w3-margin-bottom w3-card-2">
             <input type="hidden" name="command" value="OPEN_ADMIN_STATISTIC">
-            <button type="submit" class="w3-button w3-block w3-theme-l2 w3-center">
+            <button type="submit" class="w3-button w3-block w3-center w3-black w3-text-amber">
                 ${txtStatistic}
             </button>
         </form>

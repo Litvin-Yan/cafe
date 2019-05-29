@@ -1,5 +1,7 @@
 package by.epam.cafe.constant;
 
+import java.math.BigDecimal;
+
 public class GeneralConstant {
 
     public static final String ORDER_ID = "orderId";
@@ -15,6 +17,7 @@ public class GeneralConstant {
     public static final String EXPECTED_TIME = "timeOfReceiving";
     public static final String EXPECTED_DATE = "dateOfReceiving";
     public static final String PAYMENT_METHOD = "paymentMethod";
+    public static final String ORDER_PRICE = "orderPrice";
     public static final String PRODUCT_ID = "productId";
     public static final String DUPLICATE_UNIQUE_INDEX = "23000";
     public static final String CAN_NOT_DELETE_OR_UPDATE = "23000";
@@ -95,6 +98,7 @@ public class GeneralConstant {
 
     public static final int COUNT_PRODUCTS_ON_PAGE = 5;
     public static final int COUNT_USERS_ON_PAGE = 4;
+    public static final BigDecimal PROCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT = new BigDecimal(0.05);
 
     private GeneralConstant() {
     }

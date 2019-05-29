@@ -13,12 +13,15 @@ import by.epam.cafe.entity.ProductEntity;
 import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
+import by.epam.cafe.receiver.OrderDataReceiver;
 import by.epam.cafe.receiver.OrderReceiver;
+import by.epam.cafe.type.PaymentType;
 import by.epam.cafe.type.UploadType;
 import by.epam.cafe.util.Formatter;
 import by.epam.cafe.validator.impl.CommonValidatorImpl;
 import by.epam.cafe.validator.impl.OrderValidatorImpl;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,71 +70,47 @@ public class OrderReceiverImpl implements OrderReceiver {
 
         OrderValidatorImpl validator = new OrderValidatorImpl();
         CommonValidatorImpl commonValidator = new CommonValidatorImpl();
+
         int userId = ((UserEntity) content.getSessionAttributes().get(GeneralConstant.USER)).getId();
         String[] date = content.getRequestParameters().get(GeneralConstant.EXPECTED_DATE);
         String[] time = content.getRequestParameters().get(GeneralConstant.EXPECTED_TIME);
         Timestamp expectedTime = Timestamp.valueOf(date[0]+" "+time[0]);
         String[] paymentMethod = content.getRequestParameters().get(GeneralConstant.PAYMENT_METHOD);
-
-
-        boolean isValidData = true;
+        PaymentType paymentType = PaymentType.valueOf(paymentMethod[0]);
+        String[] orderPrice = content.getRequestParameters().get(GeneralConstant.PAYMENT_METHOD);
 
         content.getRequestAttributes().put(RequestNameConstant.EXPECTED_TIME, expectedTime);
         content.getRequestAttributes().put(RequestNameConstant.PAYMENT_METHOD, paymentMethod[0]);
-
-        if (!commonValidator.isVarExist(expectedTime) || !validator.checkPassword(password[0])) {
-            content.getRequestAttributes().put(WRONG_PASSWORD, true);
-            isValidData = false;
-        }
-
-        if (!commonValidator.isVarExist(repeatPassword) || !password[0].equals(repeatPassword[0])) {
-            content.getRequestAttributes().put(WRONG_REPEAT_PASSWORD, true);
-            isValidData = false;
-        }
-
-        if (!commonValidator.isVarExist(email) || !validator.checkEmail(email[0])) {
-            content.getRequestAttributes().put(WRONG_EMAIL, true);
-            isValidData = false;
-        }
-
-        if (!commonValidator.isVarExist(name) || !validator.checkName(name[0])) {
-            content.getRequestAttributes().put(WRONG_NAME, true);
-            isValidData = false;
-        }
-
-        if (!isValidData) {
-            return;
-        }
+        content.getRequestAttributes().put(RequestNameConstant.ORDER_PRICE, orderPrice[0]);
 
         OrderEntity order = new OrderEntity();
-        order.setCash(cash);
         order.setPaid(false);
         order.setUserId(userId);
-        order.setBonus();
-        order.setExpectedTime();
-        order.setId(userId);
-        order.setPaymentType();
-        order.setTime();
+        order.setExpectedTime(expectedTime);
+        order.setPaymentType(paymentType);
+        order.setCash(BigDecimal.valueOf(Double.parseDouble(orderPrice[0])));
+        order.setBonus(order.getCash().multiply(GeneralConstant.PROCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT));
 
-        TransactionManager handler = new TransactionManager();
+        TransactionManager manager = new TransactionManager();
         try {
             UserDAOImpl userDao = new UserDAOImpl();
             OrderDAOImpl orderDAO = new OrderDAOImpl();
             OrderDataDAOImpl orderDataDAO = new OrderDataDAOImpl();
-            handler.beginTransaction(userDao, orderDAO, orderDataDAO);
+            OrderDataReceiverImpl orderDataReceiver = new OrderDataReceiverImpl();
+            manager.beginTransaction(userDao, orderDAO, orderDataDAO);
 
             if (orderDAO.create(order)) {
-                handler.commit();
+                manager.commit();
             } else {
 //                content.getRequestAttributes().put(EMAIL_EXISTS, true);
             }
-            handler.commit();
-            handler.endTransaction();
+            manager.commit();
+            manager.endTransaction();
 
         } catch (DAOException e) {
             try {
-                handler.rollback();
-                handler.endTransaction();
+                manager.rollback();
+                manager.endTransaction();
             } catch (DAOException e1) {
                 throw new ReceiverException("Create order rollback error", e);
             }

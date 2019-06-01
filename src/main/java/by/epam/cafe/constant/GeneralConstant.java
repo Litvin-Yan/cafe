@@ -85,6 +85,7 @@ public class GeneralConstant {
     public static final String SUCCESS = "success";
     public static final String COUNT = "count";
     public static final String CASH = "cash";
+    public static final String BONUS = "bonus";
     public static final String VALUE = "value";
     public static final String PAGE_NOT_FOUND = "pageNotFound";
     public static final String PAGE_NUMBER = "pageNumber";

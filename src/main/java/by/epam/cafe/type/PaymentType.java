@@ -1,5 +1,5 @@
 package by.epam.cafe.type;
 
 public enum PaymentType {
-    CASH, CARD, BONUS
+    CASH, MONEY, BONUSES
 }

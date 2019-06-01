@@ -7,7 +7,7 @@
 <fmt:message bundle="${rb}" key="txt.choose.product.type" var="txtChooseitemType"/>
 <fmt:message bundle="${rb}" key="txt.order.date" var="txtDateOfReceiving"/>
 <fmt:message bundle="${rb}" key="txt.order.time" var="txtTimeOfReceiving"/>
-<fmt:message bundle="${rb}" key="txt.send" var="send"/>
+<fmt:message bundle="${rb}" key="txt.to.order" var="toOrder"/>
 <fmt:message bundle="${rb}" key="txt.payment.type.money" var="txtMoney"/>
 <fmt:message bundle="${rb}" key="txt.payment.type.cash" var="txtCash"/>
 <fmt:message bundle="${rb}" key="txt.payment.type.bonus" var="txtBonuses"/>
@@ -36,13 +36,13 @@
                 <br>
                 <select id="paymentType" required name="paymentMethod" class="w3-select">
                     <option value='' selected disabled> ${txtChoosePaymentType}</option>
-                    <option value="money">
+                    <option value="MONEY">
                         ${txtMoney}
                     </option>
-                    <option value="cash">
+                    <option value="CASH">
                         ${txtCash}
                     </option>
-                    <option value="bonuses">
+                    <option value="BONUSES">
                         ${txtBonuses}
                     </option>
                 </select>
@@ -55,10 +55,11 @@
                         <c:set var="total" value="${total + product.key.price*product.value}"/>
                     </c:forEach>
                     <c:out value="${total}$"/>
+                    <input type="hidden" value="${total}" name="orderPrice">
                 </label>
                 <p>
                     <input class="w3-button w3-black w3-text-amber" style="margin-bottom: 8px" type="submit" id="submit"
-                           value="${send}" onclick="">
+                           value="${toOrder}" onclick="">
                 </p>
             </form>
         </div>

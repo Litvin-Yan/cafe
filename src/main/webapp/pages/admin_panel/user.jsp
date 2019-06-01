@@ -25,19 +25,23 @@
 <fmt:message bundle="${rb}" key="txt.admin" var="txtAdmin"/>
 <fmt:message bundle="${rb}" key="txt.userEntity" var="txtUser"/>
 <fmt:message bundle="${rb}" key="txt.cash" var="txtCash"/>
+<fmt:message bundle="${rb}" key="txt.bonus" var="txtBonus"/>
 <fmt:message bundle="${rb}" key="txt.role" var="txtRole"/>
 <fmt:message bundle="${rb}" key="txt.email" var="txtEmail"/>
 <fmt:message bundle="${rb}" key="txt.blocked" var="txtBlocked"/>
 <fmt:message bundle="${rb}" key="txt.blocked.text" var="txtBlockedText"/>
 <fmt:message bundle="${rb}" key="txt.blocking.reason" var="txtBlockingReason"/>
 <fmt:message bundle="${rb}" key="txt.select.role" var="txtSelectRole"/>
+<fmt:message bundle="${rb}" key="txt.select.action" var="txtSelectAction"/>
 <fmt:message bundle="${rb}" key="txt.change.role.wrong" var="txtChangeWrongRole"/>
 <fmt:message bundle="${rb}" key="txt.change.lock.wrong" var="txtChangeWrongLock"/>
 <fmt:message bundle="${rb}" key="lbl.Name" var="txtName"/>
 <fmt:message bundle="${rb}" key="txt.error.check.connection" var="txtErrorCheckConnection"/>
 <fmt:message bundle="${rb}" key="txt.before.unlock.user" var="txtBeforeUnlockUser"/>
 <fmt:message bundle="${rb}" key="txt.before.block.user" var="txtBeforeBlockUser"/>
-<body>
+<fmt:message bundle="${rb}" key="txt.add.bonuses" var="txtAddBonuses"/>
+<fmt:message bundle="${rb}" key="txt.withdraw.bonuses" var="txtWithdrawBonuses"/>
+<fmt:message bundle="${rb}" key="txt.enter.amount" var="txtEnterAmount"/>
 
 <div class="w3-container w3-content main-container">
     <div class="w3-col m3 w3-margin-top">
@@ -64,6 +68,10 @@
                                             <button class="w3-button w3-black w3-padding-small"
                                                     onclick="(modal_change_role${userEntity.id}).style.display='block'">
                                                 <i class="fa fa-users"></i>
+                                            </button>
+                                            <button class="w3-button w3-black w3-padding-small"
+                                                    onclick="(modal_change_bonus${userEntity.id}).style.display='block'">
+                                                <i class="fa fa-money"></i>
                                             </button>
                                             <c:choose>
                                                 <c:when test="${userEntity.isBlocked}">
@@ -163,6 +171,48 @@
                                 </div>
 
 
+                                <div id="modal_change_bonus${userEntity.id}" class="w3-modal w3-center">
+                                    <div class="w3-modal-content">
+                                        <div class="w3-container">
+                                            <span onclick="(modal_change_bonus${userEntity.id}).style.display='none'"
+                                                  class="w3-button w3-display-topright">
+                                                &times;
+                                            </span>
+                                            <p>${txtSelectAction}:</p>
+                                            <p>
+                                            <form method="post" id="bonusForm${userEntity.id}" action="/ajaxController"
+                                                  onsubmit="return false">
+                                                <input type="hidden" name="userId" value="${userEntity.id}">
+                                                <label class="w3-padding-small">${txtWithdrawBonuses}
+                                                    <input type="radio" class="w3-radio" name="command" value="WITHDRAW_BONUS"
+                                                           required>
+                                                </label>
+                                                <label class="w3-padding-small">${txtAddBonuses}
+                                                    <input type="radio" class="w3-radio" name="command" value="ADD_BONUS">
+                                                </label>
+                                                <br>
+                                                <label class="w3-padding-small">${txtEnterAmount}
+                                                    <input type="number" name="bonus" id="bonus" step="1"
+                                                           class="w3-input w3-border" min="1" max="1000" required/>
+                                                </label>
+                                            </form>
+                                            </p>
+                                            <div class="w3-row">
+                                                <div class="w3-half">
+                                                    <input onclick="changeBonuses(this, 'bonusForm${userEntity.id}', 'modal_change_bonus${userEntity.id}')"
+                                                           type="button"
+                                                           class="w3-button" value="${txtYes}">
+                                                </div>
+                                                <div class="w3-half">
+                                                    <input type="button" class="w3-button" value="${txtNo}"
+                                                           onclick="(modal_change_bonus${userEntity.id}).style.display='none'">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="w3-col s4">
                                     <div class=" w3-padding">
                                         <img src="${userImagePath}${userEntity.avatarURL}" alt="${userEntity.name}"
@@ -181,6 +231,8 @@
                                             <div style="margin: 4px">
                                                 <i>${txtRole}: </i>
                                                 <b> <c:out value="${userEntity.type}"/> </b>
+                                                <i>  ${txtBonus}: </i>
+                                                <b> <ctg:decimal-presenter number="${userEntity.bonus}"/>$ </b>
                                             </div>
                                             <div style="margin: 4px">
                                                 <i>${txtEmail}: </i>
@@ -251,7 +303,25 @@
     </div>
 </div>
 
-</body>
+<div id="modal_bonus_error" class="w3-modal">
+    <div class="w3-modal-content">
+        <div class="w3-container">
+            <span onclick="(modal_bonus_error).style.display='none'" class="w3-button w3-display-topright">&times;</span>
+            <p>${txtErrorCheckConnection}</p>
+            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_bonus_error).style.display='none'">
+        </div>
+    </div>
+</div>
+<div id="modal_bonus_wrong" class="w3-modal">
+    <div class="w3-modal-content">
+        <div class="w3-container">
+            <span onclick="(modal_bonus_wrong).style.display='none'" class="w3-button w3-display-topright">&times;</span>
+            <p>${txtChangeWrongLock}</p>
+            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_bonus_wrong).style.display='none'">
+        </div>
+    </div>
+</div>
+
 <script src="${pageContext.request.contextPath}/js/user.js"></script>
 <link rel="stylesheet" type="text/css"
       href="${pageContext.request.contextPath}/vendors/jquery.imgareaselect-0.9.10/css/imgareaselect-default.css"/>
@@ -265,6 +335,7 @@
         src="${pageContext.request.contextPath}/vendors/jquery.imgareaselect-0.9.10/scripts/jquery.imgareaselect.pack.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+
 <%@include file="/pages/partial/footer.jsp" %>
 
 

@@ -198,5 +198,7 @@ function updateOrderPrice() {
         let price = parseFloat(priceList[i].innerText.replace("$", ""));
         sum += price * count;
     }
-    $('.orderPrice').html(sum+"$");
+    // $('.orderPrice').html(sum+"$");
+    $('.orderPrice').html(`${sum}$`+
+        `<input type='hidden' value='${sum}' name='orderPrice'>`);
 }

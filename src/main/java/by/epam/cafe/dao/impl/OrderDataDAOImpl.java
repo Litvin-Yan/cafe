@@ -57,7 +57,7 @@ public class OrderDataDAOImpl extends OrderDataDAO {
 
     @Override
     public boolean create(OrderDataEntity entity) throws DAOException {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     public boolean create(int productId, int productCount, BigDecimal productPrice, int orderId) throws DAOException {

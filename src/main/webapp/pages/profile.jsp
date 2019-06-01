@@ -106,32 +106,8 @@
                 </div>
             </div>
 
-            <%--Bet info section--%>
             <div class="w3-col m8 w3-container">
-<%--                <div class="w3-bar w3-black w3-card-2 w3-margin-bottom">--%>
-<%--                    <button class="w3-bar-item w3-button generalLink w3-white"--%>
-<%--                            onclick="openTab(event,'Upcoming', 'general', 'generalLink')">--%>
-<%--                        ${txtExpectedRates}--%>
-<%--                    </button>--%>
-<%--                    <button class="w3-bar-item w3-button generalLink"--%>
-<%--                            onclick="openTab(event,'Past', 'general', 'generalLink')">--%>
-<%--                        ${txtBettingResult}--%>
-<%--                    </button>--%>
-<%--                </div>--%>
 
-<%--                <div id="Upcoming" class="general">--%>
-<%--                    &lt;%&ndash;Incude upcoming bets part&ndash;%&gt;--%>
-<%--                    <div class="scroll" id="style-2">--%>
-<%--                        <%@include file="/jsp/user/part/upcoming_bet.jsp" %>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-
-<%--                <div id="Past" class="general" style="display:none">--%>
-<%--                    &lt;%&ndash;Incude upcoming bets part&ndash;%&gt;--%>
-<%--                    <div class="scroll" id="style-2">--%>
-<%--                        <%@include file="/jsp/user/part/past_bet.jsp" %>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
             </div>
         </div>
     </div>

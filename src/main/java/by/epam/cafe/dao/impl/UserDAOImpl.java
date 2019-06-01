@@ -78,19 +78,13 @@ public class UserDAOImpl extends UserDAO {
                     "SET user_money = ? " +
                     "WHERE user_id = ?;";
 
-    private static final String RETURN_MONEY_FOR_CANCELED_ORDER =
-            "UPDATE  " +
-                    "    user, " +
-                    "    bet, " +
-                    "    competition, " +
-                    "    competitor  " +
-                    "SET  " +
-                    "    user_cash = user_cash + bet_cash " +
-                    "WHERE " +
-                    "    user.user_id = bet.user_id " +
-                    "        AND bet.competitor_id = competitor.competitor_id " +
-                    "        AND competitor.competition_id = competition.competition_id " +
-                    "        AND competition.competition_id = ?;";
+    private static final String UPDATE_USER_BONUS =
+            "UPDATE cafe.user " +
+                    "SET user_bonus = ? " +
+                    "WHERE user_id = ?;";
+
+    private static final String RETURN_MONEY_FOR_CANCELED_ORDER = "";
+
 
     @Override
     public List<UserEntity> findAll() {
@@ -188,6 +182,8 @@ public class UserDAOImpl extends UserDAO {
                 foundUser.setBlocked(result.getBoolean(SQLFieldConstant.User.IS_BLOCKED));
                 foundUser.setBlockedText(result.getString(SQLFieldConstant.User.BLOCKED_TEXT));
                 foundUser.setAvatarURL(result.getString(SQLFieldConstant.User.AVATAR_URL));
+                foundUser.setBonus(result.getBigDecimal(SQLFieldConstant.User.BONUS));
+                foundUser.setCash(result.getBigDecimal(SQLFieldConstant.User.MONEY));
                 String userType = result.getString(SQLFieldConstant.User.TYPE);
                 foundUser.setType(UserType.valueOf(userType));
                 userList.add(foundUser);
@@ -317,6 +313,21 @@ public class UserDAOImpl extends UserDAO {
 
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_USER_MONEY)) {
             statement.setBigDecimal(1, entity.getCash());
+            statement.setInt(2, entity.getId());
+            isUpdated = statement.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            throw new DAOException("Update cash error ", e);
+        }
+
+        return isUpdated;
+    }
+
+    public boolean updateBonus(UserEntity entity) throws DAOException {
+        boolean isUpdated;
+
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_USER_BONUS)) {
+            statement.setBigDecimal(1, entity.getBonus());
             statement.setInt(2, entity.getId());
             isUpdated = statement.executeUpdate() == 1;
 

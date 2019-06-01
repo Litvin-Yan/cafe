@@ -66,6 +66,18 @@ public enum CommandType {
         }
     },
 
+    WITHDRAW_BONUS(new WithdrawBonusCommand(new UserReceiverImpl())) {
+        public void doReceiver(RequestContent content) throws ReceiverException {
+            ((UserReceiverImpl) getCommand().getReceiver()).withdrawBonus(content);
+        }
+    },
+
+    ADD_BONUS(new AddBonusCommand(new UserReceiverImpl())) {
+        public void doReceiver(RequestContent content) throws ReceiverException {
+            ((UserReceiverImpl) getCommand().getReceiver()).addBonus(content);
+        }
+    },
+
     CHANGE_AVATAR(new UpdateAvatarCommand(new UserReceiverImpl())) {
         public void doReceiver(RequestContent content) throws ReceiverException {
             ((UserReceiverImpl) getCommand().getReceiver()).changeAvatar(content);

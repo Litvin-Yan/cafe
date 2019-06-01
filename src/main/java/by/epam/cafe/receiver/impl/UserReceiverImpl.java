@@ -2,12 +2,13 @@ package by.epam.cafe.receiver.impl;
 
 
 import by.epam.cafe.constant.RequestNameConstant;
-import by.epam.cafe.constant.SQLFieldConstant;
 import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.dao.TransactionManager;
-import by.epam.cafe.dao.impl.*;
+import by.epam.cafe.dao.impl.CommonDAOImpl;
+import by.epam.cafe.dao.impl.OrderDAOImpl;
+import by.epam.cafe.dao.impl.OrderDataDAOImpl;
+import by.epam.cafe.dao.impl.UserDAOImpl;
 import by.epam.cafe.entity.OrderDataEntity;
-import by.epam.cafe.entity.ProductEntity;
 import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
@@ -26,13 +27,12 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
-import static by.epam.cafe.constant.GeneralConstant.*;
 import static by.epam.cafe.constant.GeneralConstant.USER;
 import static by.epam.cafe.constant.GeneralConstant.WRONG_DATA;
-import static by.epam.cafe.constant.RequestNameConstant.*;
+import static by.epam.cafe.constant.GeneralConstant.*;
 import static by.epam.cafe.constant.RequestNameConstant.NAME;
+import static by.epam.cafe.constant.RequestNameConstant.*;
 
 public class UserReceiverImpl implements UserReceiver {
 
@@ -566,7 +566,7 @@ public class UserReceiverImpl implements UserReceiver {
                 manager.endTransaction();
 
             } catch (DAOException e1) {
-                throw new ReceiverException("Open users setting rollback error", e);
+                throw new ReceiverException("Add money rollback error", e);
             }
             throw new ReceiverException(e);
         }
@@ -648,7 +648,151 @@ public class UserReceiverImpl implements UserReceiver {
                 manager.endTransaction();
 
             } catch (DAOException e1) {
-                throw new ReceiverException("Open users setting rollback error", e);
+                throw new ReceiverException("Withdraw money rollback error", e);
+            }
+            throw new ReceiverException(e);
+        }
+    }
+
+    public void addBonus(RequestContent content) throws ReceiverException {
+
+        int userId = Integer.valueOf(content.getRequestParameters().get(USER_ID)[0]);
+        UserEntity currentUser = (UserEntity) content.getSessionAttributes().get(USER);
+
+        if (!UserType.ADMIN.equals(currentUser.getType()) ||
+                currentUser.getId() == userId) {
+            content.setAjaxSuccess(false);
+            return;
+        }
+
+        CommonValidatorImpl commonValidator = new CommonValidatorImpl();
+        UserValidatorImpl userValidator = new UserValidatorImpl();
+        String[] stringAddBonus = content.getRequestParameters().get(BONUS);
+        boolean isDataValid = true;
+
+        if (!commonValidator.isVarExist(stringAddBonus) ||
+                !commonValidator.isInteger(stringAddBonus[0])) {
+            content.getAjaxResult().add(WRONG_DATA, new Gson().toJsonTree(true));
+            isDataValid = false;
+        }
+
+        if (!isDataValid) {
+            content.setAjaxSuccess(false);
+            return;
+        }
+        int bonus = Integer.valueOf(stringAddBonus[0]);
+
+        if (!userValidator.isCashValid(bonus)) {
+            content.getAjaxResult().add(WRONG_DATA, new Gson().toJsonTree(true));
+            content.setAjaxSuccess(false);
+            return;
+        }
+
+        TransactionManager manager = new TransactionManager();
+        try {
+            UserDAOImpl userDAO = new UserDAOImpl();
+            manager.beginTransaction(userDAO);
+            UserEntity actualUser = userDAO.findEntityById(userId);
+
+            actualUser.setBonus(actualUser.getBonus().add(new BigDecimal(bonus)));
+            boolean isUpdated = userDAO.updateBonus(actualUser);
+
+            if (isUpdated) {
+                manager.commit();
+            } else {
+                manager.rollback();
+                content.getAjaxResult().add(UPDATE_ERROR, new Gson().toJsonTree(true));
+            }
+            content.setAjaxSuccess(isUpdated);
+            manager.endTransaction();
+
+        } catch (DAOException e) {
+            try {
+                manager.rollback();
+                manager.endTransaction();
+
+            } catch (DAOException e1) {
+                throw new ReceiverException("Add bonus rollback error", e);
+            }
+            throw new ReceiverException(e);
+        }
+    }
+
+    public void withdrawBonus(RequestContent content) throws ReceiverException {
+
+        int userId = Integer.valueOf(content.getRequestParameters().get(USER_ID)[0]);
+        UserEntity currentUser = (UserEntity) content.getSessionAttributes().get(USER);
+
+        if (!UserType.ADMIN.equals(currentUser.getType()) ||
+                currentUser.getId() == userId) {
+            content.setAjaxSuccess(false);
+            return;
+        }
+
+        CommonValidatorImpl commonValidator = new CommonValidatorImpl();
+        UserValidatorImpl userValidator = new UserValidatorImpl();
+        String[] stringWithdrawBonus = content.getRequestParameters().get(BONUS);
+        boolean isDataValid = true;
+
+
+        if (!commonValidator.isVarExist(stringWithdrawBonus) ||
+                !commonValidator.isInteger(stringWithdrawBonus[0])) {
+            content.getAjaxResult().add(WRONG_DATA, new Gson().toJsonTree(true));
+            isDataValid = false;
+        }
+
+        if (!isDataValid) {
+            content.setAjaxSuccess(false);
+            return;
+        }
+        int bonus = Integer.valueOf(stringWithdrawBonus[0]);
+
+        if (!userValidator.isCashValid(bonus)) {
+            content.getAjaxResult().add(WRONG_DATA, new Gson().toJsonTree(true));
+            content.setAjaxSuccess(false);
+            return;
+        }
+
+        TransactionManager manager = new TransactionManager();
+        try {
+            UserDAOImpl userDAO = new UserDAOImpl();
+            manager.beginTransaction(userDAO);
+            UserEntity actualUser = userDAO.findEntityById(userId);
+            boolean isUserDataValid = true;
+
+            if (actualUser.getBonus().compareTo(new BigDecimal(bonus)) == -1) {
+                content.getAjaxResult().add(LITTLE_MONEY, new Gson().toJsonTree(true));
+                isUserDataValid = false;
+            }
+
+            if (!isUserDataValid) {
+                manager.commit();
+                manager.endTransaction();
+                content.setAjaxSuccess(false);
+                return;
+            }
+
+            actualUser.setBonus(actualUser.getBonus().subtract(new BigDecimal(bonus)));
+            boolean isUpdated = userDAO.updateBonus(actualUser);
+
+            if (isUpdated) {
+                manager.commit();
+
+            } else {
+                manager.rollback();
+                content.getAjaxResult().add(UPDATE_ERROR, new Gson().toJsonTree(true));
+            }
+
+            content.setAjaxSuccess(isUpdated);
+            manager.endTransaction();
+
+        } catch (DAOException e) {
+            try {
+                manager.rollback();
+                manager.endTransaction();
+
+            } catch (DAOException e1) {
+                throw new ReceiverException("Withdraw bonus rollback error", e);
             }
             throw new ReceiverException(e);
         }

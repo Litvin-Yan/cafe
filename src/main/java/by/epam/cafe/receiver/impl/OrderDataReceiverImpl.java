@@ -61,7 +61,9 @@ public class OrderDataReceiverImpl implements OrderDataReceiver {
         requestContent.setAjaxSuccess(true);
     }
 
-    public void createOrderData(RequestContent content, int orderId) throws ReceiverException {
+    public boolean createOrderData(RequestContent content, int orderId) throws ReceiverException {
+        boolean allCreated = true;
+
         OrderDataValidatorImpl validator = new OrderDataValidatorImpl();
 
         OrderDataEntity orderData = (OrderDataEntity) content.getSessionAttributes().get(ORDER_DATA);
@@ -76,7 +78,7 @@ public class OrderDataReceiverImpl implements OrderDataReceiver {
             }
         }
         if (!isValidData) {
-            return;
+            return false;
         }
 
         TransactionManager manager = new TransactionManager();
@@ -93,6 +95,7 @@ public class OrderDataReceiverImpl implements OrderDataReceiver {
                     try {
                         manager.rollback();
                         manager.endTransaction();
+                        allCreated = false;
                     } catch (DAOException e1) {
                         throw new ReceiverException("Create orderData rollback error", e);
                     }
@@ -104,6 +107,7 @@ public class OrderDataReceiverImpl implements OrderDataReceiver {
         } catch (DAOException e) {
             throw new ReceiverException(e);
         }
+        return allCreated;
     }
 
     public BigDecimal findOrderPriceById(int orderId, RequestContent content) throws ReceiverException {

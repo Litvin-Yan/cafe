@@ -13,22 +13,22 @@ import by.epam.cafe.entity.ProductEntity;
 import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
-import by.epam.cafe.receiver.OrderDataReceiver;
 import by.epam.cafe.receiver.OrderReceiver;
 import by.epam.cafe.type.PaymentType;
 import by.epam.cafe.type.UploadType;
 import by.epam.cafe.util.Formatter;
 import by.epam.cafe.validator.impl.CommonValidatorImpl;
 import by.epam.cafe.validator.impl.OrderValidatorImpl;
+import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import static by.epam.cafe.constant.GeneralConstant.ORDER_DATA;
-import static by.epam.cafe.constant.RequestNameConstant.WRONG_PASSWORD;
-import static by.epam.cafe.constant.RequestNameConstant.WRONG_REPEAT_PASSWORD;
+import static by.epam.cafe.constant.GeneralConstant.WRONG_DATA;
 
 public class OrderReceiverImpl implements OrderReceiver {
 
@@ -74,10 +74,10 @@ public class OrderReceiverImpl implements OrderReceiver {
         int userId = ((UserEntity) content.getSessionAttributes().get(GeneralConstant.USER)).getId();
         String[] date = content.getRequestParameters().get(GeneralConstant.EXPECTED_DATE);
         String[] time = content.getRequestParameters().get(GeneralConstant.EXPECTED_TIME);
-        Timestamp expectedTime = Timestamp.valueOf(date[0]+" "+time[0]);
+        Timestamp expectedTime = Timestamp.valueOf(date[0] + " " + time[0] + ":00.0");
         String[] paymentMethod = content.getRequestParameters().get(GeneralConstant.PAYMENT_METHOD);
         PaymentType paymentType = PaymentType.valueOf(paymentMethod[0]);
-        String[] orderPrice = content.getRequestParameters().get(GeneralConstant.PAYMENT_METHOD);
+        String[] orderPrice = content.getRequestParameters().get(GeneralConstant.ORDER_PRICE);
 
         content.getRequestAttributes().put(RequestNameConstant.EXPECTED_TIME, expectedTime);
         content.getRequestAttributes().put(RequestNameConstant.PAYMENT_METHOD, paymentMethod[0]);
@@ -88,9 +88,22 @@ public class OrderReceiverImpl implements OrderReceiver {
         order.setUserId(userId);
         order.setExpectedTime(expectedTime);
         order.setPaymentType(paymentType);
-        order.setCash(BigDecimal.valueOf(Double.parseDouble(orderPrice[0])));
-        order.setBonus(order.getCash().multiply(GeneralConstant.PROCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT));
+        BigDecimal cash = BigDecimal.valueOf(Double.parseDouble(orderPrice[0])).setScale(10, RoundingMode.HALF_DOWN);
+        order.setCash(cash);
+        BigDecimal bonus = order.getCash().multiply(GeneralConstant.PROCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT).setScale(10, RoundingMode.HALF_DOWN);
+        order.setBonus(bonus);
 
+        OrderDataEntity orderData = (OrderDataEntity) content.getSessionAttributes().get(ORDER_DATA);
+
+        if (orderData.getProducts().isEmpty()) {
+            content.getRequestAttributes().put(WRONG_DATA, true);
+            return;
+        }
+
+        if (!validator.isValidExpectedDate(order)) {
+            content.getRequestAttributes().put(WRONG_DATA, true);
+            return;
+        }
         TransactionManager manager = new TransactionManager();
         try {
             UserDAOImpl userDao = new UserDAOImpl();
@@ -99,10 +112,51 @@ public class OrderReceiverImpl implements OrderReceiver {
             OrderDataReceiverImpl orderDataReceiver = new OrderDataReceiverImpl();
             manager.beginTransaction(userDao, orderDAO, orderDataDAO);
 
-            if (orderDAO.create(order)) {
-                manager.commit();
+            UserEntity user = userDao.findEntityById(userId);
+            boolean enoughMoney;
+            switch (order.getPaymentType()) {
+                case CASH:
+                    enoughMoney = true;
+                    break;
+                case MONEY:
+                    enoughMoney = user.getCash().compareTo(order.getCash()) != -1;
+                    break;
+                case BONUSES:
+                    enoughMoney = user.getBonus().compareTo(order.getCash()) != -1;
+                    break;
+                default:
+                    enoughMoney = false;
+            }
+
+            if (!enoughMoney){
+                content.getAjaxResult().add(GeneralConstant.LITTLE_MONEY, new Gson().toJsonTree(true));
+                return;
+            }
+
+            int orderId = orderDAO.createAndGetOrderId(order);
+            manager.commit();
+            if (orderId != 0) {
+                if (orderDataReceiver.createOrderData(content, orderId)) {
+                    switch (order.getPaymentType()) {
+                        case CASH:
+                            break;
+                        case MONEY:
+                            user.setCash(user.getCash().subtract(order.getCash()));
+                            user.setBonus(user.getBonus().add(order.getBonus()));
+                            userDao.updateCash(user);
+                            userDao.updateBonus(user);
+                            break;
+                        case BONUSES:
+                            user.setBonus(user.getBonus().subtract(order.getCash()));
+                            userDao.updateBonus(user);
+                            break;
+                        default:
+                            enoughMoney = false;
+                    }
+                }
             } else {
-//                content.getRequestAttributes().put(EMAIL_EXISTS, true);
+                manager.rollback();
+                manager.endTransaction();
             }
             manager.commit();
             manager.endTransaction();

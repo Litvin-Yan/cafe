@@ -33,6 +33,5 @@
                 ${txtStatistic}
             </button>
         </form>
-
     </div>
 

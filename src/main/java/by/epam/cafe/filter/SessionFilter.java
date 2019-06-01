@@ -17,7 +17,7 @@ import static javax.servlet.jsp.PageContext.SESSION;
 @WebFilter(filterName = "sessionFilter", urlPatterns = {"/pages/*"},
         dispatcherTypes = {DispatcherType.FORWARD, DispatcherType.REQUEST})
 public class SessionFilter implements Filter {
-    private static final int SESSION_LIFE_TIME = 1000 * 60;
+    private static final int SESSION_LIFE_TIME = 1000 * 180;
 
     public void destroy() {
     }

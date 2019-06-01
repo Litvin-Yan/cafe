@@ -18,8 +18,8 @@ import java.util.Map;
 public class OrderDAOImpl extends OrderDAO {
 
     private static final String CREATE_ORDER =
-            "INSERT INTO `order` (order_expected_time, order_bonus, order_payment_method, user_id) " +
-                    "VALUES (?, ?, ?, ?);";
+            "INSERT INTO `order` (order_expected_time, order_bonus, order_payment_method, user_id, order_price) " +
+                    "VALUES (?, ?, ?, ?, ?);";
 
     private static final String FIND_ACTIVE_ORDER_BY_USER_ID =
             "select distinct order_id" +
@@ -60,17 +60,46 @@ public class OrderDAOImpl extends OrderDAO {
     public boolean create(OrderEntity entity) throws DAOException {
         boolean isCreated = false;
         try (PreparedStatement statement = connection.prepareStatement(CREATE_ORDER)) {
+
             statement.setTimestamp(1, entity.getExpectedTime());
             statement.setBigDecimal(2, entity.getBonus());
             statement.setString(3, String.valueOf(entity.getPaymentType()));
             statement.setInt(4, entity.getUserId());
+            statement.setBigDecimal(5, entity.getCash());
             isCreated = statement.executeUpdate() == 1;
+
         } catch (SQLException e) {
             if (!GeneralConstant.DUPLICATE_UNIQUE_INDEX.equals(e.getSQLState())) {
                 throw new DAOException("Create order error ", e);
             }
         }
         return isCreated;
+    }
+
+    public int createAndGetOrderId(OrderEntity entity) throws DAOException {
+        int orderId = 0;
+        try (PreparedStatement statement = connection.prepareStatement(CREATE_ORDER)) {
+
+            statement.setTimestamp(1, entity.getExpectedTime());
+            statement.setBigDecimal(2, entity.getBonus());
+            statement.setString(3, String.valueOf(entity.getPaymentType()));
+            statement.setInt(4, entity.getUserId());
+            statement.setBigDecimal(5, entity.getCash());
+
+            statement.executeUpdate();
+
+            ResultSet resultSet = statement.getGeneratedKeys();
+
+            if (resultSet.next()) {
+                orderId = resultSet.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            if (!GeneralConstant.DUPLICATE_UNIQUE_INDEX.equals(e.getSQLState())) {
+                throw new DAOException("Create order error ", e);
+            }
+        }
+        return orderId;
     }
 
     @Override

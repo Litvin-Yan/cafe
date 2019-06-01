@@ -5,8 +5,10 @@ import by.epam.cafe.constant.SQLFieldConstant;
 import by.epam.cafe.dao.OrderDAO;
 import by.epam.cafe.entity.OrderEntity;
 import by.epam.cafe.exception.DAOException;
+import by.epam.cafe.type.PaymentType;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,19 +24,37 @@ public class OrderDAOImpl extends OrderDAO {
                     "VALUES (?, ?, ?, ?, ?);";
 
     private static final String FIND_ACTIVE_ORDER_BY_USER_ID =
-            "select distinct order_id" +
-                    ", order_paid" +
-                    ", order_payment_method" +
-                    ", order_bonus" +
+            "select distinct order_payment_method" +
                     ", user_id" +
                     ", order_expected_time" +
                     ", order_time " +
+                    ", order_price " +
                     "FROM " +
                     "`order` "+
                     "WHERE " +
                     "user_id = ? AND " +
                     "order_expected_time > now() " +
                     "ORDER BY order_time;";
+
+    private static final String FIND_ORDER_WITHOUT_COMMENT_BY_USER_ID =
+
+            "select distinct `order`.order_id" +
+                    ", order_payment_method" +
+                    ", user_id" +
+                    ", order_expected_time" +
+                    ", order_time " +
+                    ", order_price " +
+                    "FROM " +
+                    "`order` "+
+                    "LEFT JOIN "+
+                    "`comment` "+
+                    "ON `order`.order_id = comment.order_id "+
+                    "WHERE " +
+                    "user_id = ? AND " +
+                    "order_expected_time < now() AND " +
+                    "comment.order_id IS NULL " +
+                    "ORDER BY order_time " +
+                    "LIMIT 0, 5;";
 
     @Override
     public List<OrderEntity> findAll() throws DAOException {
@@ -107,31 +127,55 @@ public class OrderDAOImpl extends OrderDAO {
         return false;
     }
 
-    public List<Map<String, Object>> findActiveOrdersByUserId(int userId) throws DAOException {
-        List<Map<String, Object>> activeOrders;
+    public List<OrderEntity> findActiveOrdersByUserId(int userId) throws DAOException {
+
+        List<OrderEntity> activeOrders;
 
         try (PreparedStatement statement = connection.prepareStatement(FIND_ACTIVE_ORDER_BY_USER_ID)) {
             statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
             activeOrders = new ArrayList<>();
             while (resultSet.next()) {
-                Map<String, Object> activeOrder = new HashMap<>();
                 OrderEntity order = new OrderEntity();
-
-                order.setId(resultSet.getInt(SQLFieldConstant.Order.ID));
-                order.setCash(resultSet.getBigDecimal(SQLFieldConstant.OrderData.PRODUCT_PRICE));
-                order.setUserId(resultSet.getInt(SQLFieldConstant.User.ID));
-                BigDecimal divisor = new BigDecimal(10);
-                BigDecimal bonus = order.getCash().divide(divisor,0);
-                order.setBonus(bonus);
+                order.setCash(resultSet.getBigDecimal(SQLFieldConstant.Order.PRICE));
                 order.setExpectedTime(resultSet.getTimestamp(SQLFieldConstant.Order.EXPECTED_TIME));
-                order.setPaid(resultSet.getBoolean(SQLFieldConstant.Order.PAID));
+                order.setTime(resultSet.getTimestamp(SQLFieldConstant.Order.TIME));
+                String paymentType = resultSet.getString(SQLFieldConstant.Order.PAYMENT_METHOD);
+                order.setPaymentType(PaymentType.valueOf(paymentType));
                 order.setUserId(resultSet.getInt(SQLFieldConstant.Order.USER_ID));
+
+                activeOrders.add(order);
             }
 
         } catch (SQLException e) {
             throw new DAOException("Find active orders error", e);
         }
         return activeOrders;
+    }
+
+    public List<OrderEntity> findOrdersWithoutCommentByUserId(int userId) throws DAOException {
+
+        List<OrderEntity> ordersWithoutComment;
+
+        try (PreparedStatement statement = connection.prepareStatement(FIND_ORDER_WITHOUT_COMMENT_BY_USER_ID)) {
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            ordersWithoutComment = new ArrayList<>();
+            while (resultSet.next()) {
+                OrderEntity order = new OrderEntity();
+                order.setCash(resultSet.getBigDecimal(SQLFieldConstant.Order.PRICE));
+                order.setExpectedTime(resultSet.getTimestamp(SQLFieldConstant.Order.EXPECTED_TIME));
+                order.setTime(resultSet.getTimestamp(SQLFieldConstant.Order.TIME));
+                String paymentType = resultSet.getString(SQLFieldConstant.Order.PAYMENT_METHOD);
+                order.setPaymentType(PaymentType.valueOf(paymentType));
+                order.setUserId(resultSet.getInt(SQLFieldConstant.Order.USER_ID));
+
+                ordersWithoutComment.add(order);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Find orders without comments error", e);
+        }
+        return ordersWithoutComment;
     }
 }

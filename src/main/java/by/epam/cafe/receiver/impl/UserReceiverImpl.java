@@ -9,6 +9,7 @@ import by.epam.cafe.dao.impl.OrderDAOImpl;
 import by.epam.cafe.dao.impl.OrderDataDAOImpl;
 import by.epam.cafe.dao.impl.UserDAOImpl;
 import by.epam.cafe.entity.OrderDataEntity;
+import by.epam.cafe.entity.OrderEntity;
 import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
@@ -27,6 +28,7 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import static by.epam.cafe.constant.GeneralConstant.USER;
 import static by.epam.cafe.constant.GeneralConstant.WRONG_DATA;
@@ -399,12 +401,15 @@ public class UserReceiverImpl implements UserReceiver {
                 return;
             }
 
-//            List<Map<String, Object>> activeOrder = orderDAO.findActiveOrdersByUserId(user.getId());
+            List<OrderEntity> activeOrders = orderDAO.findActiveOrdersByUserId(user.getId());
+            List<OrderEntity> ordersWithoutComment = orderDAO.findOrdersWithoutCommentByUserId(user.getId());
 
             manager.commit();
             manager.endTransaction();
 
             content.getSessionAttributes().put(USER, actualUser);
+            content.getSessionAttributes().put(ACTIVE_ORDER, activeOrders);
+            content.getSessionAttributes().put(ORDER_WITHOUT_COMMENT, ordersWithoutComment);
 
         } catch (DAOException e) {
             try {

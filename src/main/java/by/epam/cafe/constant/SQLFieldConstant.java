@@ -24,6 +24,7 @@ final public class SQLFieldConstant {
         private static final String ORDER = "order_";
         public static final String ID = ORDER + "id";
         public static final String PAID = ORDER + "paid";
+        public static final String PRICE = ORDER + "price";
         public static final String PAYMENT_METHOD = ORDER + "payment_method";
         public static final String BONUS = ORDER + "bonus";
         public static final String USER_ID = "user_id";

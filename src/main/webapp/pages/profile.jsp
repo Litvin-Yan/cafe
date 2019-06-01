@@ -31,6 +31,11 @@
 <fmt:message bundle="${rb}" key="txt.add" var="txtAdd"/>
 <fmt:message bundle="${rb}" key="txt.withdraw" var="txtWithdraw"/>
 <fmt:message bundle="${rb}" key="txt.cancel" var="txtCancel"/>
+<fmt:message bundle="${rb}" key="txt.in.waiting.of.comment" var="txtInWaitingOfComment"/>
+<fmt:message bundle="${rb}" key="txt.active.order" var="txtActiveOrder"/>
+<fmt:message bundle="${rb}" key="txt.order.expected.date" var="txtOrderExpectedDate"/>
+<fmt:message bundle="${rb}" key="txt.order.date" var="txtOrderDate"/>
+<fmt:message bundle="${rb}" key="txt.order.price" var="txtOrderPrice"/>
 
 <body>
 <div class="w3-row-padding">
@@ -105,9 +110,77 @@
                     <br>
                 </div>
             </div>
-
+            <%--Order info section--%>
             <div class="w3-col m8 w3-container">
+                <%--Incude active order part--%>
+                <table class="items w3-table w3-centered" style="width: auto">
+                    <td>
+                        <table class="items w3-table w3-centered" style="width: auto">
+                            <thead>${txtActiveOrder}</thead>
+                            <tbody>
+                            <c:forEach items="${activeOrders}" var="activeOrder">
+                                <tr class="w3-large  backgraund-opacity">
+                                    <td>
+                                <span>
+                                    <i class="w3-small">${txtOrderDate}:</i>
+                                    <b class="w3-small"><ctg:date-presenter date="${activeOrder.time}"/></b>
+                                </span>
+                                        <br>
+                                        <span>
+                                    <i class="w3-small">${txtOrderExpectedDate}:</i>
+                                    <b class="w3-small"><ctg:date-presenter date="${activeOrder.expectedTime}"/></b>
+                                </span>
+                                    </td>
+                                    <td>
+                                <span>
+                                    <i class="w3-small">${txtOrderPrice}:</i>
+                                    <b class="w3-small"> <ctg:decimal-presenter number="${activeOrder.cash}"/>$ </b>
+                                </span>
+                                        <br>
+                                        <span>
 
+                                </span>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="items w3-table w3-centered" style="width: auto">
+                            <thead>${txtInWaitingOfComment}</thead>
+                            <tbody>
+                            <c:forEach items="${ordersWithoutComment}" var="orderWithoutComment">
+                                <tr class="w3-large  backgraund-opacity">
+                                    <td>
+                                <span>
+                                    <i class="w3-small">${txtOrderDate}:</i>
+                                    <b class="w3-small"><ctg:date-presenter date="${orderWithoutComment.time}"/></b>
+                                </span>
+                                        <br>
+                                        <span>
+                                    <i class="w3-small">${txtOrderExpectedDate}:</i>
+                                    <b class="w3-small"><ctg:date-presenter
+                                            date="${orderWithoutComment.expectedTime}"/></b>
+                                </span>
+                                    </td>
+                                    <td>
+                                <span>
+                                    <i class="w3-small">${txtOrderPrice}:</i>
+                                    <b class="w3-small"> <ctg:decimal-presenter
+                                            number="${orderWithoutComment.cash}"/>$ </b>
+                                </span>
+                                        <br>
+                                        <span>
+
+                                </span>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </td>
+                </table>
             </div>
         </div>
     </div>

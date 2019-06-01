@@ -44,6 +44,8 @@ public class GeneralConstant {
     public static final String HEIGHT = "height";
     public static final String WIDTH = "width";
     public static final String USER = "user";
+    public static final String ACTIVE_ORDER = "activeOrders";
+    public static final String ORDER_WITHOUT_COMMENT = "ordersWithoutComment";
     public static final String ORDER_DATA = "orderData";
     public static final String ORDER = "order";
     public static final String PRODUCT_LIST = "productList";

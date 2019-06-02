@@ -64,8 +64,9 @@ public class CommentReceiverImpl implements CommentReceiver {
         CommonValidatorImpl commonValidator = new CommonValidatorImpl();
         CommentValidatorImpl commentValidator = new CommentValidatorImpl();
         UserEntity user = (UserEntity) content.getSessionAttributes().get(GeneralConstant.USER);
-        String[] stringNewsId = content.getRequestParameters().get(GeneralConstant.PRODUCT_ID);
+        String[] stringOrderId = content.getRequestParameters().get(GeneralConstant.ORDER_ID);
         String[] commentTextArr = content.getRequestParameters().get(GeneralConstant.TEXT);
+        String[] commentRateArr = content.getRequestParameters().get(GeneralConstant.COMMENT_RATE);
 
 
         if (user == null) {
@@ -75,16 +76,19 @@ public class CommentReceiverImpl implements CommentReceiver {
         }
 
         if (!commonValidator.isVarExist(commentTextArr) ||
-                !commonValidator.isVarExist(stringNewsId) ||
-                !commonValidator.isInteger(stringNewsId[0]) ||
+                !commonValidator.isVarExist(stringOrderId) ||
+                !commonValidator.isInteger(stringOrderId[0]) ||
+                !commonValidator.isVarExist(commentRateArr) ||
+                !commonValidator.isInteger(commentRateArr[0]) ||
                 !commentValidator.isCommentTextValid(commentTextArr[0].trim())) {
             content.setAjaxSuccess(false);
             return;
         }
 
         CommentEntity comment = new CommentEntity();
-//        comment.setUserId(user.getId());
-//        comment.setNewsId(Integer.valueOf(stringNewsId[0]));
+
+        comment.setOrderId(Integer.valueOf(stringOrderId[0]));
+        comment.setRate(Integer.valueOf(commentRateArr[0]));
         comment.setText(commentTextArr[0].trim());
 
         TransactionManager manager = new TransactionManager();

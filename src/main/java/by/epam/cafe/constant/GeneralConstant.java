@@ -66,6 +66,7 @@ public class GeneralConstant {
     public static final String COMMENT_ID = "commentId";
     public static final String IS_BLOCKED = "isBlocked";
     public static final String TEXT = "text";
+    public static final String COMMENT_RATE = "commentRate";
     public static final String STATE = "state";
     public static final String ON = "on";
     public static final String COMMAND = "command";

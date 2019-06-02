@@ -102,7 +102,6 @@ public class CommentDAOImpl extends CommentDAO {
         } catch (SQLException e) {
             throw new DAOException("Error create comment",e);
         }
-
         return isCreated;
     }
 

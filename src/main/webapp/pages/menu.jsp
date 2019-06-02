@@ -37,7 +37,7 @@
             </td>
             <td>
                 <span>${product.name}</span>
-                <span>${product.price}$</span>
+                <span class="price"><ctg:decimal-presenter number="${product.price}"/>$</span>
             </td>
             <td>
                 <span>${product.ingredients}</span>

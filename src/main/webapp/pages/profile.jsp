@@ -38,6 +38,11 @@
 <fmt:message bundle="${rb}" key="txt.order.price" var="txtOrderPrice"/>
 <fmt:message bundle="${rb}" key="txt.comment" var="txtComment"/>
 <fmt:message bundle="${rb}" key="txt.cancel.the.order" var="txtCancelTheOrder"/>
+<fmt:message bundle="${rb}" key="txt.comment.text" var="txtCommentText"/>
+<fmt:message bundle="${rb}" key="txt.order.rate" var="txtOrderRate"/>
+<fmt:message bundle="${rb}" key="txt.are.you.sure" var="txtAreYouSure"/>
+<fmt:message bundle="${rb}" key="txt.yes" var="txtYes"/>
+<fmt:message bundle="${rb}" key="txt.no" var="txtNo"/>
 
 <body>
 <div class="w3-row-padding">
@@ -122,7 +127,7 @@
                             <tbody>
                             <c:forEach items="${activeOrders}" var="activeOrder">
                                 <tr class="w3-large  backgraund-opacity">
-                                    <form id="activeOrder${activeOrder.id}">
+                                    <form id="activeOrder${activeOrder.id}" method="post" action="/ajaxController"  onsubmit="return false">
                                         <input type="hidden" name="command" value="CANCEL_THE_ORDER">
                                         <input type="hidden" name="orderId" value="${activeOrder.id}">
                                         <td>
@@ -144,13 +149,30 @@
                                             <br>
                                             <span>
                                                 <button class="w3-button w3-black w3-text-amber w3-small"
-                                                        onclick="(modalCancelTheOrder).style.display = 'inherit'">
+                                                        onclick="(modalCancelTheOrder${activeOrder.id}).style.display = 'inherit'">
                                                         ${txtCancelTheOrder}
                                                 </button>
                                             </span>
                                         </td>
                                     </form>
                                 </tr>
+
+                                <div id="modalCancelTheOrder${activeOrder.id}" class="w3-modal">
+                                    <div class="w3-modal-content" style="max-width: 50%;">
+                                        <div class="w3-container">
+                                            <div id="cancelTheOrder">
+                                                <input type="hidden" name="command" value="CANCEL_THE_ORDER"/>
+                                                <span onclick="(modalCancelTheOrder${activeOrder.id}).style.display='none'"
+                                                      class="w3-button w3-display-topright">&times;</span>
+                                                <p class="w3-centered">${txtAreYouSure}?</p>
+                                                <br>
+                                                <input type="button" class="w3-button" value="${txtYes}" onclick="cancelTheOrder(this, ${activeOrder.id}, 'modalCancelTheOrder');">
+                                                <input type="button" class="w3-button" value="${txtNo}"
+                                                       onclick="(modelCancelTheOrder${activeOrder.id}).style.display='none'">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </c:forEach>
                             </tbody>
                         </table>
@@ -185,13 +207,40 @@
                                             <br>
                                             <span>
                                                 <button class="w3-button w3-black w3-text-amber w3-small"
-                                                        onclick="(modalCommentTheOrder).style.display = 'inherit'">
+                                                        onclick="(modalCommentTheOrder${orderWithoutComment.id}).style.display = 'inherit'">
                                                     ${txtComment}
                                                 </button>
                                             </span>
                                         </td>
                                     </form>
                                 </tr>
+
+                                <div id="modalCommentTheOrder${orderWithoutComment.id}" class="w3-modal">
+                                    <div class="w3-modal-content" style="max-width: 50%;">
+                                        <div class="w3-container">
+                                            <div id="addComment">
+                                                <input type="hidden" name="command" value="CREATE_COMMENT"/>
+                                                <span onclick="(modalCommentTheOrder${orderWithoutComment.id}).style.display='none'"
+                                                      class="w3-button w3-display-topright">&times;</span>
+                                                <br>
+                                                <p>${txtOrderRate}(1-10) : </p>
+                                                <p>
+                                                    <input type="number" name="rate" id="rate" step="1"
+                                                           class="w3-input w3-border" min="1" max="10"/>
+                                                </p>
+                                                <br>
+                                                <p>${txtCommentText}: </p>
+                                                <p>
+                                                    <input type="text" name="rate" id="text" step="1"
+                                                           class="w3-input w3-border" min="1" max="100"/>
+                                                </p>
+                                                <input type="button" class="w3-button" value="${txtOk}" onclick="commentTheOrder(this, ${orderWithoutComment.id}, 'modalCommentTheOrder');">
+                                                <input type="button" class="w3-button" value="${txtCancel}"
+                                                       onclick="(modalCommentTheOrder${orderWithoutComment.id}).style.display='none'">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </c:forEach>
                             </tbody>
                         </table>

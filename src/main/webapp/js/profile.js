@@ -118,7 +118,7 @@ function withdrawMoney(e, closableModal) {
     });
 }
 
-function changeBonuses(e, formId, closableModal) {
+function commentTheOrder(e, formId, closableModal) {
 
     var $from = $('#'+formId);
 
@@ -169,7 +169,7 @@ function changeBonuses(e, formId, closableModal) {
     });
 }
 
-function changeBonuses(e, formId, closableModal) {
+function cancelTheOrder(e, formId, closableModal) {
 
     var $from = $('#'+formId);
 

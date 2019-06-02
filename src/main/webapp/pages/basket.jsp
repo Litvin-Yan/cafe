@@ -54,7 +54,8 @@
                     <c:forEach var="product" items="${orderData.products}">
                         <c:set var="total" value="${total + product.key.price*product.value}"/>
                     </c:forEach>
-                    <c:out value="${total}$"/>
+<%--                    <c:out value="${total}$"/>--%>
+                    <ctg:decimal-presenter number="${total}"/>$
                     <input type="hidden" value="${total}" name="orderPrice">
                 </label>
                 <p>
@@ -75,7 +76,7 @@
                         </td>
                         <td>
                             <span>${product.name}</span>
-                            <span class="price">${product.price}$</span>
+                            <span class="price"><ctg:decimal-presenter number="${product.price}"/>$</span>
                         </td>
                         <td>
                             <div class="btn-group mr-2 pod" id="pod${product.id}" role="group"

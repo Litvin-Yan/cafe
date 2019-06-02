@@ -10,6 +10,7 @@ import by.epam.cafe.command.order.OpenBasketCommand;
 import by.epam.cafe.command.orderdata.AddProductCommand;
 import by.epam.cafe.command.product.OpenMenuCommand;
 import by.epam.cafe.command.orderdata.RemoveProductCommand;
+import by.epam.cafe.command.product.OpenProductSettingsCommand;
 import by.epam.cafe.command.user.*;
 import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.exception.DAOException;
@@ -172,6 +173,12 @@ public enum CommandType {
     COMMENT_THE_ORDER(new CreateCommentCommand(new CommentReceiverImpl())) {
         public void doReceiver(RequestContent content) throws ReceiverException {
             ((CommentReceiverImpl) getCommand().getReceiver()).createComment(content);
+        }
+    },
+
+    OPEN_PRODUCT_SETTINGS(new OpenProductSettingsCommand(new ProductReceiverImpl())) {
+        public void doReceiver(RequestContent content) throws ReceiverException {
+            ((ProductReceiverImpl) getCommand().getReceiver()).openProductSettings(content);
         }
     };
 

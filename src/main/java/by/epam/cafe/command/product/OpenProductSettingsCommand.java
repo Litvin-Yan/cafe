@@ -5,6 +5,7 @@ import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.Receiver;
+import by.epam.cafe.receiver.impl.UserReceiverImpl;
 import by.epam.cafe.type.CommandType;
 import by.epam.cafe.type.PageType;
 import by.epam.cafe.type.RouteType;
@@ -15,37 +16,38 @@ import org.apache.logging.log4j.Logger;
 
 import static by.epam.cafe.constant.GeneralConstant.PAGE_NOT_FOUND;
 
-public class OpenMenuSettingsCommand extends AbstractCommand {
+public class OpenProductSettingsCommand extends AbstractCommand {
     private static final Logger LOGGER = LogManager.getLogger();
 
-
-    public OpenMenuSettingsCommand(Receiver receiver) {
+    public OpenProductSettingsCommand(Receiver receiver) {
         super(receiver);
     }
 
     @Override
-    public Router execute(RequestContent content) {
+    public Router execute(RequestContent requestContent) {
         Router router = new Router();
 
         try {
-            receiver.action(CommandType.takeCommandType(this), content);
+            receiver.action(CommandType.takeCommandType(this), requestContent);
 
-            if (!content.getRequestAttributes().containsKey(PAGE_NOT_FOUND)) {
-                router.setRoutePath(PageType.ADMIN_PRODUCT.getPage());
+            if (!requestContent.getRequestAttributes().containsKey(PAGE_NOT_FOUND)) {
                 router.setRouteType(RouteType.FORWARD);
+                router.setRoutePath(PageType.ADMIN_PRODUCT.getPage());
 
             } else {
-                router.setRoutePath(PageType.ERROR_404.getPage());
                 router.setRouteType(RouteType.REDIRECT);
+                router.setRoutePath(PageType.ERROR_404.getPage());
             }
 
+
         } catch (ReceiverException e) {
-            LOGGER.log(Level.ERROR, "Open product settings product receiver error", e);
-            router.setRoutePath(PageType.SERVER_ERROR.getPage());
+            LOGGER.log(Level.ERROR, "Handle receiver error", e);
             router.setRouteType(RouteType.REDIRECT);
+            router.setRoutePath(PageType.SERVER_ERROR.getPage());
         } catch (DAOException e) {
             e.printStackTrace();
         }
+
         return router;
     }
 }

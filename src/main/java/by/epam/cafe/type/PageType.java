@@ -23,7 +23,7 @@ public enum PageType {
 
     /* ------- Admin pages --------*/
     ADMIN_MAIN,
-    ADMIN_PRODUCTS,
+    ADMIN_PRODUCT,
     ADMIN_USER,
 
     /* ------- Error pages ------- */

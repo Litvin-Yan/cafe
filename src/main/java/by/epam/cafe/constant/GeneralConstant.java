@@ -60,7 +60,7 @@ public class GeneralConstant {
     public static final String BLOCK_STATE = "blockState";
     public static final String TEXT_BLOCK = "textBlock";
     public static final String UPDATE_ERROR = "updateError";
-    public static final String PRODUCTS_IMAGE_PATH = "newsImagePath";
+    public static final String PRODUCT_IMAGE_PATH = "newsImagePath";
     public static final String USER_IMAGE_PATH = "userImagePath";
     public static final String LOCALE = "locale";
     public static final String COMMENT_ID = "commentId";
@@ -72,7 +72,7 @@ public class GeneralConstant {
     public static final String COMMAND = "command";
     public static final String REGISTERED_COUNT = "registeredCount";
     public static final String LOCKED_COUNT = "lockedCount";
-    public static final String PRODUCT_COUNT = "productCount";
+    public static final String PRODUCTS_COUNT = "productCount";
     public static final String PRODUCT_TYPE_COUNT = "productTypeCount";
     public static final String TYPE_ID = "typeId";
     public static final String TITLE = "title";
@@ -101,6 +101,7 @@ public class GeneralConstant {
     public static final String ORDER_DATA_PRODUCT_PRICE = "orderDataProductPrice";
 
     public static final int COUNT_PRODUCTS_ON_PAGE = 5;
+    public static final int COUNT_PRODUCTS_ON_ADMIN_PAGE = 4;
     public static final int COUNT_USERS_ON_PAGE = 4;
     public static final BigDecimal PROCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT = new BigDecimal(0.05);
 

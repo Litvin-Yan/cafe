@@ -1,6 +1,5 @@
 package by.epam.cafe.dao.impl;
 
-import by.epam.cafe.constant.GeneralConstant;
 import by.epam.cafe.dao.CommonDAO;
 import by.epam.cafe.entity.Entity;
 import by.epam.cafe.exception.DAOException;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static by.epam.cafe.constant.GeneralConstant.LOCKED_COUNT;
-import static by.epam.cafe.constant.GeneralConstant.PRODUCT_COUNT;
+import static by.epam.cafe.constant.GeneralConstant.PRODUCTS_COUNT;
 import static by.epam.cafe.constant.GeneralConstant.REGISTERED_COUNT;
 
 public class CommonDAOImpl extends CommonDAO {
@@ -24,7 +23,7 @@ public class CommonDAOImpl extends CommonDAO {
             "SELECT " +
                     "(SELECT COUNT(user_id) FROM user) AS "+ REGISTERED_COUNT +", " +
                     "(SELECT COUNT(user_id) FROM user WHERE user_is_blocked) AS "+LOCKED_COUNT+", " +
-                    "(SELECT COUNT(product_id) FROM product) AS "+PRODUCT_COUNT+";";
+                    "(SELECT COUNT(product_id) FROM product) AS "+ PRODUCTS_COUNT +";";
 
     @Override
     public List findAll() throws DAOException {
@@ -86,7 +85,7 @@ public class CommonDAOImpl extends CommonDAO {
             if (resultSet.next()) {
                 statisticMap.put(REGISTERED_COUNT, resultSet.getInt(REGISTERED_COUNT));
                 statisticMap.put(LOCKED_COUNT, resultSet.getInt(LOCKED_COUNT));
-                statisticMap.put(PRODUCT_COUNT, resultSet.getInt(PRODUCT_COUNT));
+                statisticMap.put(PRODUCTS_COUNT, resultSet.getInt(PRODUCTS_COUNT));
             }
 
         } catch (SQLException e) {

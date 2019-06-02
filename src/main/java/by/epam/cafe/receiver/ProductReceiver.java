@@ -49,4 +49,15 @@ public interface ProductReceiver extends Receiver {
      * @see RequestContent
      */
     void deleteProduct(RequestContent requestContent) throws ReceiverException;
+
+    /**
+     * Delete product.
+     *
+     * @param requestContent request content
+     * @throws ReceiverException when throw DAOException
+     *
+     * @see DAOException
+     * @see RequestContent
+     */
+    void openProductSettings(RequestContent requestContent) throws ReceiverException;
 }

@@ -59,8 +59,8 @@ public class OrderReceiverImpl implements OrderReceiver {
 
         content.getRequestAttributes().put(GeneralConstant.PRODUCT_LIST, productList);
         content.getRequestAttributes().put(GeneralConstant.LIMIT, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
-        content.getRequestAttributes().put(GeneralConstant.PRODUCT_COUNT, productCount);
-        content.getRequestAttributes().put(GeneralConstant.PRODUCTS_IMAGE_PATH, UploadType.PRODUCTS.getUploadFolder());
+        content.getRequestAttributes().put(GeneralConstant.PRODUCTS_COUNT, productCount);
+        content.getRequestAttributes().put(GeneralConstant.PRODUCT_IMAGE_PATH, UploadType.PRODUCTS.getUploadFolder());
 
     }
 

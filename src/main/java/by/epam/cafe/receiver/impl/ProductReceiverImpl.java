@@ -2,6 +2,7 @@ package by.epam.cafe.receiver.impl;
 
 import by.epam.cafe.constant.GeneralConstant;
 import by.epam.cafe.content.RequestContent;
+import by.epam.cafe.dao.ProductDAO;
 import by.epam.cafe.dao.TransactionManager;
 import by.epam.cafe.dao.impl.CommentDAOImpl;
 import by.epam.cafe.dao.impl.ProductDAOImpl;
@@ -22,6 +23,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static by.epam.cafe.constant.GeneralConstant.*;
 
 
 public class ProductReceiverImpl implements ProductReceiver {
@@ -83,8 +86,8 @@ public class ProductReceiverImpl implements ProductReceiver {
             content.getRequestAttributes().put(GeneralConstant.PRODUCT_LIST, productList);
             content.getRequestAttributes().put(GeneralConstant.PRODUCT_TYPE_LIST, productTypeList);
             content.getRequestAttributes().put(GeneralConstant.LIMIT, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
-            content.getRequestAttributes().put(GeneralConstant.PRODUCT_COUNT, productCount);
-            content.getRequestAttributes().put(GeneralConstant.PRODUCTS_IMAGE_PATH, UploadType.PRODUCTS.getUploadFolder());
+            content.getRequestAttributes().put(GeneralConstant.PRODUCTS_COUNT, productCount);
+            content.getRequestAttributes().put(GeneralConstant.PRODUCT_IMAGE_PATH, UploadType.PRODUCTS.getUploadFolder());
 
         } catch (DAOException e) {
             try {
@@ -227,6 +230,49 @@ public class ProductReceiverImpl implements ProductReceiver {
             throw new ReceiverException(e);
         }
 
+    }
+
+    @Override
+    public void openProductSettings(RequestContent content) throws ReceiverException {
+        Formatter formatter = new Formatter();
+        String[] stringPage = content.getRequestParameters().get(PAGE_NUMBER);
+        int page = formatter.formatToPage(stringPage);
+
+        if (page == -1) {
+            content.getRequestAttributes().put(PAGE_NOT_FOUND, true);
+            return;
+        }
+
+        int startIndex = formatter.formatToStartIndex(page, COUNT_PRODUCTS_ON_PAGE);
+        TransactionManager manager = new TransactionManager();
+        try {
+            ProductDAO productDAO = new ProductDAOImpl();
+            manager.beginTransaction(productDAO);
+            List<ProductEntity> productList = productDAO.findWithLimit(startIndex, COUNT_PRODUCTS_ON_PAGE);
+            int productsCount = productDAO.findProductCount();
+            manager.commit();
+            manager.endTransaction();
+
+            if (productList.isEmpty() && page != 1) {
+                content.getRequestAttributes().put(PAGE_NOT_FOUND, true);
+                return;
+            }
+
+            content.getRequestAttributes().put(PRODUCT_LIST, productList);
+            content.getRequestAttributes().put(LIMIT, COUNT_PRODUCTS_ON_ADMIN_PAGE);
+            content.getRequestAttributes().put(PRODUCTS_COUNT, productsCount);
+
+        } catch (DAOException e) {
+            try {
+                manager.rollback();
+                manager.endTransaction();
+
+            } catch (DAOException e1) {
+                throw new ReceiverException("Open product setting rollback error", e);
+            }
+
+            throw new ReceiverException(e);
+        }
     }
 
     @Override

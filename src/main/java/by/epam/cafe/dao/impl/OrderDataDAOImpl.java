@@ -27,6 +27,11 @@ public class OrderDataDAOImpl extends OrderDataDAO {
             "INSERT INTO orderdata (product_product_id, number, product_price , order_order_id) " +
                     "VALUES (?, ?, ?, ?);";
 
+    private static final String DELETE_ORDER_DATA =
+            "DELETE orderdata FROM orderdata " +
+                    "WHERE " +
+                    "order_order_id = ?";
+
     @Override
     public List<OrderDataEntity> findAll() throws DAOException {
         throw new UnsupportedOperationException();
@@ -46,8 +51,19 @@ public class OrderDataDAOImpl extends OrderDataDAO {
     }
 
     @Override
-    public boolean delete(int id) throws DAOException {
-        return false;
+    public boolean delete(int orderId) throws DAOException {
+        boolean isDeleted = false;
+        try (PreparedStatement statement = connection.prepareStatement(DELETE_ORDER_DATA)) {
+
+            statement.setInt(1, orderId);
+            isDeleted = statement.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            if (!GeneralConstant.DUPLICATE_UNIQUE_INDEX.equals(e.getSQLState())) {
+                throw new DAOException("Delete order data error ", e);
+            }
+        }
+        return isDeleted;
     }
 
     @Override

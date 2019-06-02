@@ -109,6 +109,7 @@
                            class="w3-button w3-hide-small w3-padding-small w3-text-amber w3-hover-none w3-hover-text-white"
                            value="<c:out value='${menuEntity}'/>">
                 </form>
+                <c:if test="${userEntity != null}">
                 <form action="${pageContext.request.contextPath}/generalController"
                       class="w3-bar-item w3-padding-small">
                     <input type="hidden" name="command" value="OPEN_BASKET">
@@ -116,6 +117,7 @@
                            class="w3-button w3-hide-small w3-padding-small w3-text-amber w3-hover-none w3-hover-text-white"
                            value="<c:out value='${basket}'/>">
                 </form>
+                </c:if>
                 <form action="${pageContext.request.contextPath}/generalController"
                       class="w3-bar-item w3-padding-small">
                     <input type="hidden" name="command" value="OPEN_COMMENTS">

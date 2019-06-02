@@ -23,12 +23,18 @@ public class OrderDAOImpl extends OrderDAO {
             "INSERT INTO `order` (order_expected_time, order_bonus, order_payment_method, user_id, order_price) " +
                     "VALUES (?, ?, ?, ?, ?);";
 
+    private static final String DELETE_ORDER =
+            "DELETE `order` FROM `order` " +
+                    "WHERE " +
+                    "`order`.order_id = ?";
+
     private static final String FIND_ACTIVE_ORDER_BY_USER_ID =
             "select distinct order_payment_method" +
                     ", user_id" +
                     ", order_expected_time" +
                     ", order_time " +
                     ", order_price " +
+                    ", order_id " +
                     "FROM " +
                     "`order` "+
                     "WHERE " +
@@ -37,13 +43,13 @@ public class OrderDAOImpl extends OrderDAO {
                     "ORDER BY order_time;";
 
     private static final String FIND_ORDER_WITHOUT_COMMENT_BY_USER_ID =
-
             "select distinct `order`.order_id" +
                     ", order_payment_method" +
                     ", user_id" +
                     ", order_expected_time" +
                     ", order_time " +
                     ", order_price " +
+                    ", `order`.order_id " +
                     "FROM " +
                     "`order` "+
                     "LEFT JOIN "+
@@ -67,8 +73,19 @@ public class OrderDAOImpl extends OrderDAO {
     }
 
     @Override
-    public boolean delete(int id) throws DAOException {
-        return false;
+    public boolean delete(int orderId) throws DAOException {
+        boolean isDeleted = false;
+        try (PreparedStatement statement = connection.prepareStatement(DELETE_ORDER)) {
+
+            statement.setInt(1, orderId);
+            isDeleted = statement.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            if (!GeneralConstant.DUPLICATE_UNIQUE_INDEX.equals(e.getSQLState())) {
+                throw new DAOException("Delete order error ", e);
+            }
+        }
+        return isDeleted;
     }
 
     @Override
@@ -143,7 +160,7 @@ public class OrderDAOImpl extends OrderDAO {
                 String paymentType = resultSet.getString(SQLFieldConstant.Order.PAYMENT_METHOD);
                 order.setPaymentType(PaymentType.valueOf(paymentType));
                 order.setUserId(resultSet.getInt(SQLFieldConstant.Order.USER_ID));
-
+                order.setId(resultSet.getInt(SQLFieldConstant.Order.ID));
                 activeOrders.add(order);
             }
 
@@ -169,6 +186,7 @@ public class OrderDAOImpl extends OrderDAO {
                 String paymentType = resultSet.getString(SQLFieldConstant.Order.PAYMENT_METHOD);
                 order.setPaymentType(PaymentType.valueOf(paymentType));
                 order.setUserId(resultSet.getInt(SQLFieldConstant.Order.USER_ID));
+                order.setId(resultSet.getInt(SQLFieldConstant.Order.ID));
 
                 ordersWithoutComment.add(order);
             }

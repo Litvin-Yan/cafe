@@ -5,31 +5,12 @@ import java.util.Objects;
 
 public class CommentEntity extends Entity{
 
-    private int id;
     private String text;
     private Boolean isBlocked;
     private Date postDate;
     private int rate;
     private int orderId;
-    private int userId;
 
-    /**
-     * Get ID.
-     *
-     * @return comment id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Set ID.
-     *
-     * @param id comment id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
 
     /**
      * Get Rate.
@@ -108,7 +89,7 @@ public class CommentEntity extends Entity{
      *
      * @return order id
      */
-    public int getNewsId() {
+    public int getOrderId() {
         return orderId;
     }
 
@@ -117,44 +98,25 @@ public class CommentEntity extends Entity{
      *
      * @param orderId order id
      */
-    public void setNewsId(int orderId) {
+    public void setOrderId(int orderId) {
         this.orderId = orderId;
     }
 
-    /**
-     * Get user ID.
-     *
-     * @return user id
-     */
-    public int getUserId() {
-        return userId;
-    }
-
-    /**
-     * Set user ID.
-     *
-     * @param userId user id
-     */
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CommentEntity)) return false;
-        CommentEntity commentEntity = (CommentEntity) o;
-        return id == commentEntity.id &&
-                rate == commentEntity.rate &&
-                orderId == commentEntity.orderId &&
-                userId == commentEntity.userId &&
-                text.equals(commentEntity.text) &&
-                isBlocked.equals(commentEntity.isBlocked) &&
-                postDate.equals(commentEntity.postDate);
+        CommentEntity that = (CommentEntity) o;
+        return rate == that.rate &&
+                orderId == that.orderId &&
+                Objects.equals(text, that.text) &&
+                Objects.equals(isBlocked, that.isBlocked) &&
+                Objects.equals(postDate, that.postDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, isBlocked, postDate, rate, orderId, userId);
+        return Objects.hash(text, isBlocked, postDate, rate, orderId);
     }
 }

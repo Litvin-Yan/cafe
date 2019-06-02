@@ -4,6 +4,8 @@ import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.command.comment.ChangeLockCommentCommand;
 import by.epam.cafe.command.comment.CreateCommentCommand;
 import by.epam.cafe.command.common.*;
+import by.epam.cafe.command.order.CancelTheOrderCommand;
+import by.epam.cafe.command.order.CreateOrderCommand;
 import by.epam.cafe.command.order.OpenBasketCommand;
 import by.epam.cafe.command.orderdata.AddProductCommand;
 import by.epam.cafe.command.product.OpenMenuCommand;
@@ -155,9 +157,21 @@ public enum CommandType {
         }
     },
 
-    CREATE_ORDER(new OpenBasketCommand(new OrderReceiverImpl())) {
+    CREATE_ORDER(new CreateOrderCommand(new OrderReceiverImpl())) {
         public void doReceiver(RequestContent content) throws ReceiverException {
             ((OrderReceiverImpl) getCommand().getReceiver()).createOrder(content);
+        }
+    },
+
+    CANCEL_THE_ORDER(new CancelTheOrderCommand(new OrderReceiverImpl())) {
+        public void doReceiver(RequestContent content) throws ReceiverException {
+            ((OrderReceiverImpl) getCommand().getReceiver()).cancelTheOrder(content);
+        }
+    },
+
+    COMMENT_THE_ORDER(new CreateCommentCommand(new CommentReceiverImpl())) {
+        public void doReceiver(RequestContent content) throws ReceiverException {
+            ((CommentReceiverImpl) getCommand().getReceiver()).createComment(content);
         }
     };
 

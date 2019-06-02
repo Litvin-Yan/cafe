@@ -15,11 +15,11 @@ import org.apache.logging.log4j.Logger;
 
 import static by.epam.cafe.constant.GeneralConstant.PAGE_NOT_FOUND;
 
-public class CreateOrderCommand extends AbstractCommand {
+public class CancelTheOrderCommand extends AbstractCommand {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public CreateOrderCommand(Receiver receiver) {
+    public CancelTheOrderCommand(Receiver receiver) {
         super(receiver);
     }
 
@@ -31,8 +31,8 @@ public class CreateOrderCommand extends AbstractCommand {
             receiver.action(CommandType.takeCommandType(this), content);
 
             if (!content.getRequestAttributes().containsKey(PAGE_NOT_FOUND)) {
-                router.setRoutePath(PageType.MENU.getPage());
-                router.setRouteType(RouteType.REDIRECT);
+                router.setRoutePath(PageType.BASKET.getPage());
+                router.setRouteType(RouteType.FORWARD);
 
             } else {
                 router.setRoutePath(PageType.ERROR_404.getPage());

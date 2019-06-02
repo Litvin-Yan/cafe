@@ -32,8 +32,8 @@ public class CommentDAOImpl extends CommentDAO {
                     "    AND comment.order_id = ?;";
 
     public static final String CREATE_COMMENT =
-            "INSERT INTO comment (comment_content, comment_date, order_id) " +
-                    "VALUES (? , now(), ?);";
+            "INSERT INTO comment (comment_content, comment_rate, comment_date, order_id) " +
+                    "VALUES (?, ?, now(), ?);";
 
     public static final String CHANGE_LOCK_COMMENT =
             "UPDATE comment " +
@@ -95,8 +95,8 @@ public class CommentDAOImpl extends CommentDAO {
 
         try (PreparedStatement statement = connection.prepareStatement(CREATE_COMMENT)) {
             statement.setString(1, entity.getText());
-            statement.setInt(2, entity.getNewsId());
-            statement.setInt(3, entity.getUserId());
+            statement.setInt(2, entity.getRate());
+            statement.setInt(3, entity.getOrderId());
             isCreated = statement.executeUpdate() == 1;
 
         } catch (SQLException e) {

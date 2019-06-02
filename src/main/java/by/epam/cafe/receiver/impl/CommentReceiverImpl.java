@@ -83,8 +83,8 @@ public class CommentReceiverImpl implements CommentReceiver {
         }
 
         CommentEntity comment = new CommentEntity();
-        comment.setUserId(user.getId());
-        comment.setNewsId(Integer.valueOf(stringNewsId[0]));
+//        comment.setUserId(user.getId());
+//        comment.setNewsId(Integer.valueOf(stringNewsId[0]));
         comment.setText(commentTextArr[0].trim());
 
         TransactionManager manager = new TransactionManager();

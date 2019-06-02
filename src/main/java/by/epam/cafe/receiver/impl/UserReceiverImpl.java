@@ -329,7 +329,7 @@ public class UserReceiverImpl implements UserReceiver {
     @Override
     public void signOut(RequestContent content) {
         content.getSessionAttributes().remove(RequestNameConstant.USER);
-        content.getRequestAttributes().remove(ORDER_DATA);
+        content.getSessionAttributes().remove(ORDER_DATA);
     }
 
     @Override

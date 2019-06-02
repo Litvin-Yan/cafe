@@ -172,4 +172,74 @@ public class OrderReceiverImpl implements OrderReceiver {
         }
 
     }
+
+    public void cancelTheOrder(RequestContent content) throws ReceiverException{
+
+        OrderValidatorImpl validator = new OrderValidatorImpl();
+        CommonValidatorImpl commonValidator = new CommonValidatorImpl();
+
+        int userId = ((UserEntity) content.getSessionAttributes().get(GeneralConstant.USER)).getId();
+        String[] paymentMethod = content.getRequestParameters().get(GeneralConstant.PAYMENT_METHOD);
+        PaymentType paymentType = PaymentType.valueOf(paymentMethod[0]);
+        String[] orderPrice = content.getRequestParameters().get(GeneralConstant.ORDER_PRICE);
+
+        content.getRequestAttributes().put(RequestNameConstant.PAYMENT_METHOD, paymentMethod[0]);
+        content.getRequestAttributes().put(RequestNameConstant.ORDER_PRICE, orderPrice[0]);
+
+        OrderEntity order = new OrderEntity();
+        order.setUserId(userId);
+        order.setPaymentType(paymentType);
+        BigDecimal cash = BigDecimal.valueOf(Double.parseDouble(orderPrice[0])).setScale(10, RoundingMode.HALF_DOWN);
+        order.setCash(cash);
+
+        if (!validator.isValidExpectedDate(order)) {
+            content.getRequestAttributes().put(WRONG_DATA, true);
+            return;
+        }
+
+        TransactionManager manager = new TransactionManager();
+        try {
+            UserDAOImpl userDao = new UserDAOImpl();
+            OrderDAOImpl orderDAO = new OrderDAOImpl();
+            OrderDataDAOImpl orderDataDAO = new OrderDataDAOImpl();
+            manager.beginTransaction(userDao, orderDAO, orderDataDAO);
+
+            UserEntity user = userDao.findEntityById(userId);
+            switch (order.getPaymentType()) {
+                case CASH:
+                    break;
+                case MONEY:
+                    user.setCash(user.getCash().add(order.getCash()));
+                    userDao.updateCash(user);
+                    break;
+                case BONUSES:
+                    user.setBonus(user.getBonus().add(order.getCash()));
+                    userDao.updateBonus(user);
+                    break;
+            }
+
+            if (orderDataDAO.delete(order.getId())) {
+                manager.commit();
+            } else {
+                manager.rollback();
+                manager.endTransaction();
+            }
+            if (orderDAO.delete(order.getId())){
+                manager.commit();
+            } else {
+                manager.rollback();
+                manager.endTransaction();
+            }
+            manager.commit();
+            manager.endTransaction();
+        } catch (DAOException e) {
+            try {
+                manager.rollback();
+                manager.endTransaction();
+            } catch (DAOException e1) {
+                throw new ReceiverException("Cancel the order rollback error", e);
+            }
+            throw new ReceiverException(e);
+        }
+    }
 }

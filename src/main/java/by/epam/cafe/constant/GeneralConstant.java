@@ -73,6 +73,7 @@ public class GeneralConstant {
     public static final String REGISTERED_COUNT = "registeredCount";
     public static final String LOCKED_COUNT = "lockedCount";
     public static final String PRODUCTS_COUNT = "productCount";
+    public static final String PRODUCTS_COUNT_ON_ADMIN = "productCountOnAdmin";
     public static final String COMMENT_COUNT = "commentCount";
     public static final String PRODUCT_TYPE_COUNT = "productTypeCount";
     public static final String TYPE_ID = "typeId";

@@ -158,7 +158,7 @@
                     </c:forEach>
                 </div>
                 <div class="pagination  w3-margin-top w3-row w3-container w3-center">
-                    <ctg:pagination total="${productsCount}" limit="${limit}" command="open_product_settings"/>
+                    <ctg:pagination total="${productCountOnAdmin}" limit="${limit}" command="open_product_settings"/>
                 </div>
             </div>
         </div>

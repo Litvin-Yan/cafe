@@ -254,7 +254,7 @@ public class ProductReceiverImpl implements ProductReceiver {
 
             content.getRequestAttributes().put(PRODUCT_LIST, productList);
             content.getRequestAttributes().put(LIMIT, COUNT_PRODUCTS_ON_ADMIN_PAGE);
-            content.getRequestAttributes().put(PRODUCTS_COUNT, productsCount);
+            content.getRequestAttributes().put(PRODUCTS_COUNT_ON_ADMIN, productsCount);
 
         } catch (DAOException e) {
             try {

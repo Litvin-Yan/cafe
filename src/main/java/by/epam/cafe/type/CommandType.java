@@ -3,6 +3,7 @@ package by.epam.cafe.type;
 import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.command.comment.ChangeLockCommentCommand;
 import by.epam.cafe.command.comment.CreateCommentCommand;
+import by.epam.cafe.command.comment.OpenCommentCommand;
 import by.epam.cafe.command.common.*;
 import by.epam.cafe.command.order.CancelTheOrderCommand;
 import by.epam.cafe.command.order.CreateOrderCommand;

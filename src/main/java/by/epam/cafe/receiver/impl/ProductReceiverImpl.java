@@ -309,49 +309,4 @@ public class ProductReceiverImpl implements ProductReceiver {
             throw new ReceiverException(e);
         }
     }
-
-    @Override
-    public void openConcreteProductPage(RequestContent content) throws ReceiverException {
-        CommonValidatorImpl commonValidator = new CommonValidatorImpl();
-        String[] newsIdString = content.getRequestParameters().get(GeneralConstant.PRODUCT_ID);
-
-        if (!commonValidator.checkParamsForInteger(newsIdString)) {
-            content.getRequestAttributes().put(GeneralConstant.PAGE_NOT_FOUND, true);
-            return;
-        }
-
-        int newsId = Integer.valueOf(newsIdString[0]);
-
-
-        TransactionManager handler = new TransactionManager();
-        try {
-            ProductDAOImpl productDAO = new ProductDAOImpl();
-            CommentDAOImpl commentDAO = new CommentDAOImpl();
-            handler.beginTransaction(productDAO, commentDAO);
-            ProductEntity product = productDAO.findEntityById(newsId);
-
-            if (product.equals(new ProductEntity())) {
-                content.getRequestAttributes().put(GeneralConstant.PAGE_NOT_FOUND, true);
-                handler.rollback();
-                handler.endTransaction();
-                return;
-            }
-
-            List<Map<String, Object>> newsCommentList = commentDAO.findCommentsByNewsId(newsId);
-            handler.commit();
-            handler.endTransaction();
-
-            content.getRequestAttributes().put(GeneralConstant.ORDER_COMMENT, newsCommentList);
-            content.getRequestAttributes().put(GeneralConstant.ORDER_ATTR, product);
-
-        } catch (DAOException e) {
-            try {
-                handler.rollback();
-                handler.endTransaction();
-            } catch (DAOException e1) {
-                throw new ReceiverException("Open concrete news rollback error", e);
-            }
-            throw new ReceiverException(e);
-        }
-    }
 }

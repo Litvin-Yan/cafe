@@ -91,7 +91,7 @@ public class OrderReceiverImpl implements OrderReceiver {
         order.setPaymentType(paymentType);
         BigDecimal cash = BigDecimal.valueOf(Double.parseDouble(orderPrice[0])).setScale(10, RoundingMode.HALF_DOWN);
         order.setCash(cash);
-        BigDecimal bonus = order.getCash().multiply(GeneralConstant.PROCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT).setScale(10, RoundingMode.HALF_DOWN);
+        BigDecimal bonus = order.getCash().multiply(GeneralConstant.PERCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT).setScale(10, RoundingMode.HALF_DOWN);
         order.setBonus(bonus);
 
         OrderDataEntity orderData = (OrderDataEntity) content.getSessionAttributes().get(ORDER_DATA);

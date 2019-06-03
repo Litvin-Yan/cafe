@@ -27,8 +27,9 @@ public class ProductDAOImpl extends ProductDAO {
                     "WHERE product_id = ?;";
 
     private static final String FIND_ALL_PRODUCT =
-            "SELECT product_id, product_name , product_type, product_price, product_avatar_url, product_ingredients" +
-                    "FROM product ";
+            "SELECT product_id, product_name , product_type, product_price, product_avatar_url, product_ingredients " +
+                    " FROM product " +
+                    " WHERE product_is_blocked = false; ";
 
     private static final String FIND_PRODUCT_BY_TYPE =
             "SELECT product_id," +
@@ -39,7 +40,8 @@ public class ProductDAOImpl extends ProductDAO {
                     " product_ingredients, " +
                     " product_weight" +
                     " FROM product" +
-                    " WHERE product_type = ?" +
+                    " WHERE product_type = ? AND " +
+                    " product_is_blocked = false " +
                     " ORDER BY product_price DESC , product_id " +
                     " LIMIT ?, ?;";
 
@@ -52,19 +54,27 @@ public class ProductDAOImpl extends ProductDAO {
                     " product_ingredients, " +
                     " product_weight " +
                     "FROM product " +
+                    "WHERE product_is_blocked = false " +
                     "ORDER BY product_price DESC , product_id " +
                     "LIMIT ?, ?;";
 
     private static final String FIND_PRODUCT_COUNT =
             "SELECT  " +
                     "    COUNT(product_id) AS count " +
-                    "FROM product;";
+                    "FROM product " +
+                    "WHERE product_is_blocked = false;";
 
     private static final String FIND_PRODUCT_COUNT_BY_TYPE =
             "SELECT  " +
                     " COUNT(product_id) AS count " +
                     " FROM product " +
-                    " WHERE product_type = ?";
+                    " WHERE product_type = ? AND " +
+                    " product_is_blocked = false;";
+
+    private static final String MARK_AS_DELETED_PRODUCT_BY_ID =
+            "UPDATE  product " +
+                    " SET product_is_blocked = true" +
+                    " WHERE product_id = ?";
 
     private static final String UPDATE_PRODUCT_TYPE =
             "UPDATE product SET product_type = ? WHERE product_id = ?;";
@@ -86,7 +96,8 @@ public class ProductDAOImpl extends ProductDAO {
 
     public static final String FIND_PRODUCT_TYPE =
             "SELECT DISTINCT product.product_type  " +
-                    "FROM product;";
+                    "FROM product " +
+                    "WHERE product_is_blocked = false;";
 
     @Override
     public List<ProductEntity> findAll() throws DAOException {
@@ -124,8 +135,19 @@ public class ProductDAOImpl extends ProductDAO {
     }
 
     @Override
-    public boolean delete(int id) throws DAOException {
-        return false;
+    public boolean delete(int productId) throws DAOException {
+        boolean isDeleted = false;
+        try (PreparedStatement statement = connection.prepareStatement(MARK_AS_DELETED_PRODUCT_BY_ID)) {
+
+            statement.setInt(1, productId);
+            isDeleted = statement.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            if (!GeneralConstant.DUPLICATE_UNIQUE_INDEX.equals(e.getSQLState())) {
+                throw new DAOException("Delete product error ", e);
+            }
+        }
+        return isDeleted;
     }
 
     @Override

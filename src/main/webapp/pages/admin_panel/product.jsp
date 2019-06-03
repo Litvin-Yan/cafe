@@ -27,10 +27,10 @@
 <fmt:message bundle="${rb}" key="txt.cash" var="txtCash"/>
 <fmt:message bundle="${rb}" key="txt.bonus" var="txtBonus"/>
 <fmt:message bundle="${rb}" key="txt.role" var="txtRole"/>
-<fmt:message bundle="${rb}" key="txt.email" var="txtEmail"/>
-<fmt:message bundle="${rb}" key="txt.blocked" var="txtBlocked"/>
-<fmt:message bundle="${rb}" key="txt.blocked.text" var="txtBlockedText"/>
-<fmt:message bundle="${rb}" key="txt.blocking.reason" var="txtBlockingReason"/>
+<fmt:message bundle="${rb}" key="txt.weight" var="txtWeight"/>
+<fmt:message bundle="${rb}" key="txt.price" var="txtPrice"/>
+<fmt:message bundle="${rb}" key="txt.consist" var="txtConsist"/>
+<fmt:message bundle="${rb}" key="txt.type" var="txtType"/>
 <fmt:message bundle="${rb}" key="txt.select.role" var="txtSelectRole"/>
 <fmt:message bundle="${rb}" key="txt.select.action" var="txtSelectAction"/>
 <fmt:message bundle="${rb}" key="txt.change.role.wrong" var="txtChangeWrongRole"/>
@@ -67,7 +67,7 @@
                                                 <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                             </button>
                                             <button class="w3-button w3-black w3-padding-small"
-                                                    onclick="(modal_change_bonus${productEntity.id}).style.display='block'">
+                                                    onclick="(modal_delete${productEntity.id}).style.display='block'">
                                                 <i class="fa fa-window-close" aria-hidden="true"></i>
                                             </button>
                                     </div>
@@ -101,21 +101,21 @@
                                     </div>
                                 </div>
 
-                                <div id="modal${productEntity.id}" class="w3-modal">
+                                <div id="modal_delete${productEntity.id}" class="w3-modal">
                                     <div class="w3-modal-content">
                                         <div class="w3-container">
-                                                        <span onclick="(modal${productEntity.id}).style.display='none'"
+                                                        <span onclick="(modal_delete${productEntity.id}).style.display='none'"
                                                               class="w3-button w3-display-topright">&times;</span>
                                             <p>${txtBeforeDelete}</p>
                                             <div class="w3-row">
                                                 <div class="w3-half">
-                                                    <input onclick="del(this, ${productEntity.id})"
+                                                    <input onclick="del(this, '${productEntity.id}', '${productEntity.imageURL}')"
                                                            type="button" class="w3-button"
                                                            value="${txtYes}">
                                                 </div>
                                                 <div class="w3-half">
                                                     <input type="button" class="w3-button" value="${txtNo}"
-                                                           onclick="(modal${productEntity.id}).style.display='none'">
+                                                           onclick="(modal_delete${productEntity.id}).style.display='none'">
                                                 </div>
                                             </div>
                                         </div>
@@ -135,19 +135,19 @@
                                             <div style="margin: 4px">
                                                 <i>${txtName}: </i>
                                                 <b> <c:out value="${productEntity.name}"/> </b>
-                                                <i>${txtCash}: </i>
+                                                <i>${txtPrice}: </i>
                                                 <b> <ctg:decimal-presenter number="${productEntity.price}"/>$ </b>
                                             </div>
                                             <div style="margin: 4px">
-                                                <i>${txtRole}: </i>
-                                                <b> <c:out value="${productEntity.productType}"/>$ </b>
+                                                <i>${txtType}: </i>
+                                                <b> <c:out value="${productEntity.productType}"/></b>
                                             </div>
                                             <div style="margin: 4px">
-                                                <i>${txtEmail}: </i>
+                                                <i>${txtConsist}: </i>
                                                 <b> <c:out value="${productEntity.ingredients}"/> </b>
                                             </div>
                                             <div style="margin: 4px">
-                                                <i>${txtBlocked}: </i>
+                                                <i>${txtWeight}: </i>
                                                 <b> <c:out value="${productEntity.weight}"/> </b>
                                             </div>
                                         </div>
@@ -165,65 +165,26 @@
     </div>
 </div>
 
-<div id="modal_role_error" class="w3-modal">
+<div id="modal_delete_error" class="w3-modal">
     <div class="w3-modal-content">
         <div class="w3-container">
-            <span onclick="(modal_role_error).style.display='none'" class="w3-button w3-display-topright">&times;</span>
+            <span onclick="(modal_delete_error).style.display='none'" class="w3-button w3-display-topright">&times;</span>
             <p>${txtErrorCheckConnection}</p>
-            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_role_error).style.display='none'">
+            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_delete_error).style.display='none'">
         </div>
     </div>
 </div>
-<div id="modal_role_wrong" class="w3-modal">
+<div id="modal_delete_wrong" class="w3-modal">
     <div class="w3-modal-content">
         <div class="w3-container">
-            <span onclick="(modal_role_wrong).style.display='none'" class="w3-button w3-display-topright">&times;</span>
-            <p>${txtChangeWrongRole}</p>
-            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_role_wrong).style.display='none'">
-        </div>
-    </div>
-</div>
-
-
-<div id="modal_lock_error" class="w3-modal">
-    <div class="w3-modal-content">
-        <div class="w3-container">
-            <span onclick="(modal_lock_error).style.display='none'" class="w3-button w3-display-topright">&times;</span>
-            <p>${txtErrorCheckConnection}</p>
-            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_lock_error).style.display='none'">
-        </div>
-    </div>
-</div>
-<div id="modal_lock_wrong" class="w3-modal">
-    <div class="w3-modal-content">
-        <div class="w3-container">
-            <span onclick="(modal_lock_wrong).style.display='none'" class="w3-button w3-display-topright">&times;</span>
+            <span onclick="(modal_delete_wrong).style.display='none'" class="w3-button w3-display-topright">&times;</span>
             <p>${txtChangeWrongLock}</p>
-            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_lock_wrong).style.display='none'">
+            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_delete_wrong).style.display='none'">
         </div>
     </div>
 </div>
 
-<div id="modal_bonus_error" class="w3-modal">
-    <div class="w3-modal-content">
-        <div class="w3-container">
-            <span onclick="(modal_bonus_error).style.display='none'" class="w3-button w3-display-topright">&times;</span>
-            <p>${txtErrorCheckConnection}</p>
-            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_bonus_error).style.display='none'">
-        </div>
-    </div>
-</div>
-<div id="modal_bonus_wrong" class="w3-modal">
-    <div class="w3-modal-content">
-        <div class="w3-container">
-            <span onclick="(modal_bonus_wrong).style.display='none'" class="w3-button w3-display-topright">&times;</span>
-            <p>${txtChangeWrongLock}</p>
-            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_bonus_wrong).style.display='none'">
-        </div>
-    </div>
-</div>
-
-<script src="${pageContext.request.contextPath}/js/user.js"></script>
+<script src="${pageContext.request.contextPath}/js/product.js"></script>
 <link rel="stylesheet" type="text/css"
       href="${pageContext.request.contextPath}/vendors/jquery.imgareaselect-0.9.10/css/imgareaselect-default.css"/>
 <script type="text/javascript"

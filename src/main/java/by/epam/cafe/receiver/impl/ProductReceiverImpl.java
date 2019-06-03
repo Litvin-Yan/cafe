@@ -189,6 +189,41 @@ public class ProductReceiverImpl implements ProductReceiver {
 
     @Override
     public void deleteProduct(RequestContent content) throws ReceiverException {
+        int productId = Integer.valueOf(content.getRequestParameters().get(GeneralConstant.PRODUCT_ID)[0]);
+        String newsImageUrl = content.getRequestParameters().get(GeneralConstant.PRODUCT_IMAGE_URL)[0];
+
+        File directoryPath = new File(content.getRealPath(), UploadType.PRODUCTS.getUploadFolder());
+        File file = new File(directoryPath, newsImageUrl);
+
+        TransactionManager manager = new TransactionManager();
+        try {
+            ProductDAOImpl productDAO = new ProductDAOImpl();
+            manager.beginTransaction(productDAO);
+            boolean isTransactionSuccess = productDAO.delete(productId);
+
+            if (isTransactionSuccess && file.exists()) {
+                isTransactionSuccess = file.delete();
+            }
+
+            if (isTransactionSuccess) {
+                manager.commit();
+
+            } else {
+                manager.rollback();
+            }
+
+            manager.endTransaction();
+            content.setAjaxSuccess(isTransactionSuccess);
+
+        } catch (DAOException e) {
+            try {
+                manager.rollback();
+                manager.endTransaction();
+            } catch (DAOException e1) {
+                throw new ReceiverException("Delete product rollback error", e);
+            }
+            throw new ReceiverException(e);
+        }
 //        int newsId = Integer.valueOf(content.getRequestParameters().get(GeneralConstant.PRODUCT_ID)[0]);
 //        String newsImageUrl = content.getRequestParameters().get(GeneralConstant.PRODUCT_IMAGE_URL)[0];
 //
@@ -243,12 +278,12 @@ public class ProductReceiverImpl implements ProductReceiver {
             return;
         }
 
-        int startIndex = formatter.formatToStartIndex(page, COUNT_PRODUCTS_ON_PAGE);
+        int startIndex = formatter.formatToStartIndex(page, COUNT_PRODUCTS_ON_ADMIN_PAGE);
         TransactionManager manager = new TransactionManager();
         try {
             ProductDAO productDAO = new ProductDAOImpl();
             manager.beginTransaction(productDAO);
-            List<ProductEntity> productList = productDAO.findWithLimit(startIndex, COUNT_PRODUCTS_ON_PAGE);
+            List<ProductEntity> productList = productDAO.findWithLimit(startIndex, COUNT_PRODUCTS_ON_ADMIN_PAGE);
             int productsCount = productDAO.findProductCount();
             manager.commit();
             manager.endTransaction();
@@ -271,6 +306,51 @@ public class ProductReceiverImpl implements ProductReceiver {
                 throw new ReceiverException("Open product setting rollback error", e);
             }
 
+            throw new ReceiverException(e);
+        }
+    }
+
+    @Override
+    public void openConcreteProductPage(RequestContent content) throws ReceiverException {
+        CommonValidatorImpl commonValidator = new CommonValidatorImpl();
+        String[] newsIdString = content.getRequestParameters().get(GeneralConstant.PRODUCT_ID);
+
+        if (!commonValidator.checkParamsForInteger(newsIdString)) {
+            content.getRequestAttributes().put(GeneralConstant.PAGE_NOT_FOUND, true);
+            return;
+        }
+
+        int newsId = Integer.valueOf(newsIdString[0]);
+
+
+        TransactionManager handler = new TransactionManager();
+        try {
+            ProductDAOImpl productDAO = new ProductDAOImpl();
+            CommentDAOImpl commentDAO = new CommentDAOImpl();
+            handler.beginTransaction(productDAO, commentDAO);
+            ProductEntity product = productDAO.findEntityById(newsId);
+
+            if (product.equals(new ProductEntity())) {
+                content.getRequestAttributes().put(GeneralConstant.PAGE_NOT_FOUND, true);
+                handler.rollback();
+                handler.endTransaction();
+                return;
+            }
+
+            List<Map<String, Object>> newsCommentList = commentDAO.findCommentsByNewsId(newsId);
+            handler.commit();
+            handler.endTransaction();
+
+            content.getRequestAttributes().put(GeneralConstant.ORDER_COMMENT, newsCommentList);
+            content.getRequestAttributes().put(GeneralConstant.ORDER_ATTR, product);
+
+        } catch (DAOException e) {
+            try {
+                handler.rollback();
+                handler.endTransaction();
+            } catch (DAOException e1) {
+                throw new ReceiverException("Open concrete news rollback error", e);
+            }
             throw new ReceiverException(e);
         }
     }

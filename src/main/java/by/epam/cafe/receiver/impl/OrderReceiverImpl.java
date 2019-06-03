@@ -91,7 +91,7 @@ public class OrderReceiverImpl implements OrderReceiver {
         order.setPaymentType(paymentType);
         BigDecimal cash = BigDecimal.valueOf(Double.parseDouble(orderPrice[0])).setScale(10, RoundingMode.HALF_DOWN);
         order.setCash(cash);
-        BigDecimal bonus = order.getCash().multiply(GeneralConstant.PERCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT).setScale(10, RoundingMode.HALF_DOWN);
+        BigDecimal bonus = order.getCash().multiply(GeneralConstant.PROCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT).setScale(10, RoundingMode.HALF_DOWN);
         order.setBonus(bonus);
 
         OrderDataEntity orderData = (OrderDataEntity) content.getSessionAttributes().get(ORDER_DATA);
@@ -230,6 +230,18 @@ public class OrderReceiverImpl implements OrderReceiver {
                     break;
             }
             manager.commit();
+
+            if (orderDataDAO.delete(order.getId())) {
+                manager.commit();
+                if (orderDAO.delete(order.getId())){
+                    manager.commit();
+                } else {
+                    manager.rollback();
+                }
+            } else {
+                manager.rollback();
+            }
+
             manager.endTransaction();
         } catch (DAOException e) {
             try {

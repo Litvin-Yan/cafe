@@ -224,47 +224,6 @@ public class ProductReceiverImpl implements ProductReceiver {
             }
             throw new ReceiverException(e);
         }
-//        int newsId = Integer.valueOf(content.getRequestParameters().get(GeneralConstant.PRODUCT_ID)[0]);
-//        String newsImageUrl = content.getRequestParameters().get(GeneralConstant.PRODUCT_IMAGE_URL)[0];
-//
-//        File directoryPath = new File(content.getRealPath(), UploadType.PRODUCTS.getUploadFolder());
-//        File file = new File(directoryPath, newsImageUrl);
-//
-//        TransactionManager manager = new TransactionManager();
-//        try {
-//            ProductDAOImpl newsDAO = new ProductDAOImpl();
-//            CommentDAOImpl commentDAO = new CommentDAOImpl();
-//            manager.beginTransaction(newsDAO, commentDAO);
-//            boolean isTransactionSuccess = commentDAO.deleteByNewsId(newsId);
-//
-//            if (isTransactionSuccess) {
-//                isTransactionSuccess = newsDAO.delete(newsId);
-//            }
-//
-//            if (isTransactionSuccess && file.exists()) {
-//                isTransactionSuccess = file.delete();
-//            }
-//
-//            if (isTransactionSuccess) {
-//                manager.commit();
-//
-//            } else {
-//                manager.rollback();
-//            }
-//
-//            manager.endTransaction();
-//            content.setAjaxSuccess(isTransactionSuccess);
-//
-//        } catch (DAOException e) {
-//            try {
-//                manager.rollback();
-//                manager.endTransaction();
-//            } catch (DAOException e1) {
-//                throw new ReceiverException("Delete news rollback error", e);
-//            }
-//            throw new ReceiverException(e);
-//        }
-
     }
 
     @Override

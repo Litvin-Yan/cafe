@@ -43,6 +43,7 @@
 <fmt:message bundle="${rb}" key="txt.are.you.sure" var="txtAreYouSure"/>
 <fmt:message bundle="${rb}" key="txt.yes" var="txtYes"/>
 <fmt:message bundle="${rb}" key="txt.no" var="txtNo"/>
+<fmt:message bundle="${rb}" key="txt.change.lock.wrong" var="txtChangeWrongLock"/>
 
 <body>
 <div class="w3-row-padding">
@@ -127,9 +128,11 @@
                             <tbody>
                             <c:forEach items="${activeOrders}" var="activeOrder">
                                 <tr class="w3-large  backgraund-opacity">
-                                    <form id="activeOrder${activeOrder.id}" method="post" action="/ajaxController"  onsubmit="return false">
+                                    <div id="activeOrder${activeOrder.id}">
                                         <input type="hidden" name="command" value="CANCEL_THE_ORDER">
                                         <input type="hidden" name="orderId" value="${activeOrder.id}">
+                                        <input type="hidden" name="paymentMethod" value="${activeOrder.paymentType}">
+                                        <input type="hidden" name="orderPrice" value="${activeOrder.cash}">
                                         <td>
                                             <span>
                                                 <i class="w3-small">${txtOrderDate}:</i>
@@ -154,21 +157,21 @@
                                                 </button>
                                             </span>
                                         </td>
-                                    </form>
+                                    </div>
                                 </tr>
 
                                 <div id="modalCancelTheOrder${activeOrder.id}" class="w3-modal">
                                     <div class="w3-modal-content" style="max-width: 50%;">
                                         <div class="w3-container">
-                                            <div id="cancelTheOrder">
-                                                <input type="hidden" name="command" value="CANCEL_THE_ORDER"/>
+                                            <div>
                                                 <span onclick="(modalCancelTheOrder${activeOrder.id}).style.display='none'"
                                                       class="w3-button w3-display-topright">&times;</span>
                                                 <p class="w3-centered">${txtAreYouSure}?</p>
                                                 <br>
-                                                <input type="button" class="w3-button" value="${txtYes}" onclick="cancelTheOrder(this, ${activeOrder.id}, 'modalCancelTheOrder');">
+                                                <input type="button" class="w3-button" value="${txtYes}"
+                                                       onclick="cancelTheOrder(this, 'activeOrder${activeOrder.id}', 'modalCancelTheOrder${activeOrder.id}');">
                                                 <input type="button" class="w3-button" value="${txtNo}"
-                                                       onclick="(modelCancelTheOrder${activeOrder.id}).style.display='none'">
+                                                       onclick="(modalCancelTheOrder${activeOrder.id}).style.display='none'">
                                             </div>
                                         </div>
                                     </div>
@@ -183,9 +186,7 @@
                             <tbody>
                             <c:forEach items="${ordersWithoutComment}" var="orderWithoutComment">
                                 <tr class="w3-large backgraund-opacity">
-                                    <form method="post" action="/ajaxController" id="orderWithoutComment${orderWithoutComment.id}" onsubmit="return false">
-                                        <input type="hidden" name="command" value="COMMENT_THE_ORDER">
-                                        <input type="hidden" name="orderId" value="${orderWithoutComment.id}">
+                                    <div>
                                         <td>
                                             <span>
                                                 <i class="w3-small">${txtOrderDate}:</i>
@@ -212,29 +213,30 @@
                                                 </button>
                                             </span>
                                         </td>
-                                    </form>
+                                    </div>
                                 </tr>
 
                                 <div id="modalCommentTheOrder${orderWithoutComment.id}" class="w3-modal">
                                     <div class="w3-modal-content" style="max-width: 50%;">
                                         <div class="w3-container">
-                                            <div id="addComment">
-                                                <input type="hidden" name="command" value="CREATE_COMMENT"/>
+                                            <div id="orderWithoutComment${orderWithoutComment.id}">
+                                                    <input type="hidden" name="command" value="COMMENT_THE_ORDER">
+                                                    <input type="hidden" name="orderId" value="${orderWithoutComment.id}">
                                                 <span onclick="(modalCommentTheOrder${orderWithoutComment.id}).style.display='none'"
                                                       class="w3-button w3-display-topright">&times;</span>
                                                 <br>
                                                 <p>${txtOrderRate}(1-10) : </p>
                                                 <p>
-                                                    <input type="number" name="rate" id="rate" step="1"
+                                                    <input type="number" name="commentRate" step="1"
                                                            class="w3-input w3-border" min="1" max="10"/>
                                                 </p>
                                                 <br>
                                                 <p>${txtCommentText}: </p>
                                                 <p>
-                                                    <input type="text" name="rate" id="text" step="1"
-                                                           class="w3-input w3-border" min="1" max="100"/>
+                                                    <input type="text" name="text"
+                                                           class="w3-input w3-border"/>
                                                 </p>
-                                                <input type="button" class="w3-button" value="${txtOk}" onclick="commentTheOrder(this, ${orderWithoutComment.id}, 'modalCommentTheOrder');">
+                                                <input type="button" class="w3-button" value="${txtOk}" onclick="commentTheOrder(this, 'orderWithoutComment${orderWithoutComment.id}', 'modalCommentTheOrder${orderWithoutComment.id}');">
                                                 <input type="button" class="w3-button" value="${txtCancel}"
                                                        onclick="(modalCommentTheOrder${orderWithoutComment.id}).style.display='none'">
                                             </div>
@@ -322,6 +324,16 @@
             <span onclick="(accessDenied).style.display='none'" class="w3-button w3-display-topright">&times;</span>
             <p>${txtWrongAccess}</p>
             <input type="button" class="w3-button" value="${txtOk}" onclick="(accessDenied).style.display='none'">
+        </div>
+    </div>
+</div>
+
+<div id="modal_bonus_wrong" class="w3-modal">
+    <div class="w3-modal-content">
+        <div class="w3-container">
+            <span onclick="(modal_bonus_wrong).style.display='none'" class="w3-button w3-display-topright">&times;</span>
+            <p>${txtChangeWrongLock}</p>
+            <input type="button" class="w3-button" value="${txtOk}" onclick="(modal_bonus_wrong).style.display='none'">
         </div>
     </div>
 </div>

@@ -193,7 +193,7 @@ public class ProductDAOImpl extends ProductDAO {
         return countProduct;
     }
 
-
+    @Override
     public int findProductCountByType(String productType) throws DAOException {
 
         int countProduct = 0;
@@ -216,6 +216,7 @@ public class ProductDAOImpl extends ProductDAO {
         return null;
     }
 
+    @Override
     public List<ProductEntity> findProductByType(String  productType, int startIndex, int limit) throws DAOException {
         List<ProductEntity> foundProducts;
         try (PreparedStatement statement = connection.prepareStatement(FIND_PRODUCT_BY_TYPE)) {
@@ -273,6 +274,7 @@ public class ProductDAOImpl extends ProductDAO {
         return productList;
     }
 
+    @Override
     public int createAndGetId(ProductEntity entity) throws DAOException {
         int productId = 0;
         try (PreparedStatement statement = connection.prepareStatement(CREATE_PRODUCT,
@@ -291,6 +293,7 @@ public class ProductDAOImpl extends ProductDAO {
         return productId;
     }
 
+    @Override
     public boolean updateImagePath(ProductEntity entity) throws DAOException {
         boolean isUpdated;
 

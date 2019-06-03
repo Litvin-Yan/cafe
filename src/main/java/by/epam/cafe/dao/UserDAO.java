@@ -87,4 +87,13 @@ public abstract class UserDAO extends DAO<UserEntity> {
      * @throws DAOException when sql request error
      */
     public abstract boolean updateCash(UserEntity entity) throws DAOException;
+
+    /**
+     * update user bonus
+     *
+     * @param entity
+     * @return  true if updated
+     * @throws DAOException
+     */
+    public abstract boolean updateBonus(UserEntity entity) throws DAOException;
 }

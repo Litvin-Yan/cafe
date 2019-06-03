@@ -32,6 +32,7 @@ import static by.epam.cafe.constant.GeneralConstant.WRONG_DATA;
 
 public class OrderReceiverImpl implements OrderReceiver {
 
+    @Override
     public void openBasketPage(RequestContent content) {
         Formatter formatter = new Formatter();
         String[] stringPage = content.getRequestParameters().get(GeneralConstant.PAGE_NUMBER);
@@ -90,7 +91,7 @@ public class OrderReceiverImpl implements OrderReceiver {
         order.setPaymentType(paymentType);
         BigDecimal cash = BigDecimal.valueOf(Double.parseDouble(orderPrice[0])).setScale(10, RoundingMode.HALF_DOWN);
         order.setCash(cash);
-        BigDecimal bonus = order.getCash().multiply(GeneralConstant.PROCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT).setScale(10, RoundingMode.HALF_DOWN);
+        BigDecimal bonus = order.getCash().multiply(GeneralConstant.PERCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT).setScale(10, RoundingMode.HALF_DOWN);
         order.setBonus(bonus);
 
         OrderDataEntity orderData = (OrderDataEntity) content.getSessionAttributes().get(ORDER_DATA);
@@ -128,7 +129,7 @@ public class OrderReceiverImpl implements OrderReceiver {
                     enoughMoney = false;
             }
 
-            if (!enoughMoney){
+            if (!enoughMoney) {
                 content.getAjaxResult().add(GeneralConstant.LITTLE_MONEY, new Gson().toJsonTree(true));
                 return;
             }
@@ -173,29 +174,24 @@ public class OrderReceiverImpl implements OrderReceiver {
 
     }
 
-    public void cancelTheOrder(RequestContent content) throws ReceiverException{
+    @Override
+    public void cancelTheOrder(RequestContent content) throws ReceiverException {
 
         OrderValidatorImpl validator = new OrderValidatorImpl();
         CommonValidatorImpl commonValidator = new CommonValidatorImpl();
 
         int userId = ((UserEntity) content.getSessionAttributes().get(GeneralConstant.USER)).getId();
         String[] paymentMethod = content.getRequestParameters().get(GeneralConstant.PAYMENT_METHOD);
-        PaymentType paymentType = PaymentType.valueOf(paymentMethod[0]);
         String[] orderPrice = content.getRequestParameters().get(GeneralConstant.ORDER_PRICE);
-
-        content.getRequestAttributes().put(RequestNameConstant.PAYMENT_METHOD, paymentMethod[0]);
-        content.getRequestAttributes().put(RequestNameConstant.ORDER_PRICE, orderPrice[0]);
+        String[] orderId = content.getRequestParameters().get(GeneralConstant.ORDER_ID);
+        PaymentType paymentType = PaymentType.valueOf(paymentMethod[0]);
 
         OrderEntity order = new OrderEntity();
         order.setUserId(userId);
         order.setPaymentType(paymentType);
         BigDecimal cash = BigDecimal.valueOf(Double.parseDouble(orderPrice[0])).setScale(10, RoundingMode.HALF_DOWN);
         order.setCash(cash);
-
-        if (!validator.isValidExpectedDate(order)) {
-            content.getRequestAttributes().put(WRONG_DATA, true);
-            return;
-        }
+        order.setId(Integer.valueOf(orderId[0]));
 
         TransactionManager manager = new TransactionManager();
         try {
@@ -205,18 +201,6 @@ public class OrderReceiverImpl implements OrderReceiver {
             manager.beginTransaction(userDao, orderDAO, orderDataDAO);
 
             UserEntity user = userDao.findEntityById(userId);
-            switch (order.getPaymentType()) {
-                case CASH:
-                    break;
-                case MONEY:
-                    user.setCash(user.getCash().add(order.getCash()));
-                    userDao.updateCash(user);
-                    break;
-                case BONUSES:
-                    user.setBonus(user.getBonus().add(order.getCash()));
-                    userDao.updateBonus(user);
-                    break;
-            }
 
             if (orderDataDAO.delete(order.getId())) {
                 manager.commit();
@@ -224,11 +208,26 @@ public class OrderReceiverImpl implements OrderReceiver {
                 manager.rollback();
                 manager.endTransaction();
             }
-            if (orderDAO.delete(order.getId())){
+            if (orderDAO.delete(order.getId())) {
                 manager.commit();
             } else {
                 manager.rollback();
                 manager.endTransaction();
+            }
+
+            switch (order.getPaymentType()) {
+                case CASH:
+                    break;
+                case MONEY:
+                    user.setBonus(user.getBonus().subtract(order.getCash().multiply(GeneralConstant.PERCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT)));
+                    user.setCash(user.getCash().add(order.getCash()));
+                    userDao.updateCash(user);
+                    userDao.updateBonus(user);
+                    break;
+                case BONUSES:
+                    user.setBonus(user.getBonus().add(order.getCash()));
+                    userDao.updateBonus(user);
+                    break;
             }
             manager.commit();
             manager.endTransaction();

@@ -21,7 +21,7 @@ public class OpenMenuCommand extends AbstractCommand {
     public OpenMenuCommand(Receiver receiver) {
         super(receiver);
     }
-    //TODO catch dao exception
+
     @Override
     public Router execute(RequestContent content) {
         Router router = new Router();

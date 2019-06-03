@@ -47,7 +47,7 @@ public class SignInCommand extends AbstractCommand {
             }
 
         } catch (ReceiverException e) {
-            LOGGER.log(Level.ERROR, "Handle receiver error", e);
+            LOGGER.log(Level.ERROR, "Sign in receiver error", e);
             router.setRouteType(RouteType.REDIRECT);
             router.setRoutePath(PageType.SERVER_ERROR.getPage());
         } catch (DAOException e) {

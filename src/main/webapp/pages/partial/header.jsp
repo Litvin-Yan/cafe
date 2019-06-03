@@ -120,7 +120,7 @@
                 </c:if>
                 <form action="${pageContext.request.contextPath}/generalController"
                       class="w3-bar-item w3-padding-small">
-                    <input type="hidden" name="command" value="OPEN_COMMENTS">
+                    <input type="hidden" name="command" value="OPEN_COMMENT">
                     <input type="submit"
                            class="w3-button w3-hide-small w3-padding-small w3-text-amber w3-hover-none w3-hover-text-white"
                            value="<c:out value='${comments}'/>">

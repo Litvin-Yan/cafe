@@ -1,9 +1,12 @@
 package by.epam.cafe.dao.impl;
 
+import by.epam.cafe.constant.GeneralConstant;
 import by.epam.cafe.constant.SQLFieldConstant;
 import by.epam.cafe.dao.CommentDAO;
 import by.epam.cafe.entity.CommentEntity;
+import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
+import javafx.util.Pair;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,10 +43,26 @@ public class CommentDAOImpl extends CommentDAO {
                     "SET comment_is_blocked = ? " +
                     "WHERE comment.order_id = ?;";
 
-    public static final String DELETE_COMMENT_BY_ORDER_ID =
-            "DELETE FROM comment  " +
-                    "WHERE " +
-                    "    comment.order_id = ?;";
+    public static final String FIND_DATA_FOR_COMMENT =
+            "SELECT comment_content"+
+                    ", comment_rate"+
+                    ", comment_date"+
+                    ", user_name"+
+                    ", user_avatar_url "+
+                    ", comment.order_id "+
+                    "FROM comment "+
+                    "JOIN `order` "+
+                    "ON (comment.order_id = `order`.order_id) "+
+                    "JOIN user "+
+                    "ON (user.user_id = `order`.user_id) "+
+                    "ORDER BY comment_date DESC "+
+                    "LIMIT ?, ?;";
+
+    private static final String FIND_COMMENT_COUNT =
+            "SELECT  " +
+                    "    COUNT(order_id) AS count " +
+                    "FROM " +
+                    "    comment;";
 
     @Override
     public List<CommentEntity> findAll() throws DAOException {
@@ -55,38 +74,6 @@ public class CommentDAOImpl extends CommentDAO {
     public CommentEntity findEntityById(int id) throws DAOException {
         throw new UnsupportedOperationException();
 
-    }
-
-    public List<Map<String, Object>> findCommentsByNewsId(int newsId) throws DAOException {
-        List<Map<String, Object>> newsCommentList = new ArrayList<>();
-
-        try (PreparedStatement statement = connection.prepareStatement(FIND_ORDER_COMMENTS)) {
-            statement.setInt(1, newsId);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                Map<String, Object> newsComment = new HashMap<>();
-                newsComment.put(SQLFieldConstant.Comment.ORDER_ID,
-                        resultSet.getInt(SQLFieldConstant.Comment.ORDER_ID));
-                newsComment.put(SQLFieldConstant.Comment.IS_BLOCKED,
-                        resultSet.getBoolean(SQLFieldConstant.Comment.IS_BLOCKED));
-                newsComment.put(SQLFieldConstant.Comment.POST_DATE,
-                        resultSet.getDate(SQLFieldConstant.Comment.POST_DATE));
-                newsComment.put(SQLFieldConstant.Comment.CONTENT,
-                        resultSet.getString(SQLFieldConstant.Comment.CONTENT));
-                newsComment.put(SQLFieldConstant.User.AVATAR_URL,
-                        resultSet.getString(SQLFieldConstant.User.AVATAR_URL));
-                newsComment.put(SQLFieldConstant.User.NAME,
-                        resultSet.getString(SQLFieldConstant.User.NAME));
-                newsCommentList.add(newsComment);
-            }
-
-        } catch (SQLException e) {
-            throw new DAOException("Error find product comments ",e);
-        }
-
-        return newsCommentList;
     }
 
     @Override
@@ -105,6 +92,7 @@ public class CommentDAOImpl extends CommentDAO {
         return isCreated;
     }
 
+    @Override
     public void changeLockCommentById(int commentId, boolean changeValue) throws DAOException {
         try (PreparedStatement statement = connection.prepareStatement(CHANGE_LOCK_COMMENT)) {
             statement.setBoolean(1, changeValue);
@@ -114,18 +102,6 @@ public class CommentDAOImpl extends CommentDAO {
         } catch (SQLException e) {
             throw new DAOException("Error change comment lock ",e);
         }
-    }
-
-    public boolean deleteByNewsId(int newsId) throws DAOException {
-        boolean isDeleted;
-        try (PreparedStatement statement = connection.prepareStatement(DELETE_COMMENT_BY_ORDER_ID)) {
-            statement.setInt(1,newsId);
-            isDeleted = !statement.execute();
-
-        } catch (SQLException e) {
-            throw new DAOException("Error delete comment",e);
-        }
-        return isDeleted;
     }
 
     @Override
@@ -143,5 +119,57 @@ public class CommentDAOImpl extends CommentDAO {
     public boolean update(CommentEntity entity) throws DAOException {
         throw new UnsupportedOperationException();
 
+    }
+
+    @Override
+    public List<Pair<UserEntity, CommentEntity>> findDataForComment(int startIndex, int limit) throws DAOException {
+
+        List<Pair<UserEntity, CommentEntity>> commentDataList = new ArrayList<>();
+        Pair<UserEntity, CommentEntity> commentData;
+
+        try (PreparedStatement statement = connection.prepareStatement(FIND_DATA_FOR_COMMENT)) {
+            statement.setInt(1, startIndex);
+            statement.setInt(2, limit);
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                UserEntity foundUser = new UserEntity();
+                CommentEntity foundComment = new CommentEntity();
+
+                foundUser.setName(result.getString(SQLFieldConstant.User.NAME));
+                foundUser.setAvatarURL(result.getString(SQLFieldConstant.User.AVATAR_URL));
+                foundComment.setRate(result.getInt(SQLFieldConstant.Comment.RATE));
+                foundComment.setPostDate(result.getTimestamp(SQLFieldConstant.Comment.POST_DATE));
+                foundComment.setText(result.getString(SQLFieldConstant.Comment.CONTENT));
+                foundComment.setOrderId(result.getInt(SQLFieldConstant.Comment.ORDER_ID));
+
+                commentData = new Pair<>(foundUser, foundComment);
+                commentDataList.add(commentData);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Find limit users error ", e);
+        }
+
+        return commentDataList;
+    }
+
+    @Override
+    public int findCommentCount() throws DAOException {
+        int count = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(FIND_COMMENT_COUNT)) {
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                count = resultSet.getInt(GeneralConstant.COUNT);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Find users count error ", e);
+        }
+
+        return count;
     }
 }

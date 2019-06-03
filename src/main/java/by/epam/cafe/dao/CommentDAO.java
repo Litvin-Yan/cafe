@@ -1,9 +1,23 @@
 package by.epam.cafe.dao;
 
 import by.epam.cafe.entity.CommentEntity;
+import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
+import javafx.util.Pair;
+
+import java.util.List;
 
 public abstract class CommentDAO extends DAO<CommentEntity> {
+
+    /**
+     * find data for comment with limit
+     *
+     * @param startIndex
+     * @param limit
+     * @return data for comment
+     * @throws DAOException when sql request error
+     */
+    public abstract List<Pair<UserEntity, CommentEntity>> findDataForComment(int startIndex, int limit) throws DAOException;
 
     /**
      * Change lock comment by id
@@ -15,11 +29,11 @@ public abstract class CommentDAO extends DAO<CommentEntity> {
     public abstract void changeLockCommentById(int commentId, boolean changeValue) throws DAOException;
 
     /**
-     * Delete product by id
+     * find comment count
      *
-     * @param newsId product id
-     * @return success delete
-     * @throws DAOException when sql request error
+     * @return count of comment
+     * @throws DAOException
      */
-    public abstract boolean deleteByNewsId(int newsId) throws DAOException;
+    public abstract int findCommentCount() throws DAOException;
+
 }

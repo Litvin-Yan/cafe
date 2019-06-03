@@ -33,7 +33,6 @@ public class GeneralConstant {
     public static final String WRONG_NUMBER_FORMAT = "wrongNumberFormat";
     public static final String WRONG_COUNT = "wrongCount";
     public static final String CREATE_ERROR = "createError";
-    public static final String DEACTIVATE_ERROR = "deactivateError";
     public static final String FILL_ERROR = "fillError";
     public static final String DUPLICATE_NAME = "duplicateName";
     public static final String WRONG_UPLOAD = "wrongUpload";
@@ -54,6 +53,7 @@ public class GeneralConstant {
     public static final String STATISTIC_MAP = "statisticMap";
     public static final String NAME = "name";
     public static final String USER_LIST = "userList";
+    public static final String COMMENT_DATA_LIST = "commentDataList";
     public static final String USERS_COUNT = "usersCount";
     public static final String USER_ID = "userId";
     public static final String USER_TYPE = "userType";
@@ -73,16 +73,13 @@ public class GeneralConstant {
     public static final String REGISTERED_COUNT = "registeredCount";
     public static final String LOCKED_COUNT = "lockedCount";
     public static final String PRODUCTS_COUNT = "productCount";
+    public static final String COMMENT_COUNT = "commentCount";
     public static final String PRODUCT_TYPE_COUNT = "productTypeCount";
     public static final String TYPE_ID = "typeId";
     public static final String TITLE = "title";
     public static final String PRODUCT_IMAGE_URL = "productImageUrl";
     public static final String OLD_PASSWORD = "oldPassword";
     public static final String NEW_NAME = "newName";
-    public static final String AMOUNT_OF_MONEY = "amountOfMoney";
-    public static final String LESS_AMOUNT_OF_MONEY = "lessAmountOfMoney";
-    public static final String MORE_AMOUNT_OF_MONEY = "moreAmountOfMoney";
-    public static final String STANDOFF_AMOUNT_OF_MONEY = "standoffAmountOfMoney";
     public static final String ORDER_COMMENT = "orderComment";
     public static final String ORDER_ATTR = "orderAttr";
     public static final String SUCCESS = "success";
@@ -101,9 +98,10 @@ public class GeneralConstant {
     public static final String ORDER_DATA_PRODUCT_PRICE = "orderDataProductPrice";
 
     public static final int COUNT_PRODUCTS_ON_PAGE = 5;
+    public static final int COUNT_COMMENT_ON_PAGE = 5;
     public static final int COUNT_PRODUCTS_ON_ADMIN_PAGE = 4;
     public static final int COUNT_USERS_ON_PAGE = 4;
-    public static final BigDecimal PROCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT = new BigDecimal(0.05);
+    public static final BigDecimal PERCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT = new BigDecimal(0.05);
 
     private GeneralConstant() {
     }

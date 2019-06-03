@@ -1,34 +1,31 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-<html>
-<head>
-    <link rel="stylesheet" href="../bootstrap/bootstrap.min.css"/>
-    <link rel="stylesheet" href="../style/style.css"/>
-    <title>$Title$</title>
-</head>
-<body>
-<header>
-    <nav class="container-fluid">
-        <ul class="nav-list row">
-            <li class="col-1"><a href="../index.jsp">Кафе</a></li>
-            <li class="col-1"><a href="menuEntity.jsp">Меню</a></li>
-            <li class="col-2"><a href="basket.jsp">Корзина</a></li>
-            <li class="col-5"><a href="comments.jsp">Отзывы</a></li>
-            <li class="col-2"><a href="sign_up.jsp">Зарегистрироваться</a></li>
-            <li class="col-1"><a href="sign_in.jsp">Войти</a></li>
-        </ul>
-    </nav>
-</header>
-<main>
+<%@include file="/pages/partial/header.jsp" %>
 
-</main>
-<footer>
-    <nav class="container-fluid">
-        <ul class="nav-list row">
-            <li class="col-10"><a href="#">Адрес</a></li>
-            <li class="col-1 en"><input type="image" src="../images/language/en.png"/></li>
-            <li class="col-1 ru"><input type="image" src="../images/language/ru.png"/></li>
-        </ul>
-    </nav>
-</footer>
-</body>
-</html>
+<fmt:message bundle="${rb}" key="txt.comments" var="txtComments"/>
+<br>
+
+<table class="products w3-table w3-centered">
+    <thead>
+    <span class="w3-xlarge">${txtComments}</span>
+    </thead>
+    <tbody>
+    <c:forEach var="commentData" items="${commentDataList}">
+        <tr class="w3-large backgraund-opacity">
+            <td>
+                <span><img src="../image/avatar/${commentData.key.avatarURL}" height="70"></span>
+                <span>${commentData.key.name}</span>
+            </td>
+            <td>
+                <span>${commentData.value.rate}</span>
+                <span><ctg:date-presenter date="${commentData.value.postDate}"/></span>
+            </td>
+            <td>
+                <span>${commentData.value.text}</span>
+            </td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>
+<div class="pagination w3-margin-left1 w3-hide-medium w3-xlarge w3-border-black w3-padding-small w3-text-amber">
+    <ctg:pagination total="${commentCount}" limit="${limit}" command="open_comment"/>
+</div>
+<%@include file="/pages/partial/footer.jsp" %>

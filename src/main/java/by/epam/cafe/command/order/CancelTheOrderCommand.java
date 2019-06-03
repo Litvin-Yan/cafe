@@ -40,7 +40,7 @@ public class CancelTheOrderCommand extends AbstractCommand {
             }
 
         } catch (ReceiverException e) {
-            LOGGER.log(Level.ERROR, "Open menu receiver error", e);
+            LOGGER.log(Level.ERROR, "Cancel the order receiver error", e);
             router.setRoutePath(PageType.SERVER_ERROR.getPage());
             router.setRouteType(RouteType.REDIRECT);
         } catch (DAOException e) {

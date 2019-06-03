@@ -113,6 +113,7 @@ public class OrderDAOImpl extends OrderDAO {
         return isCreated;
     }
 
+    @Override
     public int createAndGetOrderId(OrderEntity entity) throws DAOException {
         int orderId = 0;
         try (PreparedStatement statement = connection.prepareStatement(CREATE_ORDER)) {
@@ -144,6 +145,7 @@ public class OrderDAOImpl extends OrderDAO {
         return false;
     }
 
+    @Override
     public List<OrderEntity> findActiveOrdersByUserId(int userId) throws DAOException {
 
         List<OrderEntity> activeOrders;
@@ -170,6 +172,7 @@ public class OrderDAOImpl extends OrderDAO {
         return activeOrders;
     }
 
+    @Override
     public List<OrderEntity> findOrdersWithoutCommentByUserId(int userId) throws DAOException {
 
         List<OrderEntity> ordersWithoutComment;

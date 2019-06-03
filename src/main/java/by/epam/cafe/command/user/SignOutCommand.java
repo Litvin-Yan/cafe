@@ -30,7 +30,7 @@ public class SignOutCommand extends AbstractCommand {
             router.setRouteType(RouteType.REDIRECT);
 
         } catch (ReceiverException e) {
-            LOGGER.log(Level.ERROR, "Handle receiver error", e);
+            LOGGER.log(Level.ERROR, "Sign out receiver error", e);
             router.setRoutePath(PageType.SERVER_ERROR.getPage());
             router.setRouteType(RouteType.REDIRECT);
         } catch (DAOException e) {

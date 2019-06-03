@@ -36,14 +36,6 @@ public interface UserValidator extends Validator {
     boolean isAdmin(UserEntity user);
 
     /**
-     * Is bookmaker.
-     *
-     * @param user
-     * @return
-     */
-    boolean isBookmaker(UserEntity user);
-
-    /**
      * Is user.
      *
      * @param user

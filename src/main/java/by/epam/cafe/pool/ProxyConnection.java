@@ -6,6 +6,7 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 final public class ProxyConnection implements Connection, AutoCloseable {
+
     private Connection connection;
 
     /**

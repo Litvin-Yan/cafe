@@ -144,7 +144,7 @@ public class UserDAOImpl extends UserDAO {
             throw new DAOException("Return money for bets error ", e);
         }
     }
-//TODO: extract User add set for all fields
+
     private UserEntity extractUser(ResultSet result) throws SQLException {
         UserEntity foundUser = null;
         if (result.next()) {
@@ -164,6 +164,7 @@ public class UserDAOImpl extends UserDAO {
         return foundUser;
     }
 
+    @Override
     public List<UserEntity> findLimit(int startIndex, int limit) throws DAOException {
         List<UserEntity> userList;
 
@@ -196,6 +197,7 @@ public class UserDAOImpl extends UserDAO {
         return userList;
     }
 
+    @Override
     public int findUsersCount() throws DAOException {
         int count = 0;
 
@@ -214,6 +216,7 @@ public class UserDAOImpl extends UserDAO {
         return count;
     }
 
+    @Override
     public UserEntity findUser(UserEntity user) throws DAOException {
         UserEntity foundUser;
 
@@ -230,6 +233,7 @@ public class UserDAOImpl extends UserDAO {
         return foundUser;
     }
 
+    @Override
     public boolean updateRole(UserEntity entity) throws DAOException {
         boolean isUpdated = false;
 
@@ -250,6 +254,7 @@ public class UserDAOImpl extends UserDAO {
         return isUpdated;
     }
 
+    @Override
     public boolean updateAvatarPath(UserEntity entity) throws DAOException {
         boolean isUpdated = false;
 
@@ -269,6 +274,7 @@ public class UserDAOImpl extends UserDAO {
         return isUpdated;
     }
 
+    @Override
     public boolean updatePassword(UserEntity entity) throws DAOException {
         boolean isUpdated = false;
 
@@ -289,6 +295,7 @@ public class UserDAOImpl extends UserDAO {
         return isUpdated;
     }
 
+    @Override
     public boolean updateLock(UserEntity entity) throws DAOException {
         boolean isUpdated = false;
 
@@ -308,6 +315,7 @@ public class UserDAOImpl extends UserDAO {
         return isUpdated;
     }
 
+    @Override
     public boolean updateCash(UserEntity entity) throws DAOException {
         boolean isUpdated;
 
@@ -323,6 +331,7 @@ public class UserDAOImpl extends UserDAO {
         return isUpdated;
     }
 
+    @Override
     public boolean updateBonus(UserEntity entity) throws DAOException {
         boolean isUpdated;
 

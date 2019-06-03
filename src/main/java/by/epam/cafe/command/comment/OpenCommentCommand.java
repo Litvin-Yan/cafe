@@ -1,4 +1,4 @@
-package by.epam.cafe.command.order;
+package by.epam.cafe.command.comment;
 
 import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.content.RequestContent;
@@ -15,14 +15,13 @@ import org.apache.logging.log4j.Logger;
 
 import static by.epam.cafe.constant.GeneralConstant.PAGE_NOT_FOUND;
 
-public class OpenBasketCommand extends AbstractCommand {
+public class OpenCommentCommand extends AbstractCommand {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public OpenBasketCommand(Receiver receiver) {
+    public OpenCommentCommand(Receiver receiver) {
         super(receiver);
     }
-
     @Override
     public Router execute(RequestContent content) {
         Router router = new Router();
@@ -31,7 +30,7 @@ public class OpenBasketCommand extends AbstractCommand {
             receiver.action(CommandType.takeCommandType(this), content);
 
             if (!content.getRequestAttributes().containsKey(PAGE_NOT_FOUND)) {
-                router.setRoutePath(PageType.BASKET.getPage());
+                router.setRoutePath(PageType.COMMENT.getPage());
                 router.setRouteType(RouteType.FORWARD);
 
             } else {
@@ -40,7 +39,7 @@ public class OpenBasketCommand extends AbstractCommand {
             }
 
         } catch (ReceiverException e) {
-            LOGGER.log(Level.ERROR, "Open basket receiver error", e);
+            LOGGER.log(Level.ERROR, "Open menu receiver error", e);
             router.setRoutePath(PageType.SERVER_ERROR.getPage());
             router.setRouteType(RouteType.REDIRECT);
         } catch (DAOException e) {

@@ -7,17 +7,6 @@ import by.epam.cafe.exception.ReceiverException;
 public interface ProductReceiver extends Receiver {
 
     /**
-     * Open concrete product page.
-     *
-     * @param requestContent request content
-     * @throws ReceiverException when throw DAOException
-     *
-     * @see DAOException
-     * @see RequestContent
-     */
-    void openConcreteProductPage(RequestContent requestContent) throws ReceiverException;
-
-    /**
      * Open menu.
      *
      * @param requestContent request content

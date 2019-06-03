@@ -4,15 +4,20 @@ import by.epam.cafe.constant.GeneralConstant;
 import by.epam.cafe.content.RequestContent;
 import by.epam.cafe.dao.TransactionManager;
 import by.epam.cafe.dao.impl.CommentDAOImpl;
+import by.epam.cafe.dao.impl.UserDAOImpl;
 import by.epam.cafe.entity.CommentEntity;
 import by.epam.cafe.entity.UserEntity;
 import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.CommentReceiver;
+import by.epam.cafe.util.Formatter;
 import by.epam.cafe.validator.impl.CommentValidatorImpl;
 import by.epam.cafe.validator.impl.CommonValidatorImpl;
 import by.epam.cafe.validator.impl.UserValidatorImpl;
 import com.google.gson.Gson;
+import javafx.util.Pair;
+
+import java.util.List;
 
 
 public class CommentReceiverImpl implements CommentReceiver {
@@ -26,7 +31,7 @@ public class CommentReceiverImpl implements CommentReceiver {
         String[] isLockedCommentString = content.getRequestParameters().get(GeneralConstant.IS_BLOCKED);
         boolean isLockedComment = Boolean.valueOf(isLockedCommentString[0]);
 
-        if (!userValidator.isAdmin(user) && !userValidator.isBookmaker(user)) {
+        if (!userValidator.isAdmin(user)) {
             content.setAjaxSuccess(false);
             content.getAjaxResult().add(GeneralConstant.ACCESS_DENIED, new Gson().toJsonTree(true));
             return;
@@ -106,6 +111,54 @@ public class CommentReceiverImpl implements CommentReceiver {
                 manager.endTransaction();
             } catch (DAOException e1) {
                 throw new ReceiverException("Create comment rollback error", e);
+            }
+            throw new ReceiverException(e);
+        }
+    }
+
+    @Override
+    public void openCommentPage(RequestContent content) throws ReceiverException {
+        Formatter formatter = new Formatter();
+        String[] stringPage = content.getRequestParameters().get(GeneralConstant.PAGE_NUMBER);
+        int page = formatter.formatToPage(stringPage);
+
+        if (page == -1) {
+            content.getRequestAttributes().put(GeneralConstant.PAGE_NOT_FOUND, true);
+            return;
+        }
+
+        int startIndex = formatter.formatToStartIndex(page, GeneralConstant.COUNT_COMMENT_ON_PAGE);
+        TransactionManager handler = new TransactionManager();
+
+        List<Pair<UserEntity, CommentEntity>> commentDataList;
+        int commentCount;
+
+        try {
+            UserDAOImpl userDAO = new UserDAOImpl();
+            CommentDAOImpl commentDAO = new CommentDAOImpl();
+            handler.beginTransaction(userDAO, commentDAO);
+
+            commentDataList = commentDAO.findDataForComment(startIndex, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
+            commentCount = commentDAO.findCommentCount();
+            handler.commit();
+            handler.endTransaction();
+
+            if (commentDataList.isEmpty() && page != 1) {
+                content.getRequestAttributes().put(GeneralConstant.PAGE_NOT_FOUND, true);
+                return;
+            }
+
+            content.getRequestAttributes().put(GeneralConstant.LIMIT, GeneralConstant.COUNT_PRODUCTS_ON_PAGE);
+            content.getRequestAttributes().put(GeneralConstant.COMMENT_COUNT, commentCount);
+            content.getRequestAttributes().put(GeneralConstant.COMMENT_DATA_LIST, commentDataList);
+
+        } catch (DAOException e) {
+            try {
+                handler.rollback();
+                handler.endTransaction();
+
+            } catch (DAOException e1) {
+                throw new ReceiverException("Open comments rollback error", e);
             }
             throw new ReceiverException(e);
         }

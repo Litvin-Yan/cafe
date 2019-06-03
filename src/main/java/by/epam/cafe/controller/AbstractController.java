@@ -26,7 +26,6 @@ abstract class AbstractController extends HttpServlet {
         resp.getWriter().close();
     }
 
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         executeRequest(req, resp);

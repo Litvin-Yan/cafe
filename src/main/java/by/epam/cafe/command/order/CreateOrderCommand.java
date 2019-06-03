@@ -31,7 +31,7 @@ public class CreateOrderCommand extends AbstractCommand {
             receiver.action(CommandType.takeCommandType(this), content);
 
             if (!content.getRequestAttributes().containsKey(PAGE_NOT_FOUND)) {
-                router.setRoutePath(PageType.MENU.getPage());
+                router.setRoutePath(PageType.BASKET.getPage());
                 router.setRouteType(RouteType.REDIRECT);
 
             } else {
@@ -40,7 +40,7 @@ public class CreateOrderCommand extends AbstractCommand {
             }
 
         } catch (ReceiverException e) {
-            LOGGER.log(Level.ERROR, "Open menu receiver error", e);
+            LOGGER.log(Level.ERROR, "Create order receiver error", e);
             router.setRoutePath(PageType.SERVER_ERROR.getPage());
             router.setRouteType(RouteType.REDIRECT);
         } catch (DAOException e) {

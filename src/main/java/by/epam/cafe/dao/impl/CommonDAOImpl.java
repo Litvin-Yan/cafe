@@ -56,25 +56,6 @@ public class CommonDAOImpl extends CommonDAO {
     }
 
     @Override
-    public int findCountBetsOnCompetition(int competitionId, ExpectResultType expectResult) throws DAOException {
-        return 0;
-    }
-
-    @Override
-    public int findCountBetsOnCompetitor(int competitorId) throws DAOException {
-        return 0;
-    }
-
-    @Override
-    public BigDecimal findAmountOfMoneyOnCompetitor(int competitorId) throws DAOException {
-        return null;
-    }
-
-    @Override
-    public BigDecimal findAmountOfMoneyOnCompetition(int competitionId, ExpectResultType expectResult) throws DAOException {
-        return null;
-    }
-
     public Map<String, Object> findAdminStatistic() {
         Map<String, Object> statisticMap = null;
 

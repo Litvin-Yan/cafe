@@ -72,7 +72,7 @@ public class OrderDataReceiverImpl implements OrderDataReceiver {
         boolean isValidData = true;
 
         for (ProductEntity product : productList) {
-            if (!validator.isPositiveInteger(orderData.getProducts().get(product))) {
+            if (!validator.isValidCount(orderData.getProducts().get(product))) {
                 content.getRequestAttributes().put(WRONG_COUNTER, true);
                 isValidData = false;
             }

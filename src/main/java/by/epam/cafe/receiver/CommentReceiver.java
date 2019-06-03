@@ -27,4 +27,12 @@ public interface CommentReceiver extends Receiver {
      */
     void createComment(RequestContent requestContent) throws ReceiverException;
 
+    /**
+     * open comment page
+     *
+     * @param content
+     * @throws ReceiverException
+     */
+    void openCommentPage(RequestContent content) throws ReceiverException;
+
 }

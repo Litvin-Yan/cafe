@@ -3,7 +3,7 @@ package by.epam.cafe.entity;
 import java.util.Date;
 import java.util.Objects;
 
-public class CommentEntity extends Entity{
+public class CommentEntity extends Entity {
 
     private String text;
     private Boolean isBlocked;

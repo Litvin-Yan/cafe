@@ -22,7 +22,6 @@ public class ChooseCategoryCommand extends AbstractCommand {
     public ChooseCategoryCommand(Receiver receiver) {
         super(receiver);
     }
-    //TODO catch dao exception
 
 
     @Override
@@ -42,7 +41,7 @@ public class ChooseCategoryCommand extends AbstractCommand {
             }
 
         } catch (ReceiverException e) {
-            LOGGER.log(Level.ERROR, "Open menu receiver error", e);
+            LOGGER.log(Level.ERROR, "Choose category receiver error", e);
             router.setRoutePath(PageType.SERVER_ERROR.getPage());
             router.setRouteType(RouteType.REDIRECT);
         } catch (DAOException e) {

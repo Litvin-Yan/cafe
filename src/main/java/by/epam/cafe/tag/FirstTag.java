@@ -11,7 +11,7 @@ public class FirstTag extends TagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        String time = "<hr/>Time : <b> it's tag by Litvin Vlad </b><hr/>";
+        String time = "<hr/>Time : <b> it's tag by Litvin Yan </b><hr/>";
         String locale = "Locale : <b> " + Locale.getDefault() + " </b><hr/> ";
 
         try {

@@ -87,8 +87,38 @@ public abstract class ProductDAO extends DAO<ProductEntity> {
      */
     public abstract boolean updateIngredients(ProductEntity entity) throws DAOException;
 
+    /**
+     * find product count by type
+     *
+     * @param productType
+     * @return  count of product type
+     * @throws DAOException
+     */
+    public abstract int findProductCountByType(String productType) throws DAOException;
 
-
-
+    /**
+     * find product type
+     *
+     * @return  product type list
+     * @throws DAOException
+     */
     public abstract List<String> findProductType()throws DAOException;
+
+    /**
+     * create product
+     *
+     * @param entity
+     * @return  product id
+     * @throws DAOException
+     */
+    public abstract int createAndGetId(ProductEntity entity) throws DAOException;
+
+    /**
+     * update image path
+     *
+     * @param entity
+     * @return true if updated
+     * @throws DAOException
+     */
+    public abstract boolean updateImagePath(ProductEntity entity) throws DAOException;
 }

@@ -72,7 +72,8 @@
                 <c:forEach items="${productList}" var="product">
                     <tr class="w3-large  backgraund-opacity">
                         <td>
-                            <img src="../image/products/${product.imageURL}" height="70">
+                            <img src="../image/products/${product.imageURL}"
+                                 class="w3-image w3-circle" style="width: auto; height: 80px;">
                         </td>
                         <td>
                             <span>${product.name}</span>

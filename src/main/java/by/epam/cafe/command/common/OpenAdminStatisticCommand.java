@@ -22,7 +22,6 @@ public class OpenAdminStatisticCommand extends AbstractCommand {
         super(receiver);
     }
 
-    //TODO: catch dao exception
     @Override
     public Router execute(RequestContent requestContent){
         Router router = new Router();

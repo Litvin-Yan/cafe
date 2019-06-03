@@ -56,7 +56,7 @@ public class OrderDataDAOImpl extends OrderDataDAO {
         try (PreparedStatement statement = connection.prepareStatement(DELETE_ORDER_DATA)) {
 
             statement.setInt(1, orderId);
-            isDeleted = statement.executeUpdate() == 1;
+            isDeleted = statement.executeUpdate() >= 1;
 
         } catch (SQLException e) {
             if (!GeneralConstant.DUPLICATE_UNIQUE_INDEX.equals(e.getSQLState())) {
@@ -76,6 +76,7 @@ public class OrderDataDAOImpl extends OrderDataDAO {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean create(int productId, int productCount, BigDecimal productPrice, int orderId) throws DAOException {
         boolean isCreated = false;
         try (PreparedStatement statement = connection.prepareStatement(CREATE_ORDER_DATA)) {
@@ -97,7 +98,7 @@ public class OrderDataDAOImpl extends OrderDataDAO {
         return false;
     }
 
-    //TODO: check error
+
     private List<OrderDataEntity> extractOrderData(ResultSet resultSet) throws SQLException, DAOException {
 
         List<OrderDataEntity> orderDataList = new ArrayList<>();

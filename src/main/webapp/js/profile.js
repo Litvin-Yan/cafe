@@ -120,28 +120,12 @@ function withdrawMoney(e, closableModal) {
 
 function commentTheOrder(e, formId, closableModal) {
 
-    var $from = $('#'+formId);
-
-    $from.validate();
-
-    if (!$from.valid()) {
-        return;
-    }
-    document.getElementById(closableModal).style.display = 'none';
-
-    var bonus = parseInt(document.getElementById("bonus").value);
-
-    if (isNaN(bonus) || bonus < 1 || bonus > 1000) {
-        document.getElementById("modal_bonus_wrong").style.display = 'inherit';
-        return;
-    }
+    var $from = $(`#${formId}`);
 
     var dataPost = "";
 
     $from.find("input[name]").each(function (index, node) {
-        if (node.name !== "command" || node.checked) {
             dataPost +=`${node.name}=${node.value}&`;
-        }
     });
 
     var $this = $(e);
@@ -162,7 +146,6 @@ function commentTheOrder(e, formId, closableModal) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.log("Something really bad happened " + textStatus);
-            document.getElementById("modal_bonus_error").style.display = 'inherit';
         },
         beforeSend: function (jqXHR, settings) {},
         complete: function (jqXHR, textStatus) {}
@@ -171,28 +154,12 @@ function commentTheOrder(e, formId, closableModal) {
 
 function cancelTheOrder(e, formId, closableModal) {
 
-    var $from = $('#'+formId);
-
-    $from.validate();
-
-    if (!$from.valid()) {
-        return;
-    }
-    document.getElementById(closableModal).style.display = 'none';
-
-    var bonus = parseInt(document.getElementById("bonus").value);
-
-    if (isNaN(bonus) || bonus < 1 || bonus > 1000) {
-        document.getElementById("modal_bonus_wrong").style.display = 'inherit';
-        return;
-    }
+    var $from = $(`#${formId}`);
 
     var dataPost = "";
 
-    $from.find("input[name]").each(function (index, node) {
-        if (node.name !== "command" || node.checked) {
+    $from.find('input[name]').each(function (index, node) {
             dataPost +=`${node.name}=${node.value}&`;
-        }
     });
 
     var $this = $(e);
@@ -213,7 +180,6 @@ function cancelTheOrder(e, formId, closableModal) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.log("Something really bad happened " + textStatus);
-            document.getElementById("modal_bonus_error").style.display = 'inherit';
         },
         beforeSend: function (jqXHR, settings) {},
         complete: function (jqXHR, textStatus) {}

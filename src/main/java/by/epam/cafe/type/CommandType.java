@@ -3,13 +3,17 @@ package by.epam.cafe.type;
 import by.epam.cafe.command.AbstractCommand;
 import by.epam.cafe.command.comment.ChangeLockCommentCommand;
 import by.epam.cafe.command.comment.CreateCommentCommand;
-import by.epam.cafe.command.common.*;
+import by.epam.cafe.command.comment.OpenCommentCommand;
+import by.epam.cafe.command.common.ChangeLocaleCommand;
+import by.epam.cafe.command.common.OpenAdminStatisticCommand;
+import by.epam.cafe.command.common.OpenMainCommand;
+import by.epam.cafe.command.common.OpenPageNotFoundCommand;
 import by.epam.cafe.command.order.CancelTheOrderCommand;
 import by.epam.cafe.command.order.CreateOrderCommand;
 import by.epam.cafe.command.order.OpenBasketCommand;
 import by.epam.cafe.command.orderdata.AddProductCommand;
-import by.epam.cafe.command.product.OpenMenuCommand;
 import by.epam.cafe.command.orderdata.RemoveProductCommand;
+import by.epam.cafe.command.product.OpenMenuCommand;
 import by.epam.cafe.command.product.OpenProductSettingsCommand;
 import by.epam.cafe.command.user.*;
 import by.epam.cafe.content.RequestContent;
@@ -17,17 +21,19 @@ import by.epam.cafe.exception.DAOException;
 import by.epam.cafe.exception.ReceiverException;
 import by.epam.cafe.receiver.impl.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public enum CommandType {
 
-    ADD_PRODUCT(new AddProductCommand(new OrderDataReceiverImpl())){
+    ADD_PRODUCT(new AddProductCommand(new OrderDataReceiverImpl())) {
         public void doReceiver(RequestContent content) throws ReceiverException, DAOException {
             ((OrderDataReceiverImpl) getCommand().getReceiver()).addProduct(content);
         }
     },
 
-    REMOVE_PRODUCT(new RemoveProductCommand(new OrderDataReceiverImpl())){
+    REMOVE_PRODUCT(new RemoveProductCommand(new OrderDataReceiverImpl())) {
         public void doReceiver(RequestContent content) throws ReceiverException, DAOException {
             ((OrderDataReceiverImpl) getCommand().getReceiver()).removeProduct(content);
         }
@@ -179,6 +185,12 @@ public enum CommandType {
     OPEN_PRODUCT_SETTINGS(new OpenProductSettingsCommand(new ProductReceiverImpl())) {
         public void doReceiver(RequestContent content) throws ReceiverException {
             ((ProductReceiverImpl) getCommand().getReceiver()).openProductSettings(content);
+        }
+    },
+
+    OPEN_COMMENT(new OpenCommentCommand(new CommentReceiverImpl())) {
+        public void doReceiver(RequestContent content) throws ReceiverException {
+            ((CommentReceiverImpl) getCommand().getReceiver()).openCommentPage(content);
         }
     };
 

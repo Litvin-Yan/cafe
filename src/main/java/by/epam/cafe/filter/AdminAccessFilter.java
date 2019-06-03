@@ -24,7 +24,7 @@ public class AdminAccessFilter implements Filter {
         UserValidatorImpl validator = new UserValidatorImpl();
         UserEntity user = (UserEntity) httpRequest.getSession().getAttribute(GeneralConstant.USER);
 
-        if (!validator.isAdmin(user) && !validator.isBookmaker(user)) {
+        if (!validator.isAdmin(user)) {
             httpResponse.sendRedirect(PageType.INDEX.getPage());
             return;
         }

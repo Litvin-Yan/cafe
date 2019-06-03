@@ -20,6 +20,7 @@ public enum PageType {
     PROFILE,
     BLOCK,
     INDEX,
+    COMMENT,
 
     /* ------- Admin pages --------*/
     ADMIN_MAIN,

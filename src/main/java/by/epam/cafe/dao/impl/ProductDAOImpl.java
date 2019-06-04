@@ -302,6 +302,12 @@ public class ProductDAOImpl extends ProductDAO {
         try (PreparedStatement statement = connection.prepareStatement(CREATE_PRODUCT,
                 PreparedStatement.RETURN_GENERATED_KEYS)) {
 
+            statement.setString(1, entity.getName());
+            statement.setString(2, entity.getProductType());
+            statement.setBigDecimal(3, entity.getPrice());
+            statement.setString(4, entity.getIngredients());
+            statement.setInt(5, entity.getWeight());
+
             statement.executeUpdate();
 
             ResultSet resultSet = statement.getGeneratedKeys();

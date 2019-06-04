@@ -103,6 +103,9 @@ public class GeneralConstant {
     public static final int COUNT_PRODUCTS_ON_ADMIN_PAGE = 4;
     public static final int COUNT_USERS_ON_PAGE = 4;
     public static final BigDecimal PERCENTAGE_OF_BONUSES_OF_THE_ORDER_AMOUNT = new BigDecimal(0.05);
+    public static final String PRICE = "price";
+    public static final String CONSIST = "consist";
+    public static final String WEIGHT = "weight";
 
     private GeneralConstant() {
     }

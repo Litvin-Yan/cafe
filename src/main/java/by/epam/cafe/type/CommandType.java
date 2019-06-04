@@ -191,6 +191,12 @@ public enum CommandType {
         }
     },
 
+    CREATE_PRODUCT(new OpenProductSettingsCommand(new ProductReceiverImpl())) {
+        public void doReceiver(RequestContent content) throws ReceiverException {
+            ((ProductReceiverImpl) getCommand().getReceiver()).createProduct(content);
+        }
+    },
+
     OPEN_COMMENT(new OpenCommentCommand(new CommentReceiverImpl())) {
         public void doReceiver(RequestContent content) throws ReceiverException {
             ((CommentReceiverImpl) getCommand().getReceiver()).openCommentPage(content);

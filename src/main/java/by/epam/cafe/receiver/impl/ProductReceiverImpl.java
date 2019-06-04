@@ -20,6 +20,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import javax.servlet.http.Part;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -114,13 +115,15 @@ public class ProductReceiverImpl implements ProductReceiver {
         String[] stringPointY2 = content.getRequestParameters().get(GeneralConstant.POINT_Y2);
         String[] stringHeight = content.getRequestParameters().get(GeneralConstant.HEIGHT);
         String[] stringWidth = content.getRequestParameters().get(GeneralConstant.WIDTH);
-        String[] textArray = content.getRequestParameters().get(GeneralConstant.TEXT);
-        String[] titleArray = content.getRequestParameters().get(GeneralConstant.TITLE);
+        String[] typeArray = content.getRequestParameters().get(GeneralConstant.PRODUCT_TYPE);
+        String[] nameArray = content.getRequestParameters().get(GeneralConstant.NAME);
+        String[] priceArray = content.getRequestParameters().get(GeneralConstant.PRICE);
+        String[] consistArray = content.getRequestParameters().get(GeneralConstant.CONSIST);
+        String[] weightArray = content.getRequestParameters().get(GeneralConstant.WEIGHT);
         Part imagePart = content.getRequestParts().get(GeneralConstant.IMAGE);
 
         if (imagePart == null || !validator.checkParamsForInteger(stringPointX1, stringPointX2,
-                stringPointY1, stringPointY2, stringHeight, stringWidth) ||
-                !validator.isVarExist(textArray) || !validator.isVarExist(titleArray)) {
+                stringPointY1, stringPointY2, stringHeight, stringWidth)) {
             content.setAjaxSuccess(false);
             content.getAjaxResult().add(GeneralConstant.WRONG_DATA, new Gson().toJsonTree(true));
             return;
@@ -134,16 +137,18 @@ public class ProductReceiverImpl implements ProductReceiver {
         int height = Integer.valueOf(stringHeight[0]);
         int width = Integer.valueOf(stringWidth[0]);
 
-        if (!productValidator.isTitleValid(titleArray[0]) ||
-                !productValidator.isTextValid(textArray[0]) ||
-                !validator.isImageExtensionValid(imageExtension) ||
-                pointX1 == pointX2 || pointY1 == pointY2) {
+        if (pointX1 == pointX2 || pointY1 == pointY2) {
             content.setAjaxSuccess(false);
             content.getAjaxResult().add(GeneralConstant.WRONG_DATA, new Gson().toJsonTree(true));
             return;
         }
 
         ProductEntity product = new ProductEntity();
+        product.setName(nameArray[0]);
+        product.setPrice(new BigDecimal(priceArray[0]));
+        product.setWeight(Integer.valueOf(weightArray[0]));
+        product.setProductType(typeArray[0]);
+        product.setIngredients(consistArray[0]);
 
         TransactionManager manager = new TransactionManager();
         try {
